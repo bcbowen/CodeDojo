@@ -1,21 +1,10 @@
 using LeetCode.Solutions.P00019_RemoveNthNodeFromEnd;
+using LeetCode.Solutions.Models.LinkedList;
 
 namespace LeetCode.Tests.P00019_RemoveNthNodeFromEnd
 {
-
-    /*
-
-    */
-
     public class Tests
     {
-
-        /*
-
-
-
-        */
-
         [Test]
         [TestCase(new[] { 1, 2, 3, 4, 5 }, 2, new[] { 1, 2, 3, 5 })]
         [TestCase(new[] { 1 }, 1, new int[0])]

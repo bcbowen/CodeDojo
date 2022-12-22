@@ -1,18 +1,7 @@
-﻿using System.Text;
+﻿using LeetCode.Solutions.Models.LinkedList;
 
 namespace LeetCode.Solutions.P00019_RemoveNthNodeFromEnd
 {
-    public class ListNode
-    {
-        public int val;
-        public ListNode next;
-        public ListNode(int val = 0, ListNode next = null)
-        {
-            this.val = val;
-            this.next = next;
-        }
-    }
-
     public class Solution
     {
         private ListNode RemoveLast(ListNode head)
