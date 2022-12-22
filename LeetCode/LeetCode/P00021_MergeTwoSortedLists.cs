@@ -1,21 +1,10 @@
 using LeetCode.Solutions.P00021_MergeTwoSortedLists;
+using LeetCode.Solutions.Models.LinkedList;
 
 namespace LeetCode.Tests.P00021_MergeTwoSortedLists
 {
-
-    /*
-
-    */
-
     public class Tests
     {
-
-        /*
-
-
-
-        */
-
         [Test]
         [TestCase(new[] { 1, 2, 4 }, new[] { 1, 3, 4 }, new[] { 1, 1, 2, 3, 4, 4 })]
         [TestCase(new[] { 1, 2, 4 }, new[] { 5, 6 }, new[] { 1, 2, 4, 5, 6 })]
@@ -24,8 +13,8 @@ namespace LeetCode.Tests.P00021_MergeTwoSortedLists
         [TestCase(new int[0], new int[0], new int[0])]
         public void MergeTwoListsTest(int[] values1, int[] values2, int[] expected)
         {
-            ListNode list1 = ListNode.Init(values1);
-            ListNode list2 = ListNode.Init(values2);
+            ListNode list1 = Init(values1);
+            ListNode list2 = Init(values2);
             ListNode result = new Solution().MergeTwoLists(list1, list2);
 
             if (expected.Length > 0)
@@ -45,7 +34,19 @@ namespace LeetCode.Tests.P00021_MergeTwoSortedLists
 
         }
 
+        public static ListNode Init(int[] values)
+        {
+            if (values.Length == 0) return null;
 
+            ListNode head = new ListNode(values[0]);
+            ListNode current = head;
+            for (int i = 1; i < values.Length; i++)
+            {
+                current.next = new ListNode(values[i]);
+                current = current.next;
+            }
 
+            return head;
+        }
     }
 }

@@ -2,34 +2,6 @@ using LeetCode.Solutions.P00014_LongestCommonPrefix;
 
 namespace LeetCode.Tests.P00014_LongestCommonPrefix
 {
-
-    /*
-void Main()
-{
-	Test(new string[] { "flower", "flow", "flight"}, "fl");
-}
-
-private void Test(string[] values, string expected) 
-{
-	Solution solution = new Solution();
-	string prefix = solution.LongestCommonPrefix(values); 
-	
-	if (expected == prefix)
-	{
-		Console.WriteLine("PASS");
-	}
-	else
-	{
-		Console.WriteLine($"FAIL; Expected {expected} Got {prefix}");
-
-    Input: strs = ["dog","racecar","car"]
-Output: ""
-Explanation: There is no common prefix among the input strings.
-	}
-	
-}
-    */
-
     public class Tests
     {
         [Test]
