@@ -1,13 +1,12 @@
-﻿namespace LeetCode.Solutions.Models.LinkedList
+﻿namespace LeetCode.Solutions.Models.LinkedList;
+
+public class ListNode
 {
-    public class ListNode
+    public int val { get; set; }
+    public ListNode? next { get; set; }
+    public ListNode(int value = 0, ListNode? next = null)
     {
-        public int val { get; set; }
-        public ListNode? next { get; set; }
-        public ListNode(int value = 0, ListNode? next = null)
-        {
-            val = value;
-            this.next = next;
-        }
+        val = value;
+        this.next = next;
     }
 }
