@@ -3,7 +3,7 @@ using LeetCode.Solutions.P00106_ConstructBinaryTreeFromPostOrderAndInorder;
 
 namespace LeetCode.Tests.P00106_ConstructBinaryTreeFromPostOrderAndInorder;
 
-public partial class Tests
+public class Tests
 {
     [Test]
     public void Example1()

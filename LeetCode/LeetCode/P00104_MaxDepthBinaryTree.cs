@@ -1,7 +1,7 @@
 using LeetCode.Solutions.Models.Tree.BinaryTree;
-using LeetCode.Solutions.P000104_MaxDepthBinaryTree;
+using LeetCode.Solutions.P00104_MaxDepthBinaryTree;
 
-namespace LeetCode.Tests.P000104_MaxDepthBinaryTree;
+namespace LeetCode.Tests.P00104_MaxDepthBinaryTree;
 
 public class Tests
 {
