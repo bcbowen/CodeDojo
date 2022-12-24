@@ -1,6 +1,6 @@
 ﻿using LeetCode.Solutions.Models.Tree.BinaryTree;
 
-namespace LeetCode.Solutions.P000104_MaxDepthBinaryTree;
+namespace LeetCode.Solutions.P00104_MaxDepthBinaryTree;
 
 public class Solution
 {

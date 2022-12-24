@@ -2,7 +2,7 @@
 
 namespace LeetCode.Solutions.P00105_ConstructBinaryTreeFromPreOrderAndInorder_Template;
 
-public partial class Solution
+public class Solution
 {
     private int[] _preorder;
     private int[] _inorder;
