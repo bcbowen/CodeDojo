@@ -1,43 +1,37 @@
-﻿using System.Text;
-
-namespace LeetCode.Solutions.P00014_LongestCommonPrefix;
+﻿namespace LeetCode.Solutions.P00014_LongestCommonPrefix;
 
 public class Solution
 {
     public string LongestCommonPrefix(string[] strs)
     {
-        StringBuilder prefix = new StringBuilder();
-        int i = 0;
-        bool done = false;
-
-        while (!done)
+        string prefix = strs[0];
+        if (!string.IsNullOrEmpty(prefix))
         {
-            if (i >= strs[0].Length)
+            for (int i = 1; i < strs.Length; i++) 
             {
-                done = true;
-                continue;
-            }
-            char current = strs[0][i];
-            for (int j = 1; j < strs.Length; j++)
-            {
-                if (i >= strs[j].Length)
+                if (string.IsNullOrEmpty(strs[i]) || prefix[0] != strs[i][0]) 
                 {
-                    done = true;
+                    prefix = String.Empty;
                     break;
                 }
-                if (strs[j][i] != current)
+                if (prefix.Length > strs[i].Length) 
                 {
-                    done = true;
-                    break;
+                    prefix = prefix.Substring(0, strs[i].Length);
                 }
 
+                for (int j = 0; j < prefix.Length; j++)
+                {
+                    if (prefix[j] != strs[i][j]) 
+                    {
+                        prefix = prefix.Substring(0, j);
+                    }
+                }    
+            
             }
-            if (!done)
-            {
-                prefix.Append(current);
-            }
-            i++;
         }
-        return prefix.ToString();
+                
+        
+       return prefix;
     }
+    
 }
