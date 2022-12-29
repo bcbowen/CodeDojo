@@ -1,6 +1,6 @@
 ﻿namespace LeetCode.Solutions.P00118_PascalsTriangle;
 
-public partial class Solution
+public class Solution
 {
     public IList<IList<int>> Generate(int numRows)
     {

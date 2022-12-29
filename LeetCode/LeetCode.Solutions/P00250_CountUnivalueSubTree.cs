@@ -2,7 +2,7 @@
 
 namespace LeetCode.Solutions.P00250_CountUnivalueSubTree;
 
-public partial class Solution
+public class Solution
 {
     private int _count = 0;
     public int CountUnivalSubtrees(TreeNode root)

@@ -2,7 +2,7 @@ using LeetCode.Solutions.P00118_PascalsTriangle;
 
 namespace LeetCode.Tests.P00118_PascalsTriangle;
 
-public partial class Tests
+public class Tests
 {
     [Test]
     [TestCase(1, new[] { 1 })]

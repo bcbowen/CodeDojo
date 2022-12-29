@@ -1,6 +1,6 @@
 ﻿namespace LeetCode.Solutions.P00215_KthLargestElementInArray;
 
-public partial class Solution
+public class Solution
 {
     public int FindKthLargest(int[] nums, int k)
     {

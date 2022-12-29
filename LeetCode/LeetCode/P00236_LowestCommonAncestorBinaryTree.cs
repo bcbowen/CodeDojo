@@ -3,7 +3,7 @@ using LeetCode.Solutions.P00236_LowestCommonAncestorBinaryTree;
 
 namespace LeetCode.Tests.P00236_LowestCommonAncestorBinaryTree;
 
-public partial class Tests
+public class Tests
 {
     [Test]
     public void Example1()
