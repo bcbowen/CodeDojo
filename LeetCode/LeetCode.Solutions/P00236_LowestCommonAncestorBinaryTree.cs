@@ -2,7 +2,7 @@
 
 namespace LeetCode.Solutions.P00236_LowestCommonAncestorBinaryTree;
 
-public partial class Solution
+public class Solution
 {
     public TreeNode LowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q)
     {

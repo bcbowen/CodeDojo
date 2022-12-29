@@ -1,6 +1,6 @@
 ﻿namespace LeetCode.Solutions.P00242_ValidAnagram;
 
-public partial class Solution
+public class Solution
 {
     public bool IsAnagram(string s, string t)
     {

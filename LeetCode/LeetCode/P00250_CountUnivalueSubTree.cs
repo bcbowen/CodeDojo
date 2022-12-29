@@ -3,7 +3,7 @@ using LeetCode.Solutions.P00250_CountUnivalueSubTree;
 
 namespace LeetCode.Tests.P00250_CountUnivalueSubTree;
 
-public partial class Tests
+public class Tests
 {
     [Test]
     public void Example1()

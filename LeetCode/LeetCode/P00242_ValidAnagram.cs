@@ -2,7 +2,7 @@ using LeetCode.Solutions.P00242_ValidAnagram;
 
 namespace LeetCode.Tests.P00242_ValidAnagram;
 
-public partial class Tests
+public class Tests
 {
 
     [TestCase("anagram", "nagaram", true)]

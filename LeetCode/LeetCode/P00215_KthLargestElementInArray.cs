@@ -2,7 +2,7 @@ using LeetCode.Solutions.P00215_KthLargestElementInArray;
 
 namespace LeetCode.Tests.P00215_KthLargestElementInArray;
 
-public partial class Tests
+public class Tests
 {
     [TestCase(new[] { 3, 2, 1, 5, 6, 4 }, 2, 5)]
     [TestCase(new[] { 3, 2, 3, 1, 2, 4, 5, 5, 6 }, 4, 4)]

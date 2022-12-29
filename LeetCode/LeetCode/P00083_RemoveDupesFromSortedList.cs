@@ -3,7 +3,7 @@ using LeetCode.Solutions.P00083_RemoveDupesFromSortedList;
 
 namespace LeetCode.Tests.P00083_RemoveDupesFromSortedList;
 
-public partial class Tests
+public class Tests
 {
 
     [Test]
