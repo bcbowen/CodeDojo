@@ -2,7 +2,7 @@ using LeetCode.Solutions.P00389_FindDifference;
 
 namespace LeetCode.Tests.P00389_FindDifference;
 
-public partial class Tests
+public class Tests
 {
     [TestCase("abcd", "abcde", 'e')]
     [TestCase("", "y", 'y')]
