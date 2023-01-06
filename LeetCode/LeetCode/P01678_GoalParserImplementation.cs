@@ -1,0 +1,16 @@
+using LeetCode.Solutions.P01678_GoalParserImplementation;
+
+namespace LeetCode.Tests.P01678_GoalParserImplementation;
+
+public class Tests
+{
+    [TestCase("G()(al)", "Goal")]
+    [TestCase("G()()()()(al)", "Gooooal")]
+    [TestCase("(al)G(al)()()G", "alGalooG")]
+    public void Test(string command, string expected)
+    {
+        string result = new Solution().Interpret(command);
+        Assert.That(result, Is.EqualTo(expected));
+    }
+
+}
