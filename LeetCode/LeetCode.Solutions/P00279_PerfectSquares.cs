@@ -9,25 +9,33 @@ public class Solution
     /// <returns></returns>
     public int NumSquares(int n)
     {
-        if (n < 2) return 1;
-
-        double root = Math.Sqrt(n);
-        if (root % 1 == 0)
+        int[] squares = GetSquares(n);
+        int sum = 0;
+        int count = 0; 
+        for (int i = squares.Length - 1; i > 0; i--)
         {
-            return 1;
+            while (sum + squares[i] <= n) 
+            {
+                sum += squares[i];
+                count++;
+            }
         }
 
-        int count = 1;
-        root = Math.Floor(root);
-        int rootSquared = (int)root * (int)root;
-
-        while (n > rootSquared)
-        {
-            count++;
-            n -= rootSquared;
-        }
-
-        count += NumSquares(n);
         return count;
+    }
+
+    private int[] GetSquares(int n) 
+    {
+        List<int> squares = new List<int>();
+        int root = 1;
+        int square = 1;
+        while (square < n) 
+        {
+            squares.Add(square);
+            root++;
+            square = root * root; 
+        }
+
+        return squares.ToArray();
     }
 }
