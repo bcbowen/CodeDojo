@@ -9,6 +9,6 @@ public class Tests
     public void Test(int[] nums, int expected)
     {
         int result = new Solution().Rob(nums);
-        Assert.AreEqual(expected, result);
+        Assert.That(result, Is.EqualTo(expected));
     }
 }
