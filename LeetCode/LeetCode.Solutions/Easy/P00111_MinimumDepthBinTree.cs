@@ -13,6 +13,8 @@ public class Solution
         };
 
         int currentLevel = 0;
+        if (root == null) return currentLevel;
+
         Queue<TreeNode> q = new Queue<TreeNode>();
         q.Enqueue(root);
         bool found = false;
