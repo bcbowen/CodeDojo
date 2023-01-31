@@ -1,4 +1,4 @@
-﻿namespace LeetCode.Solutions.P00303_RangeSumQueryImmutable;
+﻿namespace LeetCode.Solutions.Easy;
 
 public class NumArray
 {
