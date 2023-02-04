@@ -2,6 +2,8 @@ using LeetCode.Solutions.Medium.P00028_ImplementStrStr;
 
 namespace LeetCode.Tests.Medium.P00028_ImplementStrStr;
 
+[TestFixture]
+[Category("Medium")]
 public class Tests
 {
     [Test]

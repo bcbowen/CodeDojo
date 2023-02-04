@@ -4,6 +4,8 @@ using LeetCode.Tests.Utility.Helpers;
 
 namespace LeetCode.Tests.Medium.P00061_RotateList;
 
+[TestFixture]
+[Category("Medium")]
 public class Tests
 {
     [Test]

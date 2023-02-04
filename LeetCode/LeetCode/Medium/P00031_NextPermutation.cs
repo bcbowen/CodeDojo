@@ -2,6 +2,8 @@ using LeetCode.Solutions.Medium.P00031_NextPermutation;
 
 namespace LeetCode.Tests.Medium.P00031_NextPermutation;
 
+[TestFixture]
+[Category("Medium")]
 public class Tests
 {
     [Test]

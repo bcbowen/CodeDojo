@@ -2,6 +2,8 @@ using LeetCode.Solutions.Medium.P00048_RotateImage;
 
 namespace LeetCode.Tests.Medium.P00048_RotateImage;
 
+[TestFixture]
+[Category("Medium")]
 public class Tests
 {
     [Test]

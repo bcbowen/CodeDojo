@@ -2,6 +2,8 @@ using LeetCode.Solutions.Medium.P00054_SpiralMatrix;
 
 namespace LeetCode.Tests.Medium.P00054_SpiralMatrix;
 
+[TestFixture]
+[Category("Medium")]
 public class Tests
 {
     [Test]
