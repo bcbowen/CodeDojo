@@ -3,6 +3,8 @@ using LeetCode.Solutions.Medium.P00106_ConstructBinaryTreeFromPostOrderAndInorde
 
 namespace LeetCode.Tests.Medium.P00106_ConstructBinaryTreeFromPostOrderAndInorder;
 
+[TestFixture]
+[Category("Medium")]
 public class Tests
 {
     [Test]

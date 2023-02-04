@@ -2,6 +2,8 @@ using LeetCode.Solutions.Medium.P00049_GroupAnagrams;
 
 namespace LeetCode.Tests.Medium.P00049_GroupAnagrams;
 
+[TestFixture]
+[Category("Medium")]
 public class Tests
 {
 

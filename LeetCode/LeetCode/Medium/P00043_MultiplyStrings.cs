@@ -2,6 +2,8 @@ using LeetCode.Solutions.Medium.P00043_MultiplyStrings;
 
 namespace LeetCode.Tests.Medium.P00043_MultiplyStrings;
 
+[TestFixture]
+[Category("Medium")]
 public class Tests
 {
     [Test]

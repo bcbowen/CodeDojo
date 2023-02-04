@@ -2,6 +2,8 @@ using LeetCode.Solutions.Medium.P00015_ThreeSum;
 
 namespace LeetCode.Tests.Medium.P00015_ThreeSum;
 
+[TestFixture]
+[Category("Medium")]
 public class Tests
 {
     [Test]

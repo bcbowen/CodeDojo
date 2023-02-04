@@ -2,6 +2,8 @@ using LeetCode.Solutions.Medium.P00050_Pow_X_N;
 
 namespace LeetCode.Tests.Medium.P00050_Pow_X_N;
 
+[TestFixture]
+[Category("Medium")]
 public class Tests
 {
     [Test]

@@ -4,6 +4,8 @@ using LeetCode.Tests.Utility.Helpers;
 
 namespace LeetCode.Tests.Medium.P00002_Add2Numbers;
 
+[TestFixture]
+[Category("Medium")]
 public class Tests
 {
     [Test]
