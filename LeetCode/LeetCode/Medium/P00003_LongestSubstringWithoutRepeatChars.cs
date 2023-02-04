@@ -3,7 +3,6 @@ using LeetCode.Solutions.Medium.P00003_LongestSubstringWithoutRepeatChars;
 namespace LeetCode.Tests.Medium.P00003_LongestSubstringWithoutRepeatChars;
 
 [TestFixture]
-[Category("P00003")]
 [Category("Medium")]
 public class Tests
 {

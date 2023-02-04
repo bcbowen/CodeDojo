@@ -3,7 +3,6 @@ using LeetCode.Solutions.Hard.P00004_MedianOfTwoSortedArrays;
 namespace LeetCode.Tests.Hard.P00004_MedianOfTwoSortedArrays;
 
 [TestFixture]
-[Category("P00004")]
 [Category("Hard")]
 public partial class Tests
 {

@@ -4,7 +4,6 @@ namespace LeetCode.Tests.Easy.P00001_TwoSum;
 
 [TestFixture]
 [Category("Easy")]
-[Category("P00001")]
 public class Tests
 {
     [SetUp]
