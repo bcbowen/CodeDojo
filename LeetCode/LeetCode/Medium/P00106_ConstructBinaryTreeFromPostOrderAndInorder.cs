@@ -8,7 +8,7 @@ namespace LeetCode.Tests.Medium.P00106_ConstructBinaryTreeFromPostOrderAndInorde
 public class Tests
 {
     [Test]
-    public void Example1()
+    public void ConstructBinaryTree_Example1()
     {
         /*
         Input: inorder = [9, 3, 15, 20, 7], postorder = [9, 15, 7, 20, 3]
@@ -26,7 +26,7 @@ public class Tests
     }
 
     [Test]
-    public void Example2()
+    public void ConstructBinaryTree_Example2()
     {
         /*
         Input: inorder = [-1], postorder = [-1]
@@ -42,7 +42,7 @@ public class Tests
 
 
     [Test]
-    public void Example3()
+    public void ConstructBinaryTree_Example3()
     {
         int[] inorder = { 4, 2, 5, 1, 3 };
         int[] postorder = { 4, 5, 2, 3, 1 };
@@ -57,7 +57,7 @@ public class Tests
 
 
     [Test]
-    public void Example4()
+    public void ConstructBinaryTree_Example4()
     {
 
         int[] inorder = { 4, 10, 12, 15, 18, 22, 24, 25, 31, 35, 44, 50, 66, 70, 90 };

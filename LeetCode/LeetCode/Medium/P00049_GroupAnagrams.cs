@@ -8,7 +8,7 @@ public class Tests
 {
 
     [Test]
-    public void Test()
+    public void P00049_GroupAnagrams_Test()
     {
         /*
         Example 1:
@@ -46,7 +46,7 @@ public class Tests
     [TestCase("bad", "abd")]
     [TestCase("sack", "acks")]
     [TestCase("e", "e")]
-    public void KeyTest(string value, string expected)
+    public void P00049_GroupAnagrams_KeyTest(string value, string expected)
     {
         string result = new Solution().GetKey(value);
         Assert.AreEqual(expected, result);
