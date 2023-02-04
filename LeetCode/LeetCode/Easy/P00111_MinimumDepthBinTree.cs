@@ -5,7 +5,6 @@ namespace LeetCode.Tests.Easy.P00111_MinimumDepthBinTree;
 
 [TestFixture]
 [Category("Easy")]
-[Category("P00111")]
 public class Tests
 {
     /*

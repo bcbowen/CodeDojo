@@ -1,9 +1,8 @@
-using LeetCode.Solutions.Easy;
+using LeetCode.Solutions.Easy.P00303_RangeSumQueryImmutable;
 
-namespace LeetCode.Solutions.Easy;
+namespace LeetCode.Tests.Easy.P00303_RangeSumQueryImmutable;
 
 [TestFixture]
-[Category("P00303")]
 [Category("Easy")]
 public class Tests
 {

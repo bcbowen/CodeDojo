@@ -2,7 +2,6 @@ using LeetCode.Solutions.Easy.P01071_GcdOfStrings;
 
 namespace LeetCode.Tests.Easy.P01071_GcdOfStrings;
 [TestFixture]
-[Category("P01071")]
 [Category("Easy")]
 public class Tests
 {
