@@ -2,6 +2,7 @@
 
 namespace LeetCode.Solutions.Hard.P00004_MedianOfTwoSortedArrays;
 
+
 public class Solution
 {    
     public double FindMedianSortedArrays(int[] nums1, int[] nums2)

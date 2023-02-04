@@ -7,7 +7,7 @@ namespace LeetCode.Tests.Medium.P00048_RotateImage;
 public class Tests
 {
     [Test]
-    public void ThreeTest()
+    public void P00048_RotateImage_ThreeTest()
     {
         int[][] matrix = new int[3][];
         matrix[0] = new[] { 1, 2, 3 };
@@ -31,7 +31,7 @@ public class Tests
     }
 
     [Test]
-    public void FourTest()
+    public void P00048_RotateImage_FourTest()
     {
         int[][] matrix = new int[4][];
         matrix[0] = new[] { 5, 1, 9, 11 };
