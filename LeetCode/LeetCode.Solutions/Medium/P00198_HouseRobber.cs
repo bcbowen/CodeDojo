@@ -1,4 +1,4 @@
-﻿namespace LeetCode.Solutions.Medium;
+﻿namespace LeetCode.Solutions.Medium.P00198_HouseRobber;
 
 public class Solution
 {

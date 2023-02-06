@@ -1,6 +1,6 @@
 using LeetCode.Solutions.Medium.P00347_TopKFrequentElements;
 
-namespace LeetCode.Tests.Medium;
+namespace LeetCode.Tests.Medium.P00347_TopKFrequentElements;
 
 public class Tests
 {

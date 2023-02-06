@@ -1,7 +1,7 @@
 using LeetCode.Solutions.Models.Tree.NAryTree;
 using LeetCode.Solutions.Medium.P00429_NAryLevelOrderTraversal;
 
-namespace LeetCode.Tests.Medium;
+namespace LeetCode.Tests.Medium.P00429_NAryLevelOrderTraversal;
 
 public class Tests
 {

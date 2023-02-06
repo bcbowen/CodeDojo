@@ -1,6 +1,6 @@
 using LeetCode.Solutions.Medium.P00300_LongestIncreasingSubsequence;
 
-namespace LeetCode.Tests.Medium;
+namespace LeetCode.Tests.Medium.P00300_LongestIncreasingSubsequence;
 
 public class Tests
 {

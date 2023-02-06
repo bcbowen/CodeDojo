@@ -1,6 +1,6 @@
-﻿using LeetCode.Solutions.Medium.Models.LinkedList;
+﻿using LeetCode.Solutions.Models.LinkedList;
 
-namespace LeetCode.Solutions.P00328_OddEvenLinkedList;
+namespace LeetCode.Solutions.Medium.P00328_OddEvenLinkedList;
 
 public class Solution
 {

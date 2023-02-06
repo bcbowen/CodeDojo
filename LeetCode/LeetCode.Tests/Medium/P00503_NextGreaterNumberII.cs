@@ -1,6 +1,6 @@
 using LeetCode.Solutions.Medium.P00503_NextGreaterNumberII;
 
-namespace LeetCode.Tests.Medium;
+namespace LeetCode.Tests.Medium.P00503_NextGreaterNumberII;
 
 public class Tests
 {

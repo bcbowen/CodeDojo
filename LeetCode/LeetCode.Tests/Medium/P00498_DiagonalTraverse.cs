@@ -1,6 +1,6 @@
 using LeetCode.Solutions.Medium.P00498_DiagonalTraverse;
 
-namespace LeetCode.Tests.Medium;
+namespace LeetCode.Tests.Medium.P00498_DiagonalTraverse;
 
 public class Tests
 {

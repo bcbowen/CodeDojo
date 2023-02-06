@@ -1,6 +1,6 @@
 using LeetCode.Solutions.Medium.P00438_FindAllAnagramsInString;
 
-namespace LeetCode.Tests.Medium;
+namespace LeetCode.Tests.Medium.P00438_FindAllAnagramsInString;
 
 public class Tests
 {
