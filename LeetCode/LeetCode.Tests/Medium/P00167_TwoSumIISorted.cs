@@ -1,6 +1,6 @@
 using LeetCode.Solutions.Medium.P00167_TwoSumIISorted;
 
-namespace LeetCode.Tests.Medium;
+namespace LeetCode.Tests.Medium.P00167_TwoSumIISorted;
 
 public class Tests
 {

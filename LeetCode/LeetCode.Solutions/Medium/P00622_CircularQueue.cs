@@ -1,4 +1,4 @@
-﻿namespace LeetCode.Solutions.Easy;
+﻿namespace LeetCode.Solutions.Medium.P00622_CircularQueue;
 
 public class MyCircularQueue
 {

@@ -1,6 +1,6 @@
 using LeetCode.Solutions.Medium.P00189_RotateArray;
 
-namespace LeetCode.Tests.Medium;
+namespace LeetCode.Tests.Medium.P00189_RotateArray;
 
 public class Tests
 {

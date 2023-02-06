@@ -1,4 +1,4 @@
-﻿namespace LeetCode.Solutions.Easy;
+﻿namespace LeetCode.Solutions.Easy.P00346_MovingAverageDataStream;
 
 public class MovingAverage
 {

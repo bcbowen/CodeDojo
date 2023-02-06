@@ -1,6 +1,6 @@
 using LeetCode.Solutions.Medium.P00138_CopyListWithRandomPointer;
 
-namespace LeetCode.Tests.Medium;
+namespace LeetCode.Tests.Medium.P00138_CopyListWithRandomPointer;
 
 public class Tests
 {

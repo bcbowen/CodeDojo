@@ -1,6 +1,6 @@
-using LeetCode.Solutions.Easy;
+using LeetCode.Solutions.Easy.P00346_MovingAverageDataStream;
 
-namespace LeetCode.Tests.Easy;
+namespace LeetCode.Tests.Easy.P00346_MovingAverageDataStream;
 
 public class Tests
 {

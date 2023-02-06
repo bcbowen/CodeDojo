@@ -1,6 +1,6 @@
 using LeetCode.Solutions.Medium.P00139_WordBreak;
 
-namespace LeetCode.Tests.Medium;
+namespace LeetCode.Tests.Medium.P00139_WordBreak;
 
 public class Tests
 {

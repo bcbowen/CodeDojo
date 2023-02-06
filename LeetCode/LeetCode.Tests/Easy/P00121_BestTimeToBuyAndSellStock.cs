@@ -1,6 +1,6 @@
-using LeetCode.Solutions.P00121_BestTimeToBuyAndSellStock;
+using LeetCode.Solutions.Easy.P00121_BestTimeToBuyAndSellStock;
 
-namespace LeetCode.Tests.Easy;
+namespace LeetCode.Tests.Easy.P00121_BestTimeToBuyAndSellStock;
 
 public class Tests
 {

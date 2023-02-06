@@ -1,7 +1,7 @@
 using LeetCode.Solutions.Models.LinkedList;
 using LeetCode.Solutions.Medium.P00142_LinkedListCycle2;
 
-namespace LeetCode.Tests.Medium;
+namespace LeetCode.Tests.Medium.P00142_LinkedListCycle2;
 
 public class Tests
 {

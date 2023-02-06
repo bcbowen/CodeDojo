@@ -1,4 +1,4 @@
-﻿namespace LeetCode.Solutions.Easy;
+﻿namespace LeetCode.Solutions.Easy.P00121_BestTimeToBuyAndSellStock;
 
 public class Solution
 {

@@ -1,6 +1,6 @@
 using LeetCode.Solutions.Medium.P00134_CanCompleteCircuit;
 
-namespace LeetCode.Tests.Medium;
+namespace LeetCode.Tests.Medium.P00134_CanCompleteCircuit;
 
 public class Tests
 {
