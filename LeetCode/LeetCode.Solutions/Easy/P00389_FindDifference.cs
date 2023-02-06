@@ -1,4 +1,4 @@
-﻿namespace LeetCode.Solutions.Easy;
+﻿namespace LeetCode.Solutions.Easy.P00389_FindDifference;
 
 public class Solution
 {

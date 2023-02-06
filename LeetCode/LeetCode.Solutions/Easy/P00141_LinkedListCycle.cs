@@ -1,6 +1,6 @@
 ﻿using LeetCode.Solutions.Models.LinkedList;
 
-namespace LeetCode.Solutions.Easy;
+namespace LeetCode.Solutions.Easy.P00141_LinkedListCycle;
 
 public class Solution
 {

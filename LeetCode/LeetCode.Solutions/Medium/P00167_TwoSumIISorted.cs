@@ -1,4 +1,4 @@
-﻿namespace LeetCode.Solutions.P00167_TwoSumIISorted;
+﻿namespace LeetCode.Solutions.Medium.P00167_TwoSumIISorted;
 
 public class Solution
 {

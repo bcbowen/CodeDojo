@@ -1,4 +1,4 @@
-﻿namespace LeetCode.Solutions.P00150_EvalReversePolishNotation;
+﻿namespace LeetCode.Solutions.Medium.P00150_EvalReversePolishNotation;
 
 public class Solution
 {

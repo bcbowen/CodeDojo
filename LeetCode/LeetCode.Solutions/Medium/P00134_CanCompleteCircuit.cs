@@ -1,4 +1,4 @@
-﻿namespace LeetCode.Solutions.P00134_CanCompleteCircuit;
+﻿namespace LeetCode.Solutions.Medium.P00134_CanCompleteCircuit;
 
 public class Solution
 {

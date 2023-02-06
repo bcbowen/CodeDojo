@@ -1,6 +1,6 @@
 ﻿using System.Xml.Linq;
 
-namespace LeetCode.Solutions.P00116_PopulatingNextRightPointersInBinaryTree;
+namespace LeetCode.Solutions.Medium.P00116_PopulatingNextRightPointersInBinaryTree;
 
 public class Solution
 {

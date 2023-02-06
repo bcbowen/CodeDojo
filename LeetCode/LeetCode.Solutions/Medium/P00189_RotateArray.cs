@@ -1,4 +1,4 @@
-﻿namespace LeetCode.Solutions.P00189_RotateArray;
+﻿namespace LeetCode.Solutions.Medium.P00189_RotateArray;
 
 public class Solution
 {

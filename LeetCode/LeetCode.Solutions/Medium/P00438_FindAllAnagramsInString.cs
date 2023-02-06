@@ -1,4 +1,4 @@
-﻿namespace LeetCode.Solutions.P00438_FindAllAnagramsInString;
+﻿namespace LeetCode.Solutions.Medium.P00438_FindAllAnagramsInString;
 
 public class Solution
 {

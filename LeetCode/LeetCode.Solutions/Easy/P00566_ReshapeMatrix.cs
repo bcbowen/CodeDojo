@@ -1,4 +1,4 @@
-﻿namespace LeetCode.Solutions.Easy;
+﻿namespace LeetCode.Solutions.Easy.P00566_ReshapeMatrix;
 
 public class Solution
 {

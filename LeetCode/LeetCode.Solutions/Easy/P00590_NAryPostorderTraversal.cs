@@ -1,6 +1,6 @@
 ﻿using LeetCode.Solutions.Models.Tree.NAryTree;
 
-namespace LeetCode.Solutions.Easy;
+namespace LeetCode.Solutions.Easy.P00590_NAryPostorderTraversal;
 
 public class Solution
 {

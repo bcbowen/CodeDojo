@@ -1,6 +1,6 @@
 ﻿using LeetCode.Solutions.Models.Tree.BinaryTree;
 
-namespace LeetCode.Solutions.Easy;
+namespace LeetCode.Solutions.Easy.P00144_BinaryTreePreOrder;
 
 public class Solution
 {

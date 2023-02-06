@@ -1,4 +1,4 @@
-﻿namespace LeetCode.Solutions.P00139_WordBreak;
+﻿namespace LeetCode.Solutions.Medium.P00139_WordBreak;
 
 public class Solution
 {

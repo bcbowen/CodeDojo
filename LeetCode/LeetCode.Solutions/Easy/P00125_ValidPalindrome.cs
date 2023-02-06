@@ -1,4 +1,4 @@
-﻿namespace LeetCode.Solutions.Easy;
+﻿namespace LeetCode.Solutions.Easy.P00125_ValidPalindrome;
 
 public class Solution
 {

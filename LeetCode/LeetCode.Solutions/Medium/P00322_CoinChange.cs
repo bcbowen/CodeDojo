@@ -1,4 +1,4 @@
-﻿namespace LeetCode.Solutions.P00322_CoinChange;
+﻿namespace LeetCode.Solutions.Medium.P00322_CoinChange;
 
 public class Solution
 {

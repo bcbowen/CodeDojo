@@ -1,4 +1,4 @@
-﻿namespace LeetCode.Solutions.P00378_KthSmallestElement;
+﻿namespace LeetCode.Solutions.Medium.P00378_KthSmallestElement;
 
 public class Solution
 {

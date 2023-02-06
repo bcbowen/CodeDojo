@@ -1,4 +1,4 @@
-﻿namespace LeetCode.Solutions.Easy;
+﻿namespace LeetCode.Solutions.Easy.P00703_KthLargestElementInStream;
 
 public class KthLargest
 {

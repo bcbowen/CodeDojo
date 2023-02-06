@@ -1,4 +1,4 @@
-﻿namespace LeetCode.Solutions.P00740_DeleteAndEarn;
+﻿namespace LeetCode.Solutions.Medium.P00740_DeleteAndEarn;
 
 public class Solution
 {

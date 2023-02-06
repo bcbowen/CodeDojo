@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace LeetCode.Solutions.Easy;
+namespace LeetCode.Solutions.Easy.P00415_AddStrings;
 
 public class Solution
 {

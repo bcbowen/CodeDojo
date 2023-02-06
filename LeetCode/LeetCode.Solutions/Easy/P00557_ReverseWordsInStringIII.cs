@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace LeetCode.Solutions.Easy;
+namespace LeetCode.Solutions.Easy.P00557_ReverseWordsInStringIII;
 
 public class Solution
 {

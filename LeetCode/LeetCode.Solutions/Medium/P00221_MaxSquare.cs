@@ -1,4 +1,4 @@
-﻿namespace LeetCode.Solutions.P00221_MaxSquare;
+﻿namespace LeetCode.Solutions.Medium.P00221_MaxSquare;
 
 public class Solution
 {

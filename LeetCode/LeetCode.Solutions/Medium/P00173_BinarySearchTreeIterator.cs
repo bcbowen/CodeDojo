@@ -1,6 +1,6 @@
 ﻿using LeetCode.Solutions.Models.Tree.BinaryTree;
 
-namespace LeetCode.Solutions.P00173_BinarySearchTreeIterator;
+namespace LeetCode.Solutions.Medium.P00173_BinarySearchTreeIterator;
 
 public class BSTIterator
 {

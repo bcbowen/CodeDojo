@@ -1,4 +1,4 @@
-﻿namespace LeetCode.Solutions.P00713_SubarrayProductLessThanK;
+﻿namespace LeetCode.Solutions.Medium.P00713_SubarrayProductLessThanK;
 
 public class Solution
 {
