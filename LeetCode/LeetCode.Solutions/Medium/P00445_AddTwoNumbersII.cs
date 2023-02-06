@@ -1,6 +1,6 @@
 ﻿using LeetCode.Solutions.Models.LinkedList;
 
-namespace LeetCode.Solutions.P00445_AddTwoNumbersII;
+namespace LeetCode.Solutions.Medium.P00445_AddTwoNumbersII;
 
 public class Solution
 {

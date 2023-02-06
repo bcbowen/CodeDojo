@@ -1,7 +1,7 @@
 using LeetCode.Solutions.Models.Tree.BinaryTree;
 using LeetCode.Solutions.Medium.P00173_BinarySearchTreeIterator;
 
-namespace LeetCode.Tests.Medium;
+namespace LeetCode.Tests.Medium.P00173_BinarySearchTreeIterator;
 
 public class Tests
 {

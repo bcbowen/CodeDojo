@@ -1,7 +1,6 @@
-using LeetCode.Solutions.P00116_PopulatingNextRightPointersInBinaryTree;
-using static LeetCode.Solutions.Medium.P00116_PopulatingNextRightPointersInBinaryTree.Solution;
+using LeetCode.Solutions.Medium.P00116_PopulatingNextRightPointersInBinaryTree;
 
-namespace LeetCode.Tests.Medium;
+namespace LeetCode.Tests.Medium.P00116_PopulatingNextRightPointersInBinaryTree;
 
 public class Tests
 {
@@ -9,20 +8,20 @@ public class Tests
     [Test]
     public void Example1Test()
     {
-        Node root = new Node(1);
-        root.left = new Node(2);
-        root.right = new Node(3);
-        root.left.left = new Node(4);
-        root.left.right = new Node(5);
+        Solution.Node root = new Solution.Node(1);
+        root.left = new Solution.Node(2);
+        root.right = new Solution.Node(3);
+        root.left.left = new Solution.Node(4);
+        root.left.right = new Solution.Node(5);
 
-        root.right = new Node(3);
-        root.right.left = new Node(6);
-        root.right.right = new Node(7);
+        root.right = new Solution.Node(3);
+        root.right.left = new Solution.Node(6);
+        root.right.right = new Solution.Node(7);
 
-        Node result = new Solution().Connect(root);
+        Solution.Node result = new Solution().Connect(root);
         Assert.Null(result.next);
 
-        Node current = result.left;
+        Solution.Node current = result.left;
         Assert.AreEqual(3, current.next.val);
         Assert.Null(current.next.next);
 
@@ -36,8 +35,8 @@ public class Tests
     [Test]
     public void Example2Test()
     {
-        Node root = null;
-        Node result = new Solution().Connect(root);
+        Solution.Node root = null;
+        Solution.Node result = new Solution().Connect(root);
         Assert.Null(result);
     }
 

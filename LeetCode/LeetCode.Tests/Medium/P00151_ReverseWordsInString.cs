@@ -1,6 +1,6 @@
 using LeetCode.Solutions.Medium.P00151_ReverseWordsInString;
 
-namespace LeetCode.Tests.Medium;
+namespace LeetCode.Tests.Medium.P00151_ReverseWordsInString;
 
 public class Tests
 {
