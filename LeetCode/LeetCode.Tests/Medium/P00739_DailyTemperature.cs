@@ -2,6 +2,8 @@ using LeetCode.Solutions.Medium.P00739_DailyTemperature;
 
 namespace LeetCode.Tests.Medium.P00739_DailyTemperature;
 
+[TestFixture]
+[Category("Medium")]
 public class Tests
 {
     [TestCase(new[] { 73, 74, 75, 71, 69, 72, 76, 73 }, new[] { 1, 1, 4, 2, 1, 1, 0, 0 })]

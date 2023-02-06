@@ -2,6 +2,8 @@ using LeetCode.Solutions.Easy.P00263_UglyNumber;
 
 namespace LeetCode.Tests.Easy.P00263_UglyNumber;
 
+[TestFixture]
+[Category("Easy")]
 public class Tests
 {
     [TestCase(6, true)]

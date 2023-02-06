@@ -2,6 +2,8 @@ using LeetCode.Solutions.Medium.P00740_DeleteAndEarn;
 
 namespace LeetCode.Tests.Medium.P00740_DeleteAndEarn;
 
+[TestFixture]
+[Category("Medium")]
 public class Tests
 {
     [TestCase(new[] { 3, 4, 2 }, 6)]

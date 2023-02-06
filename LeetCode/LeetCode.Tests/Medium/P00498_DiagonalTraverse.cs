@@ -2,6 +2,8 @@ using LeetCode.Solutions.Medium.P00498_DiagonalTraverse;
 
 namespace LeetCode.Tests.Medium.P00498_DiagonalTraverse;
 
+[TestFixture]
+[Category("Medium")]
 public class Tests
 {
     [TestCase(new[] { 2, 3 }, new[] { 2, 3 })]

@@ -2,6 +2,8 @@ using LeetCode.Solutions.Easy.P00389_FindDifference;
 
 namespace LeetCode.Tests.Easy.P00389_FindDifference;
 
+[TestFixture]
+[Category("Easy")]
 public class Tests
 {
     [TestCase("abcd", "abcde", 'e')]

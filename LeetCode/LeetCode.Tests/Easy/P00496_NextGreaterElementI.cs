@@ -2,6 +2,8 @@ using LeetCode.Solutions.Easy.P00496_NextGreaterElementI;
 
 namespace LeetCode.Tests.Easy.P00496_NextGreaterElementI;
 
+[TestFixture]
+[Category("Easy")]
 public class Tests
 {
     [TestCase(new[] { 4, 1, 2 }, new[] { 1, 3, 4, 2 }, new[] { -1, 3, -1 })]

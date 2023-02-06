@@ -2,6 +2,8 @@ using LeetCode.Solutions.Medium.P00300_LongestIncreasingSubsequence;
 
 namespace LeetCode.Tests.Medium.P00300_LongestIncreasingSubsequence;
 
+[TestFixture]
+[Category("Medium")]
 public class Tests
 {
     [TestCase(new[] { 10, 9, 2, 5, 3, 7, 101, 18 }, 4)]

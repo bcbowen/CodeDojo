@@ -2,6 +2,8 @@ using LeetCode.Solutions.Medium.P00200_NumberIslands;
 
 namespace LeetCode.Tests.Medium.P00200_NumberIslands;
 
+[TestFixture]
+[Category("Medium")]
 public class Tests
 {
     [TestCase(1,

@@ -3,6 +3,8 @@ using LeetCode.Solutions.Medium.P00445_AddTwoNumbersII;
 
 namespace LeetCode.Tests.Medium.P00445_AddTwoNumbersII;
 
+[TestFixture]
+[Category("Medium")]
 public class Tests
 {
     [TestCase(new[] { 2, 4, 3 }, new[] { 5, 6, 4 }, new[] { 8, 0, 7 })]

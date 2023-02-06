@@ -3,6 +3,8 @@ using LeetCode.Solutions.Medium.P00142_LinkedListCycle2;
 
 namespace LeetCode.Tests.Medium.P00142_LinkedListCycle2;
 
+[TestFixture]
+[Category("Medium")]
 public class Tests
 {
     [Test]

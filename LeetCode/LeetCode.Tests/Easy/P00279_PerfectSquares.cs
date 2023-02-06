@@ -2,6 +2,8 @@ using LeetCode.Solutions.Easy.P00279_PerfectSquares;
 
 namespace LeetCode.Tests.Easy.P00279_PerfectSquares;
 
+[TestFixture]
+[Category("Easy")]
 public class Tests
 {
     [TestCase(12, 3)]

@@ -2,6 +2,8 @@ using LeetCode.Solutions.Easy.P00242_ValidAnagram;
 
 namespace LeetCode.Tests.Easy.P00242_ValidAnagram;
 
+[TestFixture]
+[Category("Easy")]
 public class Tests
 {
 

@@ -3,6 +3,8 @@ using LeetCode.Solutions.Medium.P00173_BinarySearchTreeIterator;
 
 namespace LeetCode.Tests.Medium.P00173_BinarySearchTreeIterator;
 
+[TestFixture]
+[Category("Medium")]
 public class Tests
 {
 

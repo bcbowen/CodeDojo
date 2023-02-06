@@ -2,6 +2,8 @@ using LeetCode.Solutions.Medium.P00221_MaxSquare;
 
 namespace LeetCode.Tests.Medium.P00221_MaxSquare;
 
+[TestFixture]
+[Category("Medium")]
 public class Tests
 {
     [TestCase(4, new[] { '1', '0', '1', '0', '0' }, new[] { '1', '0', '1', '1', '1' }, new[] { '1', '1', '1', '1', '1' }, new[] { '1', '0', '0', '1', '0' })]

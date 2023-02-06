@@ -2,6 +2,8 @@ using LeetCode.Solutions.Easy.P00383_RansomNote;
 
 namespace LeetCode.Tests.Easy.P00383_RansomNote;
 
+[TestFixture]
+[Category("Easy")]
 public class Tests
 {
     [TestCase("a", "b", false)]

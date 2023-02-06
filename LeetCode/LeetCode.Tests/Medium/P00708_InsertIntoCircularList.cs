@@ -3,6 +3,8 @@ using LeetCode.Solutions.Models.LinkedList;
 
 namespace LeetCode.Tests.Medium.P00708_InsertIntoCircularList;
 
+[TestFixture]
+[Category("Medium")]
 public class Tests
 {
 

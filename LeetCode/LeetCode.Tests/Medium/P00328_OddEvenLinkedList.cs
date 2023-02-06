@@ -4,6 +4,8 @@ using LeetCode.Tests.Utility.Helpers;
 
 namespace LeetCode.Tests.Medium.P00328_OddEvenLinkedList;
 
+[TestFixture]
+[Category("Medium")]
 public class Tests
 {
     [TestCase(new[] { 1, 2, 3, 4, 5 }, new[] { 1, 3, 5, 2, 4 })]

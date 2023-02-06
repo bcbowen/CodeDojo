@@ -2,6 +2,8 @@ using LeetCode.Solutions.Medium.P00150_EvalReversePolishNotation;
 
 namespace LeetCode.Tests.Medium.P00150_EvalReversePolishNotation;
 
+[TestFixture]
+[Category("Medium")]
 public class Tests
 {
     [Test]

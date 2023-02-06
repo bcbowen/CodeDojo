@@ -2,6 +2,8 @@ using LeetCode.Solutions.Easy.P00125_ValidPalindrome;
 
 namespace LeetCode.Tests.Easy.P00125_ValidPalindrome;
 
+[TestFixture]
+[Category("Easy")]
 public class Tests
 {
     [Test]

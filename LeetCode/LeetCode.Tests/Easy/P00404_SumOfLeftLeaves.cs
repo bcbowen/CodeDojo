@@ -3,6 +3,8 @@ using LeetCode.Solutions.Easy.P00404_SumOfLeftLeaves;
 
 namespace LeetCode.Tests.Easy.P00404_SumOfLeftLeaves;
 
+[TestFixture]
+[Category("Easy")]
 public class Tests
 {
     [Test]

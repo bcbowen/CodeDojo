@@ -2,6 +2,8 @@ using LeetCode.Solutions.Easy.P00557_ReverseWordsInStringIII;
 
 namespace LeetCode.Tests.Easy.P00557_ReverseWordsInStringIII;
 
+[TestFixture]
+[Category("Easy")]
 public class Tests
 {
     [TestCase("Let's take LeetCode contest", "s'teL ekat edoCteeL tsetnoc")]

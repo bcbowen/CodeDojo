@@ -2,6 +2,8 @@ using LeetCode.Solutions.Medium.P00556_NextGreaterElementIII;
 
 namespace LeetCode.Tests.Medium.P00556_NextGreaterElementIII;
 
+[TestFixture]
+[Category("Medium")]
 public class Tests
 {
     [TestCase(21, 12)]

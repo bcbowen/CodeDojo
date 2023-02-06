@@ -2,6 +2,8 @@ using LeetCode.Solutions.Medium.P00347_TopKFrequentElements;
 
 namespace LeetCode.Tests.Medium.P00347_TopKFrequentElements;
 
+[TestFixture]
+[Category("Medium")]
 public class Tests
 {
     [TestCase(new[] { 1, 1, 1, 2, 2, 3 }, 2, new[] { 1, 2 })]

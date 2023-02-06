@@ -2,6 +2,8 @@ using LeetCode.Solutions.Easy.P00415_AddStrings;
 
 namespace LeetCode.Tests.Easy.P00415_AddStrings;
 
+[TestFixture]
+[Category("Easy")]
 public class Tests
 {
     [TestCase("11", "123", "134")]

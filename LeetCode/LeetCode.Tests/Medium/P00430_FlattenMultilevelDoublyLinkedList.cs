@@ -3,6 +3,8 @@ using LeetCode.Solutions.Models.DoublyLinkedList;
 
 namespace LeetCode.Tests.Medium.P00430_FlattenMultilevelDoublyLinkedList;
 
+[TestFixture]
+[Category("Medium")]
 public class Tests
 {
     [Test]

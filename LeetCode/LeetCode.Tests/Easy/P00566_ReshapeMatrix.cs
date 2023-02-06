@@ -2,6 +2,8 @@ using LeetCode.Solutions.Easy.P00566_ReshapeMatrix;
 
 namespace LeetCode.Tests.Easy.P00566_ReshapeMatrix;
 
+[TestFixture]
+[Category("Easy")]
 public class Tests
 {
     [TestCase(1, 4, new[] { 1, 2 }, new[] { 3, 4 })]

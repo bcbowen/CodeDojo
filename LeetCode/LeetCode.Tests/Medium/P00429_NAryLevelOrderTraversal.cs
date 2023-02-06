@@ -3,6 +3,8 @@ using LeetCode.Solutions.Medium.P00429_NAryLevelOrderTraversal;
 
 namespace LeetCode.Tests.Medium.P00429_NAryLevelOrderTraversal;
 
+[TestFixture]
+[Category("Medium")]
 public class Tests
 {
     [Test]

@@ -2,6 +2,8 @@ using LeetCode.Solutions.Easy.P00217_ContainsDupes;
 
 namespace LeetCode.Tests.Easy.P00217_ContainsDupes;
 
+[TestFixture]
+[Category("Easy")]
 public class Tests
 {
     [TestCase(new[] { 1, 2, 3, 1 }, true)]
