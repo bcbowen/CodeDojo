@@ -2,7 +2,7 @@ using LeetCode.Solutions.Models.LinkedList;
 using LeetCode.Solutions.Medium.P00328_OddEvenLinkedList;
 using LeetCode.Tests.Utility.Helpers;
 
-namespace LeetCode.Tests.Medium;
+namespace LeetCode.Tests.Medium.P00328_OddEvenLinkedList;
 
 public class Tests
 {

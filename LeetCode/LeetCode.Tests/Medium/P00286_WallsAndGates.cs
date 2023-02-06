@@ -1,6 +1,6 @@
 using LeetCode.Solutions.Medium.P00286_WallsAndGates;
 
-namespace LeetCode.Tests.Medium;
+namespace LeetCode.Tests.Medium.P00286_WallsAndGates;
 
 public class Tests
 {

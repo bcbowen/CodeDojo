@@ -1,6 +1,6 @@
 using LeetCode.Solutions.Medium.P00200_NumberIslands;
 
-namespace LeetCode.Tests.Medium;
+namespace LeetCode.Tests.Medium.P00200_NumberIslands;
 
 public class Tests
 {

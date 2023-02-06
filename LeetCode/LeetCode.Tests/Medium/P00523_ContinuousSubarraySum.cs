@@ -1,6 +1,6 @@
 using LeetCode.Solutions.Medium.P00523_ContinuousSubarraySum;
 
-namespace LeetCode.Tests.Medium;
+namespace LeetCode.Tests.Medium.P00523_ContinuousSubarraySum;
 
 public class Tests
 {

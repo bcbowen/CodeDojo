@@ -1,6 +1,6 @@
 using LeetCode.Solutions.Medium.P00322_CoinChange;
 
-namespace LeetCode.Tests.Medium;
+namespace LeetCode.Tests.Medium.P00322_CoinChange;
 
 public class Tests
 {

@@ -1,6 +1,6 @@
 using LeetCode.Solutions.Medium.P00221_MaxSquare;
 
-namespace LeetCode.Tests.Medium;
+namespace LeetCode.Tests.Medium.P00221_MaxSquare;
 
 public class Tests
 {

@@ -1,7 +1,7 @@
 using LeetCode.Solutions.Models.Tree.BinaryTree;
 using LeetCode.Solutions.Medium.P00236_LowestCommonAncestorBinaryTree;
 
-namespace LeetCode.Tests.Medium;
+namespace LeetCode.Tests.Medium.P00236_LowestCommonAncestorBinaryTree;
 
 public class Tests
 {

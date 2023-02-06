@@ -1,6 +1,6 @@
 using LeetCode.Solutions.Medium.P00531_LonelyPixel;
 
-namespace LeetCode.Tests.Medium;
+namespace LeetCode.Tests.Medium.P00531_LonelyPixel;
 
 public class Tests
 {

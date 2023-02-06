@@ -1,6 +1,6 @@
 using LeetCode.Solutions.Medium.P00253_MeetingRoomsII;
 
-namespace LeetCode.Tests.Medium;
+namespace LeetCode.Tests.Medium.P00253_MeetingRoomsII;
 
 public class Tests
 {

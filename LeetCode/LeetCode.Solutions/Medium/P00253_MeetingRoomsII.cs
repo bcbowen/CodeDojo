@@ -1,4 +1,4 @@
-﻿namespace LeetCode.Solutions.Medium;
+﻿namespace LeetCode.Solutions.Medium.P00253_MeetingRoomsII;
 
 public class Solution
 {

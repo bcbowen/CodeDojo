@@ -1,6 +1,6 @@
 using LeetCode.Solutions.Medium.P00215_KthLargestElementInArray;
 
-namespace LeetCode.Tests.Medium;
+namespace LeetCode.Tests.Medium.P00215_KthLargestElementInArray;
 
 public class Tests
 {

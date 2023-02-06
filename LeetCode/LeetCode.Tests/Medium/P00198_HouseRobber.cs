@@ -1,6 +1,6 @@
 using LeetCode.Solutions.Medium.P00198_HouseRobber;
 
-namespace LeetCode.Tests.Medium;
+namespace LeetCode.Tests.Medium.P00198_HouseRobber;
 
 public class Tests
 {

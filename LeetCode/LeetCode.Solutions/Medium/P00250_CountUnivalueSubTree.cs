@@ -1,6 +1,6 @@
 ﻿using LeetCode.Solutions.Models.Tree.BinaryTree;
 
-namespace LeetCode.Solutions.Medium;
+namespace LeetCode.Solutions.Medium.P00250_CountUnivalueSubTree;
 
 public class Solution
 {

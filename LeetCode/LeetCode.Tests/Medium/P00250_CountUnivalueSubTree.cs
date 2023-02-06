@@ -1,7 +1,7 @@
 using LeetCode.Solutions.Models.Tree.BinaryTree;
 using LeetCode.Solutions.Medium.P00250_CountUnivalueSubTree;
 
-namespace LeetCode.Tests.Medium;
+namespace LeetCode.Tests.Medium.P00250_CountUnivalueSubTree;
 
 public class Tests
 {
