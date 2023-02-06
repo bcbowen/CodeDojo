@@ -2,6 +2,8 @@ using LeetCode.Solutions.Medium.P00622_CircularQueue;
 
 namespace LeetCode.Tests.Medium.P00622_CircularQueue;
 
+[TestFixture]
+[Category("Medium")]
 public class Tests
 {
     #region Troubleshooting

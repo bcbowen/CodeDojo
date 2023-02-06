@@ -2,6 +2,8 @@ using LeetCode.Solutions.Medium.P00253_MeetingRoomsII;
 
 namespace LeetCode.Tests.Medium.P00253_MeetingRoomsII;
 
+[TestFixture]
+[Category("Medium")]
 public class Tests
 {
     [TestCase(2, new[] { 0, 30 }, new[] { 5, 10 }, new[] { 15, 20 })]

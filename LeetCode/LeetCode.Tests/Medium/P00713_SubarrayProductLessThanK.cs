@@ -2,6 +2,8 @@ using LeetCode.Solutions.Medium.P00713_SubarrayProductLessThanK;
 
 namespace LeetCode.Tests.Medium.P00713_SubarrayProductLessThanK;
 
+[TestFixture]
+[Category("Medium")]
 public class Tests
 {
     [TestCase(new[] { 10, 9, 10, 4, 3, 8, 3, 3, 6, 2, 10, 10, 9, 3 }, 19, 18)]

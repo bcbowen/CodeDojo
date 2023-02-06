@@ -2,6 +2,8 @@ using LeetCode.Solutions.Medium.P00189_RotateArray;
 
 namespace LeetCode.Tests.Medium.P00189_RotateArray;
 
+[TestFixture]
+[Category("Medium")]
 public class Tests
 {
     [Test]

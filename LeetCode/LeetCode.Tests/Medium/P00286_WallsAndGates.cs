@@ -2,6 +2,8 @@ using LeetCode.Solutions.Medium.P00286_WallsAndGates;
 
 namespace LeetCode.Tests.Medium.P00286_WallsAndGates;
 
+[TestFixture]
+[Category("Medium")]
 public class Tests
 {
     [Test]

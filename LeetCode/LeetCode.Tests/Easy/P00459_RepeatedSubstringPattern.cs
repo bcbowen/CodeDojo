@@ -3,6 +3,8 @@ using LeetCode.Solutions.Easy.P00459_RepeatedSubstringPattern;
 
 namespace LeetCode.Tests.Easy.P00459_RepeatedSubstringPattern;
 
+[TestFixture]
+[Category("Easy")]
 public class Tests
 {
     [TestCase("abab", "ab", true)]

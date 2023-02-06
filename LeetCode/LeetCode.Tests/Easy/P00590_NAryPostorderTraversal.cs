@@ -3,6 +3,8 @@ using LeetCode.Solutions.Models.Tree.NAryTree;
 
 namespace LeetCode.Tests.Easy.P00590_NAryPostorderTraversal;
 
+[TestFixture]
+[Category("Easy")]
 public class Tests
 {
     [Test]

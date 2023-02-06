@@ -4,6 +4,8 @@ using LeetCode.Tests.Utility.Helpers;
 
 namespace LeetCode.Tests.Easy.P00206_ReverseLinkedList;
 
+[TestFixture]
+[Category("Easy")]
 public class Tests
 {
     [TestCase(new[] { 1, 2, 3, 4, 5 }, new[] { 5, 4, 3, 2, 1 })]

@@ -2,6 +2,8 @@ using LeetCode.Solutions.Medium.P00729_MyCalendar;
 
 namespace LeetCode.Tests.Medium.P00729_MyCalendar;
 
+[TestFixture]
+[Category("Medium")]
 public class Tests
 {
     [Test]

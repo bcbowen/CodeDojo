@@ -2,6 +2,8 @@ using LeetCode.Solutions.Medium.P00116_PopulatingNextRightPointersInBinaryTree;
 
 namespace LeetCode.Tests.Medium.P00116_PopulatingNextRightPointersInBinaryTree;
 
+[TestFixture]
+[Category("Medium")]
 public class Tests
 {
 

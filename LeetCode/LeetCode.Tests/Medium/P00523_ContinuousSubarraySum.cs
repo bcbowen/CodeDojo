@@ -2,6 +2,8 @@ using LeetCode.Solutions.Medium.P00523_ContinuousSubarraySum;
 
 namespace LeetCode.Tests.Medium.P00523_ContinuousSubarraySum;
 
+[TestFixture]
+[Category("Medium")]
 public class Tests
 {
     [TestCase(new[] { 23, 2, 4, 6, 7 }, 6, true)]

@@ -2,6 +2,8 @@ using LeetCode.Solutions.Medium.P00438_FindAllAnagramsInString;
 
 namespace LeetCode.Tests.Medium.P00438_FindAllAnagramsInString;
 
+[TestFixture]
+[Category("Medium")]
 public class Tests
 {
     [TestCase("cbaebabacd", "abc", new[] { 0, 6 })]

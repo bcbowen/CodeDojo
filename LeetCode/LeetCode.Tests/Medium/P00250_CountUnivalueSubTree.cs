@@ -3,6 +3,8 @@ using LeetCode.Solutions.Medium.P00250_CountUnivalueSubTree;
 
 namespace LeetCode.Tests.Medium.P00250_CountUnivalueSubTree;
 
+[TestFixture]
+[Category("Medium")]
 public class Tests
 {
     [Test]

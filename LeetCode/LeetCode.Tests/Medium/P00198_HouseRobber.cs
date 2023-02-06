@@ -2,6 +2,8 @@ using LeetCode.Solutions.Medium.P00198_HouseRobber;
 
 namespace LeetCode.Tests.Medium.P00198_HouseRobber;
 
+[TestFixture]
+[Category("Medium")]
 public class Tests
 {
     [TestCase(new[] { 1, 2, 3, 1 }, 4)]

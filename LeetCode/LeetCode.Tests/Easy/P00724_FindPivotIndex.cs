@@ -2,6 +2,8 @@ using LeetCode.Solutions.Easy.P00724_FindPivotIndex;
 
 namespace LeetCode.Tests.Easy.P00724_FindPivotIndex;
 
+[TestFixture]
+[Category("Easy")]
 public class Tests
 {
     [TestCase(new[] { 1, 7, 3, 6, 5, 6 }, 3)]

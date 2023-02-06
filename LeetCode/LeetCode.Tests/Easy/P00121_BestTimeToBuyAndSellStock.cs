@@ -2,6 +2,8 @@ using LeetCode.Solutions.Easy.P00121_BestTimeToBuyAndSellStock;
 
 namespace LeetCode.Tests.Easy.P00121_BestTimeToBuyAndSellStock;
 
+[TestFixture]
+[Category("Easy")]
 public class Tests
 {
     [Test]

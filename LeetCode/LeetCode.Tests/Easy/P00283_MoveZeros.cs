@@ -2,6 +2,8 @@ using LeetCode.Solutions.Easy.P00283_MoveZeros;
 
 namespace LeetCode.Tests.Easy.P00283_MoveZeros;
 
+[TestFixture]
+[Category("Easy")]
 public class Tests
 {
     [TestCase(new[] { 0, 1, 0, 3, 12 }, new[] { 1, 3, 12, 0, 0 })]

@@ -2,6 +2,8 @@ using LeetCode.Solutions.Easy.P00232_ImplementQueueUsingStacks;
 
 namespace LeetCode.Tests.Easy.P00232_ImplementQueueUsingStacks;
 
+[TestFixture]
+[Category("Easy")]
 public class Tests
 {
     [Test]

@@ -2,6 +2,8 @@ using LeetCode.Solutions.Easy.P00561_ArrayPartition;
 
 namespace LeetCode.Tests.Easy.P00561_ArrayPartition;
 
+[TestFixture]
+[Category("Easy")]
 public class Tests
 {
     [TestCase(new[] { 1, 4, 3, 2 }, 4)]

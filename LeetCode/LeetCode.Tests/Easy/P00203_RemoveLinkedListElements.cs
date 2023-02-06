@@ -3,6 +3,8 @@ using LeetCode.Solutions.Easy.P00203_RemoveLinkedListElements;
 using LeetCode.Tests.Utility.Helpers;
 namespace LeetCode.Tests.Easy.P00203_RemoveLinkedListElements;
 
+[TestFixture]
+[Category("Easy")]
 public class Tests
 {
     [TestCase(new[] { 1, 2, 6, 3, 4, 5, 6 }, 6, new[] { 1, 2, 3, 4, 5 })]

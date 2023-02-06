@@ -2,6 +2,8 @@ using LeetCode.Solutions.Medium.P00167_TwoSumIISorted;
 
 namespace LeetCode.Tests.Medium.P00167_TwoSumIISorted;
 
+[TestFixture]
+[Category("Medium")]
 public class Tests
 {
     [Test]

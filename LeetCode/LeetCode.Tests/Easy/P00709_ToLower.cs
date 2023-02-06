@@ -2,6 +2,8 @@ using LeetCode.Solutions.Easy.P00709_ToLower;
 
 namespace LeetCode.Tests.Easy.P00709_ToLower;
 
+[TestFixture]
+[Category("Easy")]
 public class Tests
 {
     [TestCase("Hello", "hello")]

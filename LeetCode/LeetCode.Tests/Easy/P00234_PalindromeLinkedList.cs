@@ -3,6 +3,8 @@ using LeetCode.Solutions.Easy.P00234_PalindromeLinkedList;
 using LeetCode.Tests.Utility.Helpers;
 namespace LeetCode.Tests.Easy.P00234_PalindromeLinkedList;
 
+[TestFixture]
+[Category("Easy")]
 public class Tests
 {
 

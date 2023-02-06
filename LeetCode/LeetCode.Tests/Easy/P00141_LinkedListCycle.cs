@@ -3,6 +3,8 @@ using LeetCode.Solutions.Models.LinkedList;
 
 namespace LeetCode.Tests.Easy.P00141_LinkedListCycle;
 
+[TestFixture]
+[Category("Easy")]
 public class Tests
 {
     [Test]

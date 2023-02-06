@@ -2,6 +2,8 @@ using LeetCode.Solutions.Easy.P00703_KthLargestElementInStream;
 
 namespace LeetCode.Tests.Easy.P00703_KthLargestElementInStream;
 
+[TestFixture]
+[Category("Easy")]
 public class Tests
 {
     [TestCase(3, new int[] { 4, 5, 8, 2 }, new int[] { 3, 5, 10, 9, 4 }, new int[] { 4, 5, 5, 8, 8 })]

@@ -2,6 +2,8 @@ using LeetCode.Solutions.Medium.P00215_KthLargestElementInArray;
 
 namespace LeetCode.Tests.Medium.P00215_KthLargestElementInArray;
 
+[TestFixture]
+[Category("Medium")]
 public class Tests
 {
     [TestCase(new[] { 3, 2, 1, 5, 6, 4 }, 2, 5)]

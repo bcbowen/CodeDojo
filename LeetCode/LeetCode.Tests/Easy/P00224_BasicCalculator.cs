@@ -2,6 +2,8 @@ using LeetCode.Solutions.Easy.P00224_BasicCalculator;
 
 namespace LeetCode.Tests.Easy.P00224_BasicCalculator;
 
+[TestFixture]
+[Category("Easy")]
 public class Tests
 {
     [TestCase("1 + 1", 2)]

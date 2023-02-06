@@ -2,6 +2,8 @@ using LeetCode.Solutions.Medium.P00322_CoinChange;
 
 namespace LeetCode.Tests.Medium.P00322_CoinChange;
 
+[TestFixture]
+[Category("Medium")]
 public class Tests
 {
     [TestCase(new[] { 1, 2, 5 }, 11, 3)]

@@ -2,6 +2,8 @@ using LeetCode.Solutions.Easy.P00191_Number1Bits_HammingWeight;
 
 namespace LeetCode.Tests.Easy.P00191_Number1Bits_HammingWeight;
 
+[TestFixture]
+[Category("Easy")]
 public class Tests
 {
 

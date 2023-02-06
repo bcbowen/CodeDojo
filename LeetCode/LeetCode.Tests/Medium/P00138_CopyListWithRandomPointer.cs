@@ -2,6 +2,8 @@ using LeetCode.Solutions.Medium.P00138_CopyListWithRandomPointer;
 
 namespace LeetCode.Tests.Medium.P00138_CopyListWithRandomPointer;
 
+[TestFixture]
+[Category("Medium")]
 public class Tests
 {
     [Test]

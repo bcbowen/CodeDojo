@@ -2,6 +2,8 @@ using LeetCode.Solutions.Medium.P00531_LonelyPixel;
 
 namespace LeetCode.Tests.Medium.P00531_LonelyPixel;
 
+[TestFixture]
+[Category("Medium")]
 public class Tests
 {
     [TestCase(3, new[] { 'W', 'W', 'B' }, new[] { 'W', 'B', 'W' }, new[] { 'B', 'W', 'W' })]
