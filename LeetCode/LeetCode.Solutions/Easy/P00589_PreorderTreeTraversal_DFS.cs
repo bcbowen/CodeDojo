@@ -1,4 +1,4 @@
-﻿namespace LeetCode.Solutions.Easy;
+﻿namespace LeetCode.Solutions.Easy.P00589_PreorderTreeTraversal_DFS;
 using LeetCode.Solutions.Models.Tree.NAryTree;
 
 public class Solution

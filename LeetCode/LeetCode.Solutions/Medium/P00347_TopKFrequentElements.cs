@@ -1,4 +1,4 @@
-﻿namespace LeetCode.Solutions.P00347_TopKFrequentElements;
+﻿namespace LeetCode.Solutions.Medium.P00347_TopKFrequentElements;
 
 public class Solution
 {

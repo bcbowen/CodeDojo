@@ -1,4 +1,4 @@
-﻿namespace LeetCode.Solutions.P00429_NAryLevelOrderTraversal;
+﻿namespace LeetCode.Solutions.Medium.P00429_NAryLevelOrderTraversal;
 using LeetCode.Solutions.Models.Tree.NAryTree;
 public class Solution
 {

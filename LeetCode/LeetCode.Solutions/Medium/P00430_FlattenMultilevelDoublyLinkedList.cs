@@ -1,6 +1,6 @@
 ﻿using LeetCode.Solutions.Models.DoublyLinkedList;
 
-namespace LeetCode.Solutions.P00430_FlattenMultilevelDoublyLinkedList;
+namespace LeetCode.Solutions.Medium.P00430_FlattenMultilevelDoublyLinkedList;
 
 public class Solution
 {

@@ -1,6 +1,6 @@
 ﻿using LeetCode.Solutions.Models.LinkedList;
 
-namespace LeetCode.Solutions.P00708_InsertIntoCircularList;
+namespace LeetCode.Solutions.Medium.P00708_InsertIntoCircularList;
 
 public class Solution
 {

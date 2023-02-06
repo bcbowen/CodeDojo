@@ -1,4 +1,4 @@
-﻿namespace LeetCode.Solutions.P00215_KthLargestElementInArray;
+﻿namespace LeetCode.Solutions.Medium.P00215_KthLargestElementInArray;
 
 public class Solution
 {

@@ -1,6 +1,6 @@
 ﻿using LeetCode.Solutions.Models.Tree.BinaryTree;
 
-namespace LeetCode.Solutions.Easy;
+namespace LeetCode.Solutions.Easy.P00404_SumOfLeftLeaves;
 
 public class Solution
 {

@@ -1,4 +1,4 @@
-﻿namespace LeetCode.Solutions.Medium;
+﻿namespace LeetCode.Solutions.Medium.P00556_NextGreaterElementIII;
 
 
 public class Solution

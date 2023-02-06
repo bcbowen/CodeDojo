@@ -1,4 +1,4 @@
-﻿namespace LeetCode.Solutions.Easy;
+﻿namespace LeetCode.Solutions.Easy.P00191_Number1Bits_HammingWeight;
 
 public class Solution
 {

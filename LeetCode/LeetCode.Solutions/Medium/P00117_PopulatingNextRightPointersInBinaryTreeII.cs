@@ -1,4 +1,4 @@
-﻿namespace LeetCode.Solutions.P00117_PopulatingNextRightPointersInBinaryTreeII;
+﻿namespace LeetCode.Solutions.Medium.P00117_PopulatingNextRightPointersInBinaryTreeII;
 
 public class Solution
 {

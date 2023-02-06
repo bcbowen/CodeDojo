@@ -1,4 +1,4 @@
-﻿using LeetCode.Solutions.Models.LinkedList;
+﻿using LeetCode.Solutions.Medium.Models.LinkedList;
 
 namespace LeetCode.Solutions.P00328_OddEvenLinkedList;
 

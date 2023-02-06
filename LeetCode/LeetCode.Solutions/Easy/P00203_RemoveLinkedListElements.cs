@@ -1,6 +1,6 @@
 ﻿using LeetCode.Solutions.Models.LinkedList;
 
-namespace LeetCode.Solutions.Easy;
+namespace LeetCode.Solutions.Easy.P00203_RemoveLinkedListElements;
 
 public class Solution
 {

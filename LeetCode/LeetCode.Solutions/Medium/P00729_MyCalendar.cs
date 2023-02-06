@@ -1,4 +1,4 @@
-﻿namespace LeetCode.Solutions.P00729_MyCalendar;
+﻿namespace LeetCode.Solutions.Medium.P00729_MyCalendar;
 
 internal class Appointment
 {

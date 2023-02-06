@@ -1,4 +1,4 @@
-﻿namespace LeetCode.Solutions.P00739_DailyTemperature;
+﻿namespace LeetCode.Solutions.Medium.P00739_DailyTemperature;
 
 public class Solution
 {
