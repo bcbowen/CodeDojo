@@ -1,4 +1,4 @@
-﻿using LeetCode.Solutions.Models.LinkedList;
+﻿using LeetCode.Models.LinkedList;
 
 namespace LeetCode.Solutions.P01290_ConvertBinaryLinkedListToInt;
 

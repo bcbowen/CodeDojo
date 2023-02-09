@@ -1,5 +1,5 @@
 using LeetCode.Solutions.Medium.P00002_Add2Numbers;
-using LeetCode.Solutions.Models.LinkedList;
+using LeetCode.Models.LinkedList;
 using LeetCode.Tests.Utility.Helpers;
 
 namespace LeetCode.Tests.Medium.P00002_Add2Numbers;

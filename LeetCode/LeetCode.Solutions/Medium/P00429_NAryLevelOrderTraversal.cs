@@ -1,5 +1,5 @@
 ﻿namespace LeetCode.Solutions.Medium.P00429_NAryLevelOrderTraversal;
-using LeetCode.Solutions.Models.Tree.NAryTree;
+using LeetCode.Models.Tree.NAryTree;
 public class Solution
 {
     public IList<IList<int>> LevelOrder(Node root)

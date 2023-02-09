@@ -1,4 +1,4 @@
-﻿using LeetCode.Solutions.Models.Tree.BinaryTree;
+﻿using LeetCode.Models.Tree.BinaryTree;
 
 namespace LeetCode.Solutions.Medium.P00236_LowestCommonAncestorBinaryTree;
 

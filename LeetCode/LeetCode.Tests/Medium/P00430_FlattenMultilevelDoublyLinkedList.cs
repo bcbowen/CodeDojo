@@ -1,5 +1,5 @@
 using LeetCode.Solutions.Medium.P00430_FlattenMultilevelDoublyLinkedList;
-using LeetCode.Solutions.Models.DoublyLinkedList;
+using LeetCode.Models.DoublyLinkedList;
 
 namespace LeetCode.Tests.Medium.P00430_FlattenMultilevelDoublyLinkedList;
 

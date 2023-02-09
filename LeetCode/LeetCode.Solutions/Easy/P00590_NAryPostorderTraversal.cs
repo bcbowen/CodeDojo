@@ -1,4 +1,4 @@
-﻿using LeetCode.Solutions.Models.Tree.NAryTree;
+﻿using LeetCode.Models.Tree.NAryTree;
 
 namespace LeetCode.Solutions.Easy.P00590_NAryPostorderTraversal;
 

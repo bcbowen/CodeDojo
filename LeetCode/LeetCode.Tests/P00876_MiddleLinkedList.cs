@@ -1,4 +1,4 @@
-using LeetCode.Solutions.Models.LinkedList;
+using LeetCode.Models.LinkedList;
 using LeetCode.Solutions.P00876_MiddleLinkedList;
 
 namespace LeetCode.Tests.P00876_MiddleLinkedList;

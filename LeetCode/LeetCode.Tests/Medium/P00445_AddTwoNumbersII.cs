@@ -1,4 +1,4 @@
-using LeetCode.Solutions.Models.LinkedList;
+using LeetCode.Models.LinkedList;
 using LeetCode.Solutions.Medium.P00445_AddTwoNumbersII;
 
 namespace LeetCode.Tests.Medium.P00445_AddTwoNumbersII;
