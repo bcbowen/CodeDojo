@@ -24,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Hard\" />
     <Folder Include="Utility\" />
   </ItemGroup>
 
