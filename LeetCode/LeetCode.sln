@@ -3,9 +3,25 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeetCode.Tests", "LeetCode.Tests\LeetCode.Tests.csproj", "{94DF2ED6-EC6F-46C0-8BA0-A7CC2F2E7550}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LeetCode.Tests", "LeetCode.Tests\LeetCode.Tests.csproj", "{94DF2ED6-EC6F-46C0-8BA0-A7CC2F2E7550}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeetCode.Solutions", "LeetCode.Solutions\LeetCode.Solutions.csproj", "{4FA1B925-1275-404E-95F2-200DCC805E79}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LeetCode.Solutions", "LeetCode.Solutions\LeetCode.Solutions.csproj", "{4FA1B925-1275-404E-95F2-200DCC805E79}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeetCode.Solutions.Easy.1To500", "LeetCode.Solutions.Easy.1To500\LeetCode.Solutions.Easy.1To500.csproj", "{B7FA6C0E-C0E6-4AFB-8E73-2A39F152D1C2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeetCode.Solutions.Easy.501To1000", "LeetCode.Solutions.Easy.501To1000\LeetCode.Solutions.Easy.501To1000.csproj", "{7FB097DE-1E1E-42DB-B095-B5ED83247A58}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeetCode.Solutions.Easy.1001To1500", "LeetCode.Solutions.Easy.1001To1500\LeetCode.Solutions.Easy.1001To1500.csproj", "{5985364C-5680-4AC3-9F4E-391B2B2D7764}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeetCode.Tests.Easy.1To500", "LeetCode.Tests.Easy.1To500\LeetCode.Tests.Easy.1To500.csproj", "{C5CEDB66-B576-4C5A-A2B9-B94B4D2310D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeetCode.Tests.Easy.501To1000", "LeetCode.Tests.Easy.501To1000\LeetCode.Tests.Easy.501To1000.csproj", "{AE787834-E5D6-40D4-BB36-56A64075C361}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeetCode.Tests.Easy.1001To1500", "LeetCode.Tests.Easy.1001To1500\LeetCode.Tests.Easy.1001To1500.csproj", "{57C43B8D-FC18-415F-9F01-6AE8D942CB32}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeetCode.Models", "LeetCode.Models\LeetCode.Models.csproj", "{5EC6888F-EC1A-4B57-A804-5E1B69561694}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeetCode.Tests.Utility", "LeetCode.Utility\LeetCode.Tests.Utility.csproj", "{4C956CCF-96BD-4522-8A60-93F387187221}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +37,38 @@ Global
 		{4FA1B925-1275-404E-95F2-200DCC805E79}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4FA1B925-1275-404E-95F2-200DCC805E79}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4FA1B925-1275-404E-95F2-200DCC805E79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7FA6C0E-C0E6-4AFB-8E73-2A39F152D1C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7FA6C0E-C0E6-4AFB-8E73-2A39F152D1C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7FA6C0E-C0E6-4AFB-8E73-2A39F152D1C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7FA6C0E-C0E6-4AFB-8E73-2A39F152D1C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7FB097DE-1E1E-42DB-B095-B5ED83247A58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FB097DE-1E1E-42DB-B095-B5ED83247A58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FB097DE-1E1E-42DB-B095-B5ED83247A58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FB097DE-1E1E-42DB-B095-B5ED83247A58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5985364C-5680-4AC3-9F4E-391B2B2D7764}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5985364C-5680-4AC3-9F4E-391B2B2D7764}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5985364C-5680-4AC3-9F4E-391B2B2D7764}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5985364C-5680-4AC3-9F4E-391B2B2D7764}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5CEDB66-B576-4C5A-A2B9-B94B4D2310D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5CEDB66-B576-4C5A-A2B9-B94B4D2310D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5CEDB66-B576-4C5A-A2B9-B94B4D2310D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5CEDB66-B576-4C5A-A2B9-B94B4D2310D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE787834-E5D6-40D4-BB36-56A64075C361}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE787834-E5D6-40D4-BB36-56A64075C361}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE787834-E5D6-40D4-BB36-56A64075C361}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE787834-E5D6-40D4-BB36-56A64075C361}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57C43B8D-FC18-415F-9F01-6AE8D942CB32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57C43B8D-FC18-415F-9F01-6AE8D942CB32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57C43B8D-FC18-415F-9F01-6AE8D942CB32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57C43B8D-FC18-415F-9F01-6AE8D942CB32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EC6888F-EC1A-4B57-A804-5E1B69561694}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EC6888F-EC1A-4B57-A804-5E1B69561694}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EC6888F-EC1A-4B57-A804-5E1B69561694}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EC6888F-EC1A-4B57-A804-5E1B69561694}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C956CCF-96BD-4522-8A60-93F387187221}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C956CCF-96BD-4522-8A60-93F387187221}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C956CCF-96BD-4522-8A60-93F387187221}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C956CCF-96BD-4522-8A60-93F387187221}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

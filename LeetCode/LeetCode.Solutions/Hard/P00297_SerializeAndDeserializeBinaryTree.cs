@@ -1,4 +1,4 @@
-﻿using LeetCode.Solutions.Models.Tree.BinaryTree;
+﻿using LeetCode.Models.Tree.BinaryTree;
 using System.Text;
 
 namespace LeetCode.Solutions.Hard.P00297_SerializeAndDeserializeBinaryTree;

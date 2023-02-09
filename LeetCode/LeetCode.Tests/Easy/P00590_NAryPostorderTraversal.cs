@@ -1,5 +1,5 @@
 using LeetCode.Solutions.Easy.P00590_NAryPostorderTraversal;
-using LeetCode.Solutions.Models.Tree.NAryTree;
+using LeetCode.Models.Tree.NAryTree;
 
 namespace LeetCode.Tests.Easy.P00590_NAryPostorderTraversal;
 

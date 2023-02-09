@@ -1,5 +1,5 @@
-using LeetCode.Solutions.Models.LinkedList;
-using LeetCode.Solutions.Models.Tree.BinaryTree;
+using LeetCode.Models.LinkedList;
+using LeetCode.Models.Tree.BinaryTree;
 using LeetCode.Solutions.P01367_LinkedListInBTree;
 using LeetCode.Tests.Utility.Helpers;
 

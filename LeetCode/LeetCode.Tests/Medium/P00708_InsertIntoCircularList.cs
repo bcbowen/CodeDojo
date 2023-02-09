@@ -1,5 +1,5 @@
 using LeetCode.Solutions.Medium.P00708_InsertIntoCircularList;
-using LeetCode.Solutions.Models.LinkedList;
+using LeetCode.Models.LinkedList;
 
 namespace LeetCode.Tests.Medium.P00708_InsertIntoCircularList;
 

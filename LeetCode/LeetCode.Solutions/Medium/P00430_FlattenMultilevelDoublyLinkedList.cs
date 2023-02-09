@@ -1,4 +1,4 @@
-﻿using LeetCode.Solutions.Models.DoublyLinkedList;
+﻿using LeetCode.Models.DoublyLinkedList;
 
 namespace LeetCode.Solutions.Medium.P00430_FlattenMultilevelDoublyLinkedList;
 

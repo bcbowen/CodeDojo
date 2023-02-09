@@ -1,4 +1,4 @@
-using LeetCode.Solutions.Models.Tree.BinaryTree;
+using LeetCode.Models.Tree.BinaryTree;
 using LeetCode.Solutions.Hard.P00297_SerializeAndDeserializeBinaryTree;
 
 namespace LeetCode.Tests.Hard.P00297_SerializeAndDeserializeBinaryTree;
