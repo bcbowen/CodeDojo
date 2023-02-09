@@ -3,6 +3,7 @@
 
 namespace LeetCode.Tests.Utility.Helpers;
 
+[Category("Helpers")]
 [TestFixture]
 public class LinkedListHelperTests
 {

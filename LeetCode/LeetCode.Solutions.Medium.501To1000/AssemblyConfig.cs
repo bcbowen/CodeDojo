@@ -1,5 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
-[assembly:InternalsVisibleTo("LeetCode.Tests.Easy.1001To1500")]
+[assembly:InternalsVisibleTo("LeetCode.Tests.Medium.501To1000")]
 namespace LeetCode.Solutions.Easy
 {
     internal class AssemblyConfig
