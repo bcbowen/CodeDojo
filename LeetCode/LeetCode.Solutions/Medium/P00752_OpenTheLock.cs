@@ -4,42 +4,53 @@ public class Solution
 {
     public int OpenLock(string[] deadends, string target)
     {
-        return 2;
-    }
-    /*
-    Set<String> dead = new HashSet();
-        for (String d: deadends) dead.add(d);
+        HashSet<string> deadSet = new HashSet<string>();
+        foreach (string deadEnd in deadends)
+        {
+            deadSet.Add(deadEnd);
+        }
 
-        Queue<String> queue = new LinkedList();
-        queue.offer("0000");
-        queue.offer(null);
-
-        Set<String> seen = new HashSet();
-        seen.add("0000");
-
+        Queue<string> queue = new Queue<string>();
+        queue.Enqueue("0000");
+        queue.Enqueue(null);
+        HashSet<string> seenSet = new HashSet<string>();
+        seenSet.Add("0000");
         int depth = 0;
-        while (!queue.isEmpty()) {
-            String node = queue.poll();
-            if (node == null) {
+        while (queue.Count > 0) 
+        {
+            string node = queue.Dequeue();
+            if (node == null)
+            {
                 depth++;
-                if (queue.peek() != null)
-                    queue.offer(null);
-            } else if (node.equals(target)) {
+                if (queue.Count > 0 && queue.Peek() != null)
+                {
+                    queue.Enqueue(null);
+                }
+            }
+            else if (node == target)
+            {
                 return depth;
-            } else if (!dead.contains(node)) {
-                for (int i = 0; i < 4; ++i) {
-                    for (int d = -1; d <= 1; d += 2) {
-                        int y = ((node.charAt(i) - '0') + d + 10) % 10;
-                        String nei = node.substring(0, i) + ("" + y) + node.substring(i+1);
-                        if (!seen.contains(nei)) {
-                            seen.add(nei);
-                            queue.offer(nei);
+            }
+            else if (!deadSet.Contains(node)) 
+            {
+                for (int i = 0; i < 4; ++i) 
+                {
+                    for (int d = -1; d <= 1; d += 2)
+                    {
+                        int y = ((node[i] - '0') + d + 10) % 10;
+                        string nei = node.Substring(0, i) + ("" + y) + node.Substring(i + 1);
+                        if (!seenSet.Contains(nei))
+                        {
+                            seenSet.Add(nei);
+                            queue.Enqueue(nei);
                         }
                     }
                 }
             }
+
         }
+
         return -1;
     }
-    */
+
 }
