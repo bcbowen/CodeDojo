@@ -14,16 +14,33 @@ public partial class MinStackTests
         stack.Push(0);
         stack.Push(-3);
         int expected = -3;
-        int result = stack.getMin();
+        int result = stack.GetMin();
         Assert.That(result, Is.EqualTo(expected));
         stack.Pop();
-        result = stack.top();
+        result = stack.Top();
         expected = 0;
         Assert.That(result, Is.EqualTo(expected));
-        result = stack.getMin();
+        result = stack.GetMin();
         expected = -2;
         Assert.That(result, Is.EqualTo(expected));
     }
+
+    [TestCase(new[] { -2, 0, -3}, -3)]
+    [TestCase(new[] { 1, 2, 3, 4, 5, 6, 7}, 1)]
+    [TestCase(new[] { 7, 6, 5, 4, 3, 2, 1}, 1)]
+    [TestCase(new[] { 4, 8, 2, 7, 1, 8, 3}, 1)]
+    [TestCase(new[] { 4, -9, 4, -5, 0}, -9)]
+    public void MinStackMinListTests(int[] values, int expected) 
+    {
+        SortedListNode list = new SortedListNode(values[0]);
+        for (int i = 1; i < values.Length; i++) 
+        {
+            list = list.Insert(values[i]);
+        }
+        int result = list.Value;
+        Assert.That(result, Is.EqualTo(expected)); 
+    }
+
     /*
     
     Input
