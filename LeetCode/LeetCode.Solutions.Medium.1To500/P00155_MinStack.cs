@@ -4,11 +4,13 @@ public class MinStack
 {
     private SortedListNode? _sortedList = null;
     private StackNode? _root = null;
+    private Dictionary<StackNode, SortedListNode> _nodeIndex = new Dictionary<StackNode, SortedListNode>();
     public MinStack()
     { }
 
     public void Push(int val)
     {
+        SortedListNode listNode; 
         if (_root == null)
         {
             _root = new StackNode(val);
@@ -17,21 +19,39 @@ public class MinStack
         {
             _root = _root.Push(val);
         }
+
+        if (_sortedList == null)
+        {
+            _sortedList = new SortedListNode(val);
+            listNode = _sortedList;
+        }
+        else
+        {
+            listNode = _sortedList.Insert(val);
+        }
+        _nodeIndex.Add(_root, listNode);
     }
 
     public void Pop()
     {
-        _root = root.Pop();
+        if (_root != null)
+        {
+            _root = _root.Pop();
+            if (_root != null)
+            {
+                _nodeIndex.Remove(_root);
+            }
+        }        
     }
 
     public int Top()
     {
-        return _root.Value;
+        return _root != null ? _root.Value : 0;
     }
 
     public int GetMin()
     {
-        return _sortedList.Value;
+        return _sortedList != null ? _sortedList.Value : 0;
     }
 }
 
@@ -41,8 +61,8 @@ internal class SortedListNode
     {
         Value = value;
     }
-    public SortedListNode Next { get; set; }
-    public SortedListNode Previous { get; set; }
+    public SortedListNode? Next { get; set; }
+    public SortedListNode? Previous { get; set; }
 
     public int Value { get; init; }
 
@@ -94,21 +114,12 @@ internal class SortedListNode
 
 internal class StackNode
 {
-    private SortedListNode _referencedListNode;
-    public StackNode(int value, SortedListNode sortedList)
+    public StackNode(int value)
     {
         Value = value;
-        if (sortedList == null)
-        {
-            _referencedListNode = new SortedListNode(value);
-        }
-        else
-        {
-            _referencedListNode = sortedList.Insert(value);
-        }
     }
     public int Value { get; init; }
-    public StackNode Next { get; set; }
+    public StackNode? Next { get; set; }
 
     public StackNode Push(int value)
     {
@@ -117,10 +128,9 @@ internal class StackNode
         return node;
     }
 
-    public StackNode Pop() 
+    public StackNode? Pop() 
     {
-        _referencedListNode.Remove();
-        StackNode node = Next;
+        StackNode? node = Next;
         Next = null;
         return node;
     }

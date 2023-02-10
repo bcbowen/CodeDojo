@@ -2,7 +2,20 @@
 
 public partial class Solution
 {
-    public int Jump(int[] nums)
+    public int Jump(int[] nums) 
+    {
+        int i = 0;
+        int j = 0;
+        while (j < nums.Length) 
+        {
+            // find step 
+            for (int k = i; k <= j; k++) 
+            { }
+        }
+        return 1;
+    }
+
+    /*
     {
         int index = 0;
         int step = nums[index];
@@ -27,4 +40,5 @@ public partial class Solution
         }
         return stepCount;
     }
+    */
 }
