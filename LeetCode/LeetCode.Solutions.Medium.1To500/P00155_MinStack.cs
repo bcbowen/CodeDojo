@@ -8,7 +8,6 @@ public class MinStack
 
     public void Push(int val)
     {
-        //SortedListNode listNode; 
         if (_root == null)
         {
             _root = new StackNode(val);
