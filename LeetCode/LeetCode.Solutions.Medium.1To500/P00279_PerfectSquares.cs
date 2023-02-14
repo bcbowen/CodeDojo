@@ -10,15 +10,40 @@ public class Solution
     public int NumSquares(int n)
     {
         int[] squares = GetSquares(n);
-        int sum = 0;
-        int count = 0;
-        for (int i = squares.Length - 1; i > 0; i--)
+        Queue<(int, int)> totals = new Queue<(int, int)>();
+        bool found = false;
+        int count = 1;
+        HashSet<int> values= new HashSet<int>();
+        foreach (int i in squares) 
         {
-            while (sum + squares[i] <= n)
+            if (i == n) return 1;
+            totals.Enqueue((count, i));
+        }
+        totals.Enqueue((0, 0));
+        count++; 
+        while (!found) 
+        {
+            (int c, int v) = totals.Dequeue();
+            if (c == 0)
             {
-                sum += squares[i];
-                count++;
+                count++;              
+                totals.Enqueue((0, 0));
+                continue;
             }
+            foreach (int s in squares) 
+            {
+                int value = v + s;
+                if (value == n) 
+                {
+                    found = true;
+                    break;
+                }
+                if (value < n && !values.Contains(value)) 
+                {
+                    totals.Enqueue((count, value)); 
+                }
+            }
+            
         }
 
         return count;
@@ -29,7 +54,7 @@ public class Solution
         List<int> squares = new List<int>();
         int root = 1;
         int square = 1;
-        while (square < n)
+        while (square <= n)
         {
             squares.Add(square);
             root++;
