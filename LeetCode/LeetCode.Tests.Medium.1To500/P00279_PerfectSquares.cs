@@ -8,6 +8,8 @@ public class Tests
 {
     [TestCase(12, 3)]
     [TestCase(13, 2)]
+    [TestCase(64, 1)]
+    [TestCase(1, 1)]
     public void Test(int n, int expected)
     {
         int result = new Solution().NumSquares(n);
