@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <RootNamespace>LeetCode.Solutions.Easy</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LeetCode.Models\LeetCode.Models.csproj" />
+    <ProjectReference Include="..\LeetCode.Utility\LeetCode.Tests.Utility.csproj" />
+  </ItemGroup>
+
+</Project>
