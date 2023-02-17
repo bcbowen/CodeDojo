@@ -2,38 +2,41 @@
 
 namespace LeetCode.Models.Tree.BinaryTree
 {
-    public static  class TreeNodeExtensions
+    public static class TreeNodeExtensions
     {
-        public static void AddNode(this TreeNode root, int value)
+        public static TreeNode AddNode(this TreeNode root, int value)
         {
             if (root == null)
             {
                 root = new TreeNode(value);
-                return;
-            };
-
-            if (value < root.val)
+            }
+            else 
             {
-                if (root.left == null)
+                if (value < root.val)
                 {
-                    root.left = new TreeNode(value);
+                    if (root.left == null)
+                    {
+                        root.left = new TreeNode(value);
+                    }
+                    else
+                    {
+                        root.left.AddNode(value);
+                    }
                 }
                 else
                 {
-                    root.left.AddNode(value);
+                    if (root.right == null)
+                    {
+                        root.right = new TreeNode(value);
+                    }
+                    else
+                    {
+                        root.right.AddNode(value);
+                    }
                 }
             }
-            else
-            {
-                if (root.right == null)
-                {
-                    root.right = new TreeNode(value);
-                }
-                else
-                {
-                    root.right.AddNode(value);
-                }
-            }
+            
+            return root;
         }
 
         public static string GetNodeList(this TreeNode node)
