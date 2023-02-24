@@ -44,7 +44,7 @@ public class Solution
                     visited.Add(neighbor, new Node(neighbor.val));
                     nodeQueue.Enqueue(neighbor);
                 }
-                visited[neighbor].neighbors.Add(visited[currentNode]);
+                visited[neighbor].neighbors.Add(visited[currentNode]    );
             }
         }
 
