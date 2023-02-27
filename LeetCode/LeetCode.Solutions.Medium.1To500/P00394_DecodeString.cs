@@ -9,21 +9,30 @@ public class Solution
 
         StringBuilder result = new StringBuilder();
         Stack<char> chars = new Stack<char>();
+
         int i = 0;
-        while (i < s.Length) 
+        while (i < s.Length)
         {
-            switch (s[i]) 
+            switch (s[i])
             {
                 case ']':
                     char c;
                     while (chars.Count > 0 && (c = chars.Pop()) != '[')
-                    { 
+                    {
                         result.Insert(0, c);
                     }
-                    int reps = int.Parse(chars.Pop().ToString());
-                    for (int j = 0; j < reps; j++) 
+                    int reps = 0;
+                    int place = 1;
+                    while (chars.Count > 0 && char.IsDigit(chars.Peek()))
                     {
-                        for (int k = 0; k < result.Length; k++) 
+                        reps += chars.Pop() - '0' * place;
+                        place *= 10;
+                   }
+
+                    //int reps = int.Parse(chars.Pop().ToString());
+                    for (int j = 0; j < reps; j++)
+                    {
+                        for (int k = 0; k < result.Length; k++)
                         {
                             chars.Push(result[k]);
                         }
@@ -34,16 +43,16 @@ public class Solution
                     chars.Push(s[i]);
                     break;
             }
-            i++; 
+            i++;
         }
 
-        foreach (char c in chars) 
+        foreach (char c in chars)
         {
-            result.Insert(0, c); 
+            result.Insert(0, c);
         }
 
-        return result.ToString(); 
-       
+        return result.ToString();
+
     }
 }
 
