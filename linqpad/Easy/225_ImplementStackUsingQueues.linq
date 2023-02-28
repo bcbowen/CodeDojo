@@ -27,20 +27,20 @@ public class MyStack
 
 	public int Pop()
 	{
-		while (q1.Count > 1) 
+		while (q1.Count > 1)
 		{
 			q2.Enqueue(q1.Dequeue());
 		}
-		
+
 		int result = q1.Dequeue();
 
-		while (q2.Count > 0) 
+		while (q2.Count > 0)
 		{
 			q1.Enqueue(q2.Dequeue());
 		}
-		
+
 		return result;
-		
+
 	}
 
 	public int Top()
@@ -71,7 +71,7 @@ public class MyStack
 
 [Fact]
 void Test()
-{ 
+{
 	MyStack stack = new MyStack();
 
 	stack.Push(1);
@@ -79,11 +79,11 @@ void Test()
 	int expected = 2;
 	int result = stack.Top(); // return 2
 	Assert.Equal(expected, result);
-	
-	expected = 2; 
+
+	expected = 2;
 	result = stack.Pop(); // return 2
 	Assert.Equal(expected, result);
-	
+
 	Assert.False(stack.Empty()); // return False
 }
 
