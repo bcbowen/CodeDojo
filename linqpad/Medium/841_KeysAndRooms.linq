@@ -13,28 +13,22 @@ public class Solution
 {
 	public bool CanVisitAllRooms(IList<IList<int>> rooms)
 	{
-		HashSet<int> keys = new HashSet<int>();
-		int i = 0;
-		keys.Add(0);
-		while (i < rooms.Count)
+		Stack<int> keys = new Stack<int>();
+		bool[] visited = new bool[rooms.Count]; 
+		keys.Push(0);
+		while (keys.Count > 0)
 		{
-			if (keys.Contains(i))
+			int key = keys.Pop();
+			foreach (int k in rooms[key])
 			{
-				foreach (int j in rooms[i])
+				if (!visited[key]) 
 				{
-					if (!keys.Contains(j))
-					{
-						keys.Add(j);
-					}
+					keys.Push(k);	
 				}
 			}
-			else
-			{
-				return false;
-			}
-			i++;
+			visited[key] = true;
 		}
-		return true;
+		return visited.All(r => r == true);
 	}
 }
 
@@ -43,6 +37,7 @@ public class Solution
 [Theory]
 [InlineData(true, new[] { 1 }, new[] { 2 }, new[] { 3 }, new int[0])]
 [InlineData(false, new[] { 1, 3 }, new[] { 3, 0, 1 }, new[] { 2 }, new[] { 0 })]
+[InlineData(true, new[] { 2 }, new int [0], new[] { 1 })]
 void Test(bool expected, params int[][] rooms)
 {
 	bool result = new Solution().CanVisitAllRooms(rooms);
