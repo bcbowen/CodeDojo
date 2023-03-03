@@ -24,7 +24,6 @@ public class ListNode
 
 public class Solution
 {
-	//private ListNode _root; 
 	public ListNode SwapPairs(ListNode head)
 	{
 		if (head == null) return head;
