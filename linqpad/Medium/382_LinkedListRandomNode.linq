@@ -41,7 +41,7 @@ public class Solution
 
 	public int GetRandom()
 	{
-		int skip = _rand.Next(0, _size - 1);
+		int skip = _rand.Next(0, _size);
 		ListNode current = _root;
 		while (skip > 0) 
 		{
@@ -55,7 +55,7 @@ public class Solution
 #region private::Tests
 
 [Fact]
-void Test() 
+void Test3Nodes() 
 {
 	ListNode node = new ListNode(1); 
 	ListNode current; 
@@ -67,14 +67,15 @@ void Test()
 	counts.Add(1, 0); 
 	counts.Add(2, 0);
 	counts.Add(3, 0);
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < 1000; i++)
 	{
 		int val = solution.GetRandom(); 
+		//val.Dump(); 
 		counts[val]++;
 	}
-	Assert.True(Math.Abs(counts[0] - counts[1]) < 5);
-	Assert.True(Math.Abs(counts[0] - counts[2]) < 5);
-	Assert.True(Math.Abs(counts[1] - counts[2]) < 5);
+	Assert.True(Math.Abs(counts[1] - counts[2]) < 100, $"1: {counts[1]}, 2: {counts[2]}");
+	Assert.True(Math.Abs(counts[1] - counts[3]) < 100, $"1: {counts[1]}, 3: {counts[3]}");
+	Assert.True(Math.Abs(counts[2] - counts[3]) < 100, $"2: {counts[2]}, 3: {counts[3]}");
 }
 
 #endregion
