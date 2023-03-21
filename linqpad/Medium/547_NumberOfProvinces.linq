@@ -45,7 +45,7 @@ public class Solution
 		{
 			return x;
 		}
-		return _root[x] = Find(x);
+		return _root[x] = Find(_root[x]);
 	}
 
 	internal void Union(int x, int y)
@@ -80,7 +80,7 @@ public class Solution
 #region private::Tests
 
 [Theory]
-//[InlineData(2, new[] { 1, 1, 0 }, new[] { 1, 1, 0 }, new[] { 0, 0, 1 })]
+[InlineData(2, new[] { 1, 1, 0 }, new[] { 1, 1, 0 }, new[] { 0, 0, 1 })]
 [InlineData(3, new[] { 1, 0, 0 }, new[] { 0, 1, 0 }, new[] { 0, 0, 1 })]
 void Test(int expected, params int[][] isConnected)
 {
