@@ -1,12 +1,13 @@
-<Query Kind="Program" />
+<Query Kind="Program">
+  <Namespace>Xunit</Namespace>
+</Query>
+
+#load "xunit"
 
 void Main()
 {
-	Test("00000000000000000000000000001011", 3);
-	Test("00000000000000000000000010000000", 1);
-	Test("11111111111111111111111111111101", 31);
-	Test("00000000000000000000000000000001", 1);
-	Test("00000000000000000000000000000010", 1);
+	RunTests();  // Call RunTests() or press Alt+Shift+T to initiate testing.
+
 	/*
 	Example 1:
 
@@ -25,27 +26,6 @@ Output: 31
 Explanation: The input binary string 11111111111111111111111111111101 has a total of thirty one '1' bits.
 	*/
 }
-
-public void Test(string s, int expected) 
-{
-	uint n = Convert.ToUInt32(s, 2);
-	Test(n, expected);
-}
-
-public void Test(uint n, int expected) 
-{
-	int result = new Solution().HammingWeight(n);
-
-	if (result == expected)
-	{
-		Console.WriteLine("PASS");
-	} 
-	else
-	{
-		Console.WriteLine($"FAIL: {result} {expected}"); 
-	}
-}
-
 
 public class Solution
 {
@@ -77,3 +57,20 @@ public class Solution
 		return bitCount;
 	}
 }
+
+#region private::Tests
+
+[Theory]
+[InlineData("00000000000000000000000000001011", 3)]
+[InlineData("00000000000000000000000010000000", 1)]
+[InlineData("11111111111111111111111111111101", 31)]
+[InlineData("00000000000000000000000000000001", 1)]
+[InlineData("00000000000000000000000000000010", 1)]
+public void HammingWeightTest(string s, int expected)
+{
+	uint n = Convert.ToUInt32(s, 2);
+	int result = new Solution().HammingWeight(n);
+	Assert.Equal(expected, result);
+}
+
+#endregion

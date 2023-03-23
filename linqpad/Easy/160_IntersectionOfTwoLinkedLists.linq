@@ -77,7 +77,6 @@ public class Solution
 
 	#region private::Tests
 
-	[Fact] void Test_Xunit() => Assert.True(1 + 1 == 2);
 
 	/*
 	Input: intersectVal = 8, listA = [4,1,8,4,5], listB = [5,6,1,8,4,5], skipA = 2, skipB = 3
