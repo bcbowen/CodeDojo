@@ -28,8 +28,7 @@ public class Solution
 }
 
 #region private::Tests
-
-[Fact] void Test_Xunit() => Assert.True(1 + 1 == 2);
+[Theory]
 [InlineData("A man, a plan, a canal: Panama", true)]
 [InlineData("race a car", false)]
 [InlineData(" ", true)]
@@ -39,7 +38,6 @@ public class Solution
 [InlineData("0P", false)]
 [InlineData("1001", true)]
 [InlineData("1011", false)]
-[Theory]
 void IsPalindromeTest(string s, bool expected) 
 {
 	bool result = new Solution().IsPalindrome(s); 

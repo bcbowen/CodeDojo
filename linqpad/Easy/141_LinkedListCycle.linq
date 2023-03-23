@@ -66,7 +66,6 @@ public class Solution
 
 #region private::Tests
 
-[Fact] void Test_Xunit() => Assert.True(1 + 1 == 2);
 
 /*
 Input: head = [3,2,0,-4], pos = 1
