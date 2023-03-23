@@ -1,23 +1,12 @@
-<Query Kind="Program" />
+<Query Kind="Program">
+  <Namespace>Xunit</Namespace>
+</Query>
+
+#load "xunit"
 
 void Main()
 {
-	Test("a", "b", false);
-	Test("aa", "ab", false);
-	Test("aa", "aab", true);
-}
-
-public void Test(string ransomNote, string magazine, bool expected) 
-{
-	bool result = new Solution().CanConstruct(ransomNote, magazine);
-	if (result == expected)
-	{
-		Console.WriteLine($"PASS note: {ransomNote} mag: {magazine}");
-	}
-	else
-	{
-		Console.WriteLine($"FAIL note: {ransomNote} mag: {magazine} expected: {expected}");
-	}
+	RunTests();  // Call RunTests() or press Alt+Shift+T to initiate testing.
 }
 
 public class Solution
@@ -52,3 +41,16 @@ public class Solution
 		return true;
 	}
 }
+
+#region private::Tests
+[Theory]
+[InlineData("a", "b", false)]
+[InlineData("aa", "ab", false)]
+[InlineData("aa", "aab", true)]
+public void Test(string ransomNote, string magazine, bool expected)
+{
+	bool result = new Solution().CanConstruct(ransomNote, magazine);
+	Assert.Equal(expected, result);
+}
+
+#endregion

@@ -66,7 +66,7 @@ public class MovingAverage
 
 #region private::Tests
 
-[Fact] void Test_Xunit() => Assert.True(1 + 1 == 2);
+
 /*
 Input
 ["MovingAverage", "next", "next", "next", "next"]

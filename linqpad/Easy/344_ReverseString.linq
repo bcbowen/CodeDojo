@@ -29,7 +29,6 @@ public class Solution
 
 #region private::Tests
 
-[Fact] void Test_Xunit() => Assert.True(1 + 1 == 2);
 
 /*
 Example 1:
@@ -48,7 +47,7 @@ Output: ["h","a","n","n","a","H"]
 void TestReverseString(char[] s, char[] expected)
 {
 	new Solution().ReverseString(s);
-	Assert.Equal(s, expected);
+	Assert.Equal(expected, s);
 }
 
 #endregion
