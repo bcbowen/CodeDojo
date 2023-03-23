@@ -1,24 +1,12 @@
-<Query Kind="Program" />
+<Query Kind="Program">
+  <Namespace>Xunit</Namespace>
+</Query>
+
+#load "xunit"
 
 void Main()
 {
-	Test(new string[] { "flower", "flow", "flight"}, "fl");
-}
-
-private void Test(string[] values, string expected) 
-{
-	Solution solution = new Solution();
-	string prefix = solution.LongestCommonPrefix(values); 
-	
-	if (expected == prefix)
-	{
-		Console.WriteLine("PASS");
-	}
-	else
-	{
-		Console.WriteLine($"FAIL; Expected {expected} Got {prefix}");
-	}
-	
+	RunTests();  // Call RunTests() or press Alt+Shift+T to initiate testing.
 }
 
 public class Solution {
@@ -58,3 +46,19 @@ public class Solution {
         return prefix.ToString();
 	}
 }
+
+#region private::Tests
+
+[Theory]
+[InlineData(new string[] { "flower", "flow", "flight" }, "fl")]
+[InlineData(new string[] { "dog", "racecar", "car" }, "")]
+[InlineData(new string[] { "dog", "", "dork" }, "")]
+[InlineData(new string[] { "", "racecar", "rat" }, "")]
+[InlineData(new string[] { "", "" }, "")]
+public void Test(string[] input, string expected)
+{
+	string result = new Solution().LongestCommonPrefix(input);
+	Assert.Equal(expected, result);
+}
+
+#endregion

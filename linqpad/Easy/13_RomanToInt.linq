@@ -1,8 +1,12 @@
-<Query Kind="Program" />
+<Query Kind="Program">
+  <Namespace>Xunit</Namespace>
+</Query>
+
+#load "xunit"
 
 void Main()
 {
-	
+	RunTests();  // Call RunTests() or press Alt+Shift+T to initiate testing.
 }
 
 public class Solution
@@ -82,3 +86,17 @@ internal class RomanNumeral
 	}
 
 }
+
+#region private::Tests
+
+[Theory]
+[InlineData("III", 3)]
+[InlineData("LVIII", 58)]
+[InlineData("MCMXCIV", 1994)]
+public void TestPalindromeNumber(string input, int expected)
+{
+	int result = new Solution().RomanToInt(input);
+	Assert.Equal(expected, result);
+}
+
+#endregion
