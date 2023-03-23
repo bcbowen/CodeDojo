@@ -42,8 +42,6 @@ public class Solution
 
 #region Tests
 
-[Fact] void Test_Xunit() => Assert.True(1 + 1 == 2);
-
 [Fact]
 void EqualTreesReturnsTrue() 
 {
@@ -124,15 +122,5 @@ void UnequalTreesReturnFalse()
 
 	Assert.False(new Solution().IsSameTree(t1, t2));
 }
-
-
-/*
-
-
-
-
-
-*/
-
 
 #endregion

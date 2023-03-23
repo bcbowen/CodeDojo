@@ -37,7 +37,7 @@ public class Solution
 
 #region private::Tests
 
-[Fact] void Test_Xunit() => Assert.True(1 + 1 == 2);
+
 /*
 Input: rowIndex = 3
 Output: [1,3,3,1]

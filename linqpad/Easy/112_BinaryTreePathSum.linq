@@ -65,7 +65,6 @@ public class Solution
 
 #region private::Tests
 
-[Fact] void Test_Xunit() => Assert.True(1 + 1 == 2);
 /*
 [1,2]
 1
