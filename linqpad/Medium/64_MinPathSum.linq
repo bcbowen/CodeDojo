@@ -11,10 +11,50 @@ void Main()
 
 public class Solution
 {
-	//private int _minCost;
-	//private int _targetX; 
-	//private int _targetY; 
-	public int MinPathSum(int[][] grid)
+	/// <summary>
+	/// DP: create a grid with accumulated path lengths
+	/// * start with first row and column 
+	/// * each interior length is min [top plus current | left + current]
+	/// </summary>
+	public int MinPathSum(int[][] grid) 
+	{
+		int[][] pathGrid = new int[grid.Length][];
+		for (int i = 0; i < grid.Length; i++) 
+		{
+			pathGrid[i] = new int[grid[i].Length];
+		}
+		
+		// initialize upper left corner with first cost
+		pathGrid[0][0] = grid[0][0];
+		
+		// populate first row with accumulated lengths
+		for (int i = 1; i < pathGrid[0].Length; i++)
+		{
+			pathGrid[0][i] = pathGrid[0][i - 1] + grid[0][i]; 
+		}
+		
+		// populate first col with accumulated lengths
+		for (int i = 1; i < grid.Length; i++)
+		{
+			pathGrid[i][0] = pathGrid[i - 1][0] + grid[i][0]; 
+		}
+		
+		// for each interior cell, value is current grid value plus the min of the cells to the top or left
+		for (int col = 1; col < grid.Length; col++)
+		{
+			for (int row = 1; row < grid[col].Length; row++) 
+			{
+				pathGrid[col][row] = grid[col][row] + Math.Min(pathGrid[col - 1][row], pathGrid[col][row - 1]);
+			}
+		}
+		
+		return pathGrid[pathGrid.Length - 1][pathGrid[0].Length - 1]; 
+	}
+	
+	/// <summary>This gives the correct answer but is too slow with big inputs like BigTest
+	/// Uses BFS to build all paths
+	/// </summary>
+	public int MinPathSum_1(int[][] grid)
 	{
 		int minCost = int.MaxValue;
 		int targetY = grid.Length - 1; 
@@ -31,13 +71,13 @@ public class Solution
 				minCost = Math.Min(minCost, total); 
 			}
 
-			if (y < grid.Length - 1 && total < minCost && !processedCells.Contains((x, y + 1))) 
+			if (y < grid.Length - 1 && total < minCost) 
 			{
 				traversal.Enqueue((total, x, y + 1)); 
 				processedCells.Add((x, y + 1));
 			}
 
-			if (x < grid[0].Length - 1 && total < minCost && !processedCells.Contains((x + 1, y)))
+			if (x < grid[0].Length - 1 && total < minCost)
 			{
 				traversal.Enqueue((total, x + 1, y)); 
 				processedCells.Add((x + 1, y));
@@ -46,8 +86,6 @@ public class Solution
 		return minCost;
 	}
 }
-
-#region private::Tests
 
 /*
 Input: grid = [[1,3,1],[1,5,1],[4,2,1]]
@@ -105,4 +143,3 @@ void BigTest()
 	Assert.Equal(expected, result);
 }
 
-#endregion
