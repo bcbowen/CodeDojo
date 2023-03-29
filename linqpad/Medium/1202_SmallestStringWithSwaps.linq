@@ -1,4 +1,6 @@
 <Query Kind="Program">
+  <NuGetReference>Newtonsoft.Json</NuGetReference>
+  <Namespace>Newtonsoft.Json</Namespace>
   <Namespace>Xunit</Namespace>
 </Query>
 
@@ -80,7 +82,8 @@ public class UnionFind
 	{
 		if (_root[i] == i) return i; 
 		
-		return Find(_root[i]);
+		// Add path compression to make subsequent calls faster
+		return _root[i] = Find(_root[i]);
 	}
 
 	public void Union(int i, int j) 
@@ -158,6 +161,10 @@ private static string GetDataDirectoryPath()
 	return dataDirectory.FullName;
 }
 
+/// <summary>
+/// * Without compression, takes ~12.5 seconds
+/// * With compression takes ~.09 seconds! 
+/// </summary>
 [Fact]
 void BigTest() 
 {
@@ -167,21 +174,11 @@ void BigTest()
 
 	path = Path.Combine(GetDataDirectoryPath(), "1202_BigTestPairs.txt");
 	Assert.True(File.Exists(path));
-	s.Length.Dump();
-}
-
-private IList<IList<int>> LoadPairs(string path)
-{
-	List<List<int>> pairs = new List<List<int>>();
+	int[][] pairs = JsonConvert.DeserializeObject<int[][]>(File.ReadAllText(path));
 	
-	StringBuilder number = new StringBuilder();
-	List<int> pair = new List<int>();
-	using (StreamReader reader = new StreamReader(path)) 
-	{
-		
-		
-		reader.Close();
-	}
-	
-	return pairs;
+	path = Path.Combine(GetDataDirectoryPath(), "1202_BigTestExpected.txt");
+	Assert.True(File.Exists(path));
+	string expected = File.ReadAllText(path);
+	string result = new Solution().SmallestStringWithSwaps(s, pairs); 
+	Assert.Equal(expected, result);
 }
