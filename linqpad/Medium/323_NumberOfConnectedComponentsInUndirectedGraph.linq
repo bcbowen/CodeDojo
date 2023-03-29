@@ -50,7 +50,7 @@ public class Solution
 		else
 		{
 			_parents[rootJ] = _parents[rootI];
-			_ranks[rootJ]++;
+			_ranks[rootI]++;
 		}
 
 		_groups--;
