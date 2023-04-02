@@ -69,8 +69,6 @@ public class Solution
 	}
 }
 
-#region private::Tests
-
 /*
 Input: n = 5, edges = [[0,1],[1,2],[3,4]]
 Output: 2
@@ -88,5 +86,3 @@ void Test(int n, int expected, params int[][] edges)
 	int result = new Solution().CountComponents(n, edges);
 	Assert.Equal(expected, result);
 }
-
-#endregion
