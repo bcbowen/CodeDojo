@@ -36,10 +36,6 @@ public class Solution
 	}
 }
 
-#region private::Tests
-
-[Fact] void Test_Xunit() => Assert.True(1 + 1 == 2);
-
 /*
 Example 1:
 
@@ -64,4 +60,3 @@ void TestToLowerCase(string input, string expected)
 	string result = new Solution().ToLowerCase(input);
 	Assert.Equal(expected, result);
 }
-#endregion

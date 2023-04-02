@@ -46,11 +46,6 @@ public class KthLargest
  * int param_1 = obj.Add(val);
  */
 
-#region private::Tests
-
-[Fact] void Test_Xunit() => Assert.True(1 + 1 == 2);
-
-
 [Theory]
 [InlineData(3, new int[] { 4, 5, 8, 2 }, new int[] { 3, 5, 10, 9, 4 }, new int[] { 4, 5, 5, 8, 8 })]
 [InlineData(1, new int[0], new int[] { -3, -2, -4, 0, 4 }, new int[] { -3, -2, -2, 0, 4 })]
@@ -85,5 +80,3 @@ kthLargest.add(10);  // return 5
 kthLargest.add(9);   // return 8
 kthLargest.add(4);   // return 8
 */
-
-#endregion

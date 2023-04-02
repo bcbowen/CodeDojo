@@ -30,9 +30,6 @@ public class Solution
 	}
 }
 
-#region private::Tests
-
-[Fact] void Test_Xunit() => Assert.True (1 + 1 == 2);
 /*
 Example 1:
 
@@ -51,5 +48,3 @@ void ReverseWordsTest(string s, string expected)
 	string result = new Solution().ReverseWords(s);
 	Assert.Equal(expected, result);
 }
-
-#endregion

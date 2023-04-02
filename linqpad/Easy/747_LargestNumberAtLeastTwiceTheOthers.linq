@@ -34,10 +34,6 @@ public class Solution
 	}
 }
 
-#region private::Tests
-
-[Fact] void Test_Xunit() => Assert.True(1 + 1 == 2);
-
 [Theory]
 [InlineData(new[] {3,6,1,0}, 1)]
 [InlineData(new[] {1,2,3,4}, -1)]
@@ -60,5 +56,3 @@ Input: nums = [1,2,3,4]
 Output: -1
 Explanation: 4 is less than twice the value of 3, so we return -1.
 */
-
-#endregion
