@@ -1,12 +1,14 @@
-<Query Kind="Program" />
+<Query Kind="Program">
+  <Namespace>Xunit</Namespace>
+</Query>
+
+#load "xunit"
 
 void Main()
 {
-	Test(InitNode(new int[] { 1, 2, 3, 4,5 }), InitNode(new int[] {3,4,5}));
-	Test(InitNode(new int[] { 1, 2, 3, 4, 5, 6 }), InitNode(new int[] {4,5, 6}));
+	RunTests();  // Call RunTests() or press Alt+Shift+T to initiate testing.
 }
 
-// You can define other methods, fields, classes and namespaces here
 
 private ListNode InitNode(int[] vals) 
 {
@@ -19,22 +21,6 @@ private ListNode InitNode(int[] vals)
 	}
 	
 	return head;
-}
-
-private void Test(ListNode head, ListNode expected)
-{
-	Solution solution = new Solution();
-	ListNode result = solution.MiddleNode(head);
-
-	if (expected.val == result.val)
-	{
-		Console.WriteLine("PASS");
-	}
-	else
-	{
-		Console.WriteLine($"FAIL; Expected {expected.val} Got {result.val}");
-	}
-
 }
 
 public class ListNode
@@ -88,4 +74,53 @@ public class Solution
 
 		return list[index];
 	}
+}
+
+public static class LinkedListHelpers
+{
+	public static ListNode? Init(int[] values)
+	{
+		if (values == null || values.Length == 0) return null;
+
+		ListNode head = new ListNode(values[0]);
+		ListNode current = head;
+		for (int i = 1; i < values.Length; i++)
+		{
+			current.next = new ListNode(values[i]);
+			current = current.next;
+		}
+
+		return head;
+	}
+
+	public static bool ValuesMatch(ListNode head, int[] values)
+	{
+		if (head == null && values == null) return true;
+		if (head == null || values == null) return false;
+
+		ListNode current = head;
+		int i = 0;
+		while (current != null)
+		{
+			if (i > values.Length - 1) return false;
+			if (current.val != values[i++]) return false;
+			current = current.next;
+		}
+		if (i != values.Length) return false;
+
+		return true;
+	}
+}
+
+[Theory]
+[InlineData(new[] { 1, 2, 3, 4, 5 }, new[] { 3, 4, 5 })]
+[InlineData(new[] { 1, 2, 3, 4, 5, 6 }, new[] { 4, 5, 6 })]
+public void Test(int[] values, int[] expectedValues)
+{
+	Solution solution = new Solution();
+	ListNode head = LinkedListHelpers.Init(values);
+	ListNode result = solution.MiddleNode(head);
+
+	Assert.True(LinkedListHelpers.ValuesMatch(result, expectedValues));
+
 }
