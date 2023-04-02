@@ -47,9 +47,6 @@ public class Solution
 	}
 }
 
-#region private::Tests
-
-[Fact] void Test_Xunit() => Assert.True(1 + 1 == 2);
 
 /*
 Input: mat = [[1,2],[3,4]], r = 1, c = 4
@@ -106,5 +103,3 @@ void FlattenTest(int[] expected, params int[][] matrix)
 	int[] result = new Solution().Flatten(matrix);
 	Assert.Equal(expected, result);
 }
-
-#endregion

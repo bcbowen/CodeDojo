@@ -9,7 +9,6 @@ void Main()
 	RunTests();  // Call RunTests() or press Alt+Shift+T to initiate testing.
 }
 
-// You can define other methods, fields, classes and namespaces here
 
 public class Solution
 {
@@ -103,11 +102,6 @@ public class SolutionFirst
 		}
 	}
 }
-
-#region private::Tests
-
-[Fact] void Test_Xunit() => Assert.True (1 + 1 == 2);
-
 
 [Theory]
 [InlineData(new[] { 1, -1, 3, 2, 4, -1, 5, 6 }, new[] { 1, 3, 5, 6, 2, 4 })]
@@ -305,6 +299,3 @@ void HydrateNode_LeetCode589Example2()
 }
 
 #endregion HydrateNodeTests
-
-
-#endregion
