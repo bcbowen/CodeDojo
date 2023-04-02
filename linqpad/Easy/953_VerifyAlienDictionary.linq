@@ -52,8 +52,6 @@ public class Solution
 	}
 }
 
-#region private::Tests
-
 /*
 Example 1:
 
@@ -72,8 +70,6 @@ Output: false
 
 Explanation: The first three characters "app" match, and the second string is shorter (in size.) According to lexicographical rules "apple" > "app", because 'l' > '∅', where '∅' is defined as the blank character which is less than any other character (More info).
 */
-
-[Fact] void Test_Xunit() => Assert.True(1 + 1 == 2);
 
 [Theory]
 [InlineData(new[] {"hello","leetcode"}, "hlabcdefgijkmnopqrstuvwxyz", true)]
@@ -112,5 +108,3 @@ void CompareTests(string word1, string word2, int expected)
 		Assert.True(result < 0);
 	}
 }
-
-#endregion
