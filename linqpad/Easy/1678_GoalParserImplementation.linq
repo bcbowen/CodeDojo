@@ -30,10 +30,6 @@ public class Solution
 	}
 }
 
-#region private::Tests
-
-[Fact] void Test_Xunit() => Assert.True (1 + 1 == 2);
-
 /*
 Example 1:
 
@@ -63,5 +59,3 @@ void Test(string command, string expected)
 	string result = new Solution().Interpret(command);
 	Assert.Equal(expected, result);
 }
-
-#endregion

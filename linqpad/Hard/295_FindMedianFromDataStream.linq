@@ -88,10 +88,6 @@ public class MedianFinder
  * double param_2 = obj.FindMedian();
  */
 
-#region private::Tests
-
-[Fact] void Test_Xunit() => Assert.True(1 + 1 == 2);
-
 [Theory]
 [InlineData(new[] { 2, 3, 4 }, 3.0)]
 [InlineData(new[] { 2, 3 }, 2.5)]
@@ -135,4 +131,3 @@ medianFinder.findMedian(); // return 1.5 (i.e., (1 + 2) / 2)
 medianFinder.addNum(3);    // arr[1, 2, 3]
 medianFinder.findMedian(); // return 2.0
 */
-#endregion

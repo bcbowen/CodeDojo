@@ -33,9 +33,6 @@ public class Solution
 	}
 }
 
-#region private::Tests
-
-[Fact] void Test_Xunit() => Assert.True(1 + 1 == 2);
 /*
 Input: mat = [[1,2,3],
               [4,5,6],
@@ -65,7 +62,3 @@ void Tests(int expected, params int[][] mat)
 	int result = new Solution().DiagonalSum(mat);
 	Assert.Equal(expected, result);
 }
-
-
-
-#endregion

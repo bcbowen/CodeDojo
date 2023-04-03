@@ -1,25 +1,23 @@
-<Query Kind="Program" />
+<Query Kind="Program">
+  <Namespace>Xunit</Namespace>
+</Query>
+
+#load "xunit"
 
 void Main()
 {
-	Test(new[] { 1,3,2,1,3,2,2}, new[] {3,1});
-	Test(new[] { 1,1}, new[] {1,0});
-	Test(new[] {0 }, new[] {0,1});
+	RunTests();  // Call RunTests() or press Alt+Shift+T to initiate testing.
 }
 
-public void Test(int[] nums, int[] expected) 
+[Theory]
+[InlineData(new[] { 1, 3, 2, 1, 3, 2, 2 }, new[] { 3, 1 })]
+[InlineData(new[] { 1, 1 }, new[] { 1, 0 })]
+[InlineData(new[] { 0 }, new[] { 0, 1 })]
+public void Test(int[] nums, int[] expected)
 {
 	int[] result = new Solution().NumberOfPairs(nums);
-	if (result[0] == expected[0] && result[1] == expected[1]) 
-	{
-		Console.WriteLine("PASS");
-	}
-	else
-	{
-		Console.WriteLine($"FAIL: [{expected[0]},{expected[1]}] != [{result[0]}{result[1]}]");
-	}
+	Assert.Equal(expected, result);
 }
-
 public class Solution
 {
 	public int[] NumberOfPairs(int[] nums)
@@ -51,3 +49,4 @@ public class Solution
 		return result;
 	}
 }
+

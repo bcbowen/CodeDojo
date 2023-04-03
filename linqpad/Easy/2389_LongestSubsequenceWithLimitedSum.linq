@@ -53,9 +53,6 @@ public class Solution
 	}
 }
 
-#region private::Tests
-
-[Fact] void Test_Xunit() => Assert.True (1 + 1 == 2);
 [Theory]
 [InlineData(new[] {4,5,2,1}, new[] {3,10,21}, new[] {2,3,4})]
 [InlineData(new[] {2,3,4,5}, new[] {1}, new[] {0})]
@@ -99,4 +96,3 @@ Input: nums = [2,3,4,5], queries = [1]
 Output: [0]
 Explanation: The empty subsequence is the only subsequence that has a sum less than or equal to 1, so answer[0] = 0.
 */
-#endregion

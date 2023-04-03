@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\LeetCode.Models\LeetCode.Models.csproj" />
-    <ProjectReference Include="..\LeetCode.Solutions.Easy.Gt1500\LeetCode.Solutions.Easy.Gt1500.csproj" />
     <ProjectReference Include="..\LeetCode.Utility\LeetCode.Tests.Utility.csproj" />
   </ItemGroup>
 
