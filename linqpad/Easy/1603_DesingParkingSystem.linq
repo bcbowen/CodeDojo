@@ -50,10 +50,6 @@ public class ParkingSystem
  * bool param_1 = obj.AddCar(carType);
  */
 
-#region private::Tests
-
-[Fact] void Test_Xunit() => Assert.True(1 + 1 == 2);
-
 [Fact]
 void Example1Test() 
 {
@@ -86,4 +82,3 @@ parkingSystem.addCar(2); // return true because there is 1 available slot for a 
 parkingSystem.addCar(3); // return false because there is no available slot for a small car
 parkingSystem.addCar(1); // return false because there is no available slot for a big car. It is already occupied.
 */
-#endregion

@@ -39,10 +39,6 @@ public class Solution
 	}
 }
 
-#region private::Tests
-
-[Fact] void Test_Xunit() => Assert.True(1 + 1 == 2);
-
 [Theory]
 [InlineData(new[] { 1, 4, 2, 5, 3 }, 58)]
 [InlineData(new[] { 1, 2 }, 3)]
@@ -52,5 +48,3 @@ void Test(int[] arr, int expected)
 	int result = new Solution().SumOddLengthSubarrays(arr);
 	Assert.Equal(expected, result);
 }
-
-#endregion

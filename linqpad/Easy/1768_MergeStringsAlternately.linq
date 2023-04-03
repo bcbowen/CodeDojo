@@ -25,9 +25,6 @@ public class Solution
 	}
 }
 
-#region private::Tests
-
-
 /*
 Example 1:
 
@@ -55,8 +52,6 @@ word2:    p   q
 merged: a p b q c   d
 */
 
-[Fact] void Test_Xunit() => Assert.True(1 + 1 == 2);
-
 [Theory]
 [InlineData("abc", "pqr", "apbqcr")]
 [InlineData("ab", "pqrs", "apbqrs")]
@@ -66,5 +61,3 @@ void Tests(string word1, string word2, string expected)
 	string result = new Solution().MergeAlternately(word1, word2);
 	Assert.Equal(expected, result);
 }
-
-#endregion

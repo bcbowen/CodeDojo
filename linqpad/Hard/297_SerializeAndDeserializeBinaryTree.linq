@@ -75,10 +75,6 @@ public class Codec
 // Codec deser = new Codec();
 // TreeNode ans = deser.deserialize(ser.serialize(root));
 
-#region Tests
-
-[Fact] void Test_Xunit() => Assert.True(1 + 1 == 2);
-
 [Fact]
 public void FullTest1() 
 {
@@ -339,6 +335,3 @@ void SerializeFullThreeLevelTree()
 
 }
 */
-
-
-#endregion
