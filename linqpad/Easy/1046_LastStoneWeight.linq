@@ -32,10 +32,6 @@ public class Solution
 	}
 }
 
-#region private::Tests
-
-[Fact] void Test_Xunit() => Assert.True(1 + 1 == 2);
-
 [Theory]
 [InlineData(new[] { 2, 7, 4, 1, 8, 1 }, 1)]
 void TestLastStoneWeight(int[] stones, int expected)
@@ -70,4 +66,3 @@ Example 2:
 Input: stones = [1]
 Output: 1
 */
-#endregion
