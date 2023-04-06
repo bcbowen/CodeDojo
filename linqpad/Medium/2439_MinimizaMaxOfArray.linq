@@ -13,8 +13,21 @@ void Main()
 
 public class Solution
 {
-	
-	
+	public int MinimizeArrayValue(int[] nums) 
+	{
+		long answer = 0;
+		long prefixSum = 0;
+
+		// Iterate over nums, update prefix sum and answer.
+		for (int i = 0; i < nums.Length; ++i)
+		{
+			prefixSum += nums[i];
+			answer = Math.Max(answer, (prefixSum + i) / (i + 1));
+		}
+
+		return (int)answer;
+	}
+
 	public int MinimizeArrayValue_first(int[] nums)
 	{
 		bool swapped = false;
@@ -88,7 +101,6 @@ public void BigTests(string fileName, int expected)
 	int[] nums = JsonConvert.DeserializeObject<int[]>(File.ReadAllText(path));
 
 	int result = new Solution().MinimizeArrayValue(nums);
-	result.Dump();
 	Assert.Equal(expected, result);
 }
 
