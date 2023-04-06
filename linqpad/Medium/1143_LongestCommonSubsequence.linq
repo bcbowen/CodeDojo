@@ -95,8 +95,6 @@ public class Solution
 	}
 }
 
-#region private::Tests
-
 [Theory]
 [InlineData("abcde", "ace", 3)]
 [InlineData("ace", "ace", 3)]
@@ -107,7 +105,6 @@ void Test(string text1, string text2, int expected)
 	DateTime testStart = DateTime.Now;
 	int result = new Solution().LongestCommonSubsequence(text1, text2); 
 	TimeSpan totalMilliseconds = DateTime.Now.Subtract(testStart);
-	totalMilliseconds.TotalMilliseconds.Dump();
 	Assert.Equal(expected, result);
 }
 
@@ -132,5 +129,3 @@ Output: 0
 Explanation: There is no such common subsequence, so the result is 0.
  
 */
-
-#endregion

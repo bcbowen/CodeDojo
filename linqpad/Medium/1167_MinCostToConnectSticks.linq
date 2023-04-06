@@ -34,10 +34,6 @@ public class Solution
 	}
 }
 
-#region private::Tests
-
-[Fact] void Test_Xunit() => Assert.True(1 + 1 == 2);
-
 [Theory]
 [InlineData(new[] { 2, 4, 3 }, 14)]
 [InlineData(new[] { 1, 8, 3, 5 }, 30)]
@@ -76,5 +72,3 @@ Input: sticks = [5]
 Output: 0
 Explanation: There is only one stick, so you don't need to do anything. The total cost is 0.
 */
-
-#endregion

@@ -1,24 +1,12 @@
-<Query Kind="Program" />
+<Query Kind="Program">
+  <Namespace>Xunit</Namespace>
+</Query>
+
+#load "xunit"
 
 void Main()
 {
-	Test(new[] { 18,43,36,13,7 }, 54);
-	Test(new[] { 10, 12, 19, 14 }, -1);
-	Test(new[] { 229, 398, 269, 317, 420, 464, 491, 218, 439, 153, 482, 169, 411, 93, 147, 50, 347, 210, 251, 366, 401}, 973);
-
-}
-
-public void Test(int[] nums, int expected)
-{
-	int result = new Solution().MaximumSum(nums);
-	if (result == expected)
-	{
-		Console.WriteLine("PASS");
-	}
-	else
-	{
-		Console.WriteLine($"FAIL: {expected} != {result}");
-	}
+	RunTests();  // Call RunTests() or press Alt+Shift+T to initiate testing.
 }
 
 public class Solution
@@ -79,4 +67,14 @@ public class Solution
 		return sum;
 	}
 
+}
+
+[Theory]
+[InlineData(new[] { 18, 43, 36, 13, 7 }, 54)]
+[InlineData(new[] { 10, 12, 19, 14 }, -1)]
+[InlineData(new[] { 229, 398, 269, 317, 420, 464, 491, 218, 439, 153, 482, 169, 411, 93, 147, 50, 347, 210, 251, 366, 401 }, 973)]
+public void Test(int[] nums, int expected)
+{
+	int result = new Solution().MaximumSum(nums);
+	Assert.Equal(expected, result);
 }
