@@ -7,8 +7,6 @@
 void Main()
 {
 	RunTests();  // Call RunTests() or press Alt+Shift+T to initiate testing.
-
-
 }
 
 public class Solution
@@ -59,11 +57,6 @@ internal class ScoreComparer : IComparer<int[]>
 		return score1[0].CompareTo(score2[0]);
 	}
 }
-
-
-#region private::Tests
-
-[Fact] void Test_Xunit() => Assert.True(1 + 1 == 2);
 
 [Theory]
 [InlineData(3, new[] { 2, 0, 3 }, new[] { 1, 1, 0, 0, 0 }, new[] { 1, 1, 1, 1, 0 }, new[] { 1, 0, 0, 0, 0 }, new[] { 1, 1, 0, 0, 0 }, new[] { 1, 1, 1, 1, 1 })]
@@ -125,4 +118,3 @@ The number of soldiers in each row is:
 The rows ordered from weakest to strongest are [0,2,3,1].
 
 */
-#endregion

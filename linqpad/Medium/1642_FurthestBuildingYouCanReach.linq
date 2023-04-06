@@ -89,10 +89,6 @@ public class Solution
 	}
 }
 
-#region private::Tests
-
-[Fact] void Test_Xunit() => Assert.True(1 + 1 == 2);
-
 [Theory]
 /**/
 [InlineData(new[] { 4, 2, 7, 6, 9, 14, 12 }, 5, 1, 4)]
@@ -147,4 +143,3 @@ Output: 3
 = 3
 
 */
-#endregion
