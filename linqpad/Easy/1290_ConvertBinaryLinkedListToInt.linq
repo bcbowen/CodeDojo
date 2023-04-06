@@ -51,8 +51,6 @@ public class Solution
 	}
 }
 
-#region private::Tests
-
 /*
 Input: head = [1,0,1]
 Output: 5
@@ -80,9 +78,3 @@ void GetValueTests(int[] values, int expected)
 	int result = solution.GetDecimalValue(node);
 	Assert.Equal(expected, result);
 }
-
-
-
-[Fact] void Test_Xunit() => Assert.True(1 + 1 == 2);
-
-#endregion

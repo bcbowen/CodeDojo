@@ -64,8 +64,6 @@ public class Solution
 	}
 }
 
-#region private::Tests
-
 [Theory]
 [InlineData(new[] { 1, 3, 0, 0, 2, 0, 0, 4 }, 6)]
 [InlineData(new[] { 0, 0, 0, 2, 0, 0 }, 9)]
@@ -84,5 +82,3 @@ public void HugeTest()
 	long result = new Solution().ZeroFilledSubarray(nums);
 	Assert.Equal(expected, result);
 }
-
-#endregion

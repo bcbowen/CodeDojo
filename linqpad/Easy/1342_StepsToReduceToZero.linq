@@ -1,24 +1,12 @@
-<Query Kind="Program" />
+<Query Kind="Program">
+  <Namespace>Xunit</Namespace>
+</Query>
+
+#load "xunit"
 
 void Main()
 {
-	Test(14, 6);
-	Test(8, 4);
-	Test(123, 12);
-}
-
-public void Test(int num, int expected)
-{
-	int result = new Solution().NumberOfSteps(num);
-	if (result == expected)
-	{
-		Console.WriteLine($"{num} PASS: {expected}");
-		
-	}
-	else
-	{
-		Console.WriteLine($"{num} FAIL: {expected} != {result}");
-	}
+	RunTests();  // Call RunTests() or press Alt+Shift+T to initiate testing.
 }
 
 public class Solution
@@ -42,4 +30,14 @@ public class Solution
 		
 		return steps;
 	}
+}
+
+[Theory]
+[InlineData(14, 6)]
+[InlineData(8, 4)]
+[InlineData(123, 12)]
+public void Test(int num, int expected)
+{
+	int result = new Solution().NumberOfSteps(num);
+	Assert.Equal(expected, result);
 }

@@ -59,10 +59,6 @@ public class Solution
 	}
 }
 
-#region private::Tests
-
-[Fact] void Test_Xunit() => Assert.True(1 + 1 == 2);
-
 /*
 Input: coordinates = [[1,2],[2,3],[3,4],[4,5],[5,6],[6,7]]
 Output: true
@@ -89,5 +85,3 @@ void Tests(bool expected, params int[][] coordinates)
 	bool result = new Solution().CheckStraightLine(coordinates); 
 	Assert.Equal(expected, result);
 }
-
-#endregion

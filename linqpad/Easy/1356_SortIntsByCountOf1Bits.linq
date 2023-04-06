@@ -50,10 +50,6 @@ public class Solution
 	}
 }
 
-#region private::Tests
-
-[Fact] void Test_Xunit() => Assert.True (1 + 1 == 2);
-
 /*
 Example 1:
 Input: arr = [0,1,2,3,4,5,6,7,8]
@@ -78,5 +74,3 @@ void SortByBitsTests(int[] arr, int[] expected)
 	int[] result = new Solution().SortByBits(arr); 
 	Assert.Equal(expected, result);
 }
-
-#endregion
