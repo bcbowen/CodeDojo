@@ -76,13 +76,16 @@ So one correct course order is [0,1,2,3]. Another correct ordering is [0,2,1,3].
 Example 3:
 Input: numCourses = 1, prerequisites = []
 Output: [0]
+
+2
+[]
 */
 
 [Theory]
 [InlineData(new[] { 0, 1 }, 2, new[] { 1, 0 })]
 [InlineData(new[] { 0, 1, 2, 3 }, 4, new[] { 1, 0 }, new[] { 2, 0 }, new[] { 3, 1 }, new[] { 3, 2 })]
-[InlineData(new int[0], 1, new[] {0})]
-[InlineData(new int[0], 2, new[] {0, 1})]
+[InlineData(new int[] { 0 }, 1, new int[0])]
+[InlineData(new int[] { 0, 1 }, 2, new int[0])]
 
 void Test(int[] expected, int numCourses, params int[][] prereqs)
 {
