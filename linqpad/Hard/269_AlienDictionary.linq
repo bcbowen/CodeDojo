@@ -1,0 +1,79 @@
+<Query Kind="Program">
+  <Namespace>Xunit</Namespace>
+</Query>
+
+#load "xunit"
+
+void Main()
+{
+	RunTests();  // Call RunTests() or press Alt+Shift+T to initiate testing.
+}
+
+public class Solution
+{
+	public string AlienOrder(string[] words)
+	{
+		// 'a' (97) - 'z' (122)
+		int[] inDegrees = new int[26]; 
+		(Dictionary<char, List<char>> adjacencyList, bool invalid) = GetAdjacencyList(words); 
+		if (invalid) return ""; 
+		
+		string result = ""; 
+		
+		foreach ()
+		
+	}
+
+	internal (Dictionary<char, List<char>>, bool) GetAdjacencyList(string[] words) 
+	{
+		bool found = false;
+		Dictionary<char, List<char>> adjacencyList = new Dictionary<char, System.Collections.Generic.List<char>>(); 
+		bool invalid = false;
+		int i = 0; 
+		do
+		{
+			// check 
+			for (int j = 1; j < words.Length; j++)
+			{
+				string word1 = words[j - 1]; 
+				string word2 = words[j]; 
+				if (i < word1.Length && i < word2.Length && word1[i] != word2[i])
+				{
+					if (!adjacencyList.ContainsKey(word1[i]))
+					{
+						adjacencyList.Add(word1[i], new List<char>()); 
+					}
+					
+				}
+			}
+		} while (found);
+		
+		return (adjacencyList, invalid); 
+	}
+}
+
+
+
+
+/*
+Input: words = ["wrt","wrf","er","ett","rftt"]
+Output: "wertf"
+
+
+w-e
+e-r
+t-f
+r-t
+
+w - e - r - t - f
+*/
+
+[Theory]
+[InlineData(new[] {"wrt","wrf","er","ett","rftt"}, "wertf")]
+[InlineData(new[] {"z","x"}, "zx")]
+[InlineData(new[] {"z","x","z"}, "")]
+void Test(string[] words, string expected) 
+{
+	string result = new Solution().AlienOrder(words);
+	Assert.Equal(expected, result); 
+}
