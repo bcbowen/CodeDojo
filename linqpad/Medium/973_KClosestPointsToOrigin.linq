@@ -39,10 +39,6 @@ public class Solution
 	
 }
 
-#region private::Tests
-
-[Fact] void Test_Xunit() => Assert.True(1 + 1 == 2);
-
 
 [Fact]
 void TestKClosest1()
@@ -110,8 +106,4 @@ points to the origin (0, 0).
 
 You may return the answer in any order. The answer is guaranteed to be unique (except for the order that it is in).
 
-
-
-
 */
-#endregion
