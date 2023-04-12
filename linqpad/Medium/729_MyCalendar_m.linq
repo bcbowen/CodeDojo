@@ -77,9 +77,6 @@ internal class Appointment
  * bool param_1 = obj.Book(start,end);
  */
 
-#region private::Tests
-
-[Fact] void Test_Xunit() => Assert.True(1 + 1 == 2);
 
 /*
 Input
@@ -145,5 +142,3 @@ void BookAppointmentInMiddleSucceeds()
 	bool result = myCalendar.Book(45, 47);
 	Assert.Equal(expected, result);
 }
-
-#endregion
