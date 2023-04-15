@@ -30,36 +30,36 @@ public class Solution
 	{
 		if (root.left == null && root.right == null) return true;
 		
-		return CheckTree(root, -1, -1); 
+		return CheckTree(root, null, null); 
 	}
 
-	internal bool CheckTree(TreeNode root, int min, int max)
+	internal bool CheckTree(TreeNode root, int? min, int? max)
 	{
 		bool isValid = true;
 
 		if (root.left != null)
 		{
 			//max = root.val - 1;
-			if (root.left.val >= root.val || (min > -1 && root.left.val < min))
+			if (root.left.val >= root.val || (min.HasValue && root.left.val <= min))
 			{
 				isValid = false;
 			}
 			else
 			{
 				
-				isValid = CheckTree(root.left, -1, root.val);
+				isValid = CheckTree(root.left, min, root.val);
 			}
 		}
 
 		if (isValid && root.right != null)
 		{
-			if (root.right.val <= root.val || (max > -1 && root.right.val > max))
+			if (root.right.val <= root.val || (max.HasValue && root.right.val >= max))
 			{
 				isValid = false;
 			}
 			else
 			{
-				isValid = CheckTree(root.right, root.val + 1, -1);
+				isValid = CheckTree(root.right, root.val, max);
 			}
 		}
 
@@ -82,57 +82,58 @@ void LeafIsValidTree()
 [Theory]
 [InlineData(2, 2, 2, false)]
 [InlineData(2, 1, 3, true)]
-[InlineData(2, -1, 3, true)]
-[InlineData(2, 1, -1, true)]
+[InlineData(2, null, 3, true)]
+[InlineData(2, 1, null, true)]
 [InlineData(2, 3, 1, false)]
-[InlineData(2, -1, 1, false)]
-[InlineData(2, 3, -1, false)]
-void Test_OneLevelTree(int root, int l, int r, bool expected) 
+[InlineData(2, null, 1, false)]
+[InlineData(2, 3, null, false)]
+void Test_OneLevelTree(int root, int? l, int? r, bool expected) 
 {
 	TreeNode node = new TreeNode(root);
-	if (l != -1) node.left = new TreeNode(l); 
-	if (r != -1) node.right = new TreeNode(r); 
+	if (l.HasValue) node.left = new TreeNode(l.Value); 
+	if (r.HasValue) node.right = new TreeNode(r.Value); 
 	bool result = new Solution().IsValidBST(node); 
 	Assert.Equal(expected, result);
 }
 
+/**/
 [Theory]
 [InlineData(4, 2, 6, 1, 3, 5, 7, true)]
-[InlineData(4, 2, 6, 1, 3, 5, -1, true)]
-[InlineData(4, 2, 6, 1, 3, -1, 7, true)]
+[InlineData(4, 2, 6, 1, 3, 5, null, true)]
+[InlineData(4, 2, 6, 1, 3, null, 7, true)]
 [InlineData(4, 2, 6, 1, 3, 5, 7, true)]
-[InlineData(4, 2, 6, -1, 3, 5, 7, true)]
-[InlineData(4, 2, 6, 1, 3, -1, -1, true)]
-[InlineData(4, 2, 6, -1, -1, 5, 7, true)]
-
+[InlineData(4, 2, 6, null, 3, 5, 7, true)]
+[InlineData(4, 2, 6, 1, 3, null, null, true)]
+[InlineData(4, 2, 6, null, null, 5, 7, true)]
 [InlineData(4, 2, 6, 1, 3, 5, 4, false)]
 [InlineData(4, 2, 6, 1, 3, 8, 7, false)]
 [InlineData(4, 2, 6, 1, 1, 5, 7, false)]
 [InlineData(4, 2, 6, 3, 3, 5, 7, false)]
 [InlineData(4, 5, 6, 1, 3, 5, 7, false)]
 [InlineData(4, 2, 3, 1, 3, 5, 7, false)]
+[InlineData(5, 4, 6, null, null, 3, 7, false)]
+[InlineData(-2147483648, null, 2147483647, null, null, -2147483648, null, false)]
+//// [-2147483648,null,2147483647,-2147483648]
 
-[InlineData(5, 4, 6, -1, -1, 3, 7, false)]
-
-void TwoLevelTests(int root, int l1_1, int l1_2, int l2_1, int l2_2, int l2_3, int l2_4, bool expected) 
+void TwoLevelTests(int root, int? l1_1, int? l1_2, int? l2_1, int? l2_2, int? l2_3, int? l2_4, bool expected) 
 {
 	TreeNode node = new TreeNode(root); 
-	if (l1_1 > 0) node.left = new TreeNode(l1_1); 
-	if (l1_2 > 0) node.right = new TreeNode(l1_2);
+	if (l1_1.HasValue) node.left = new TreeNode(l1_1.Value); 
+	if (l1_2.HasValue) node.right = new TreeNode(l1_2.Value);
 	TreeNode current = node;
 	
 	if (node.left != null) 
 	{
 		current = node.left;
-		if (l2_1 > 0) current.left = new TreeNode(l2_1); 
-		if (l2_2 > 0) current.right = new TreeNode(l2_2);
+		if (l2_1.HasValue) current.left = new TreeNode(l2_1.Value); 
+		if (l2_2.HasValue) current.right = new TreeNode(l2_2.Value);
 	}
 	
 	if (node.right != null)
 	{
 		current = node.right; 
-		if (l2_3 > 0) current.left = new TreeNode(l2_3); 
-		if (l2_4 > 0) current.right = new TreeNode(l2_4); 
+		if (l2_3.HasValue) current.left = new TreeNode(l2_3.Value); 
+		if (l2_4.HasValue) current.right = new TreeNode(l2_4.Value); 
 	}
 	
 	bool result = new Solution().IsValidBST(node);
@@ -194,9 +195,86 @@ void Troubleshooting()
 	Assert.Equal(expected, result);
 }
 
+[Fact]
+void Troubleshooting2()
+{
+	/*
+	                                3
+								  /    \	
+							    /       \
+							  1          5
+							 / \         / \
+						   0    2       4   6  
+						         \     /  \
+						          3  
+						          --     
+	
+	
+	
+	[3,1,5,0,2,4,6,null,null,null,3]
+	false
+	*/
+	// L1
+	TreeNode root = new TreeNode(3);
+	root.left = new TreeNode(1);
+	root.right = new TreeNode(5);
+
+	// L2
+	TreeNode current = root.left;
+	current.left = new TreeNode(0);
+	current.right = new TreeNode(2);
+
+	current = root.right;
+	current.left = new TreeNode(4);
+	current.right = new TreeNode(6);
+
+	// L3
+	current = root.left.right;
+	current.right = new TreeNode(3); // problem!
+
+	bool result = new Solution().IsValidBST(root);
+	bool expected = false;
+	Assert.Equal(expected, result);
+}
+
+[Fact]
+void Troubleshooting3()
+{
+	/*
+	                                4
+								  /   \	
+							     2     6
+							          / \
+						             5   7  
+						             						            
+						          -- 
+	[4, 2, 6, -1, -1, 5, 7]
+	true
+	*/
+	// L1
+	TreeNode root = new TreeNode(4);
+	root.left = new TreeNode(2);
+	root.right = new TreeNode(6);
+
+	// L2
+	TreeNode current = root.right;
+	current.left = new TreeNode(5);
+	current.right = new TreeNode(7);
+
+	bool result = new Solution().IsValidBST(root);
+	bool expected = true;
+	Assert.Equal(expected, result);
+}
+
+
+
 /*
 
+[InlineData(4, 2, 6, -1, -1, 5, 7, true)]
+true
 
+[3,1,5,0,2,4,6,null,null,null,3]
+false
 
 Input: root = [2,1,3]
 Output: true

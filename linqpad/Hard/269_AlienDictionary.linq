@@ -32,6 +32,7 @@ public class Solution
 		int i = 0; 
 		do
 		{
+			found = false;
 			// check 
 			for (int j = 1; j < words.Length; j++)
 			{
@@ -43,10 +44,22 @@ public class Solution
 					{
 						adjacencyList.Add(word1[i], new List<char>()); 
 					}
-					
+
+					if (!adjacencyList[word1[i]].Contains(word2[i]))
+					{
+						adjacencyList[word1[i]].Add(word2[i]);
+						found = true;
+					}
+	
+					// if there is another edge coming the other way this is invalid - there is a cycle
+					if (adjacencyList.ContainsKey(word2[i]) && adjacencyList[word2[i]].Contains(word1[i])) 
+					{
+						invalid = true;
+						break;
+					}
 				}
 			}
-		} while (found);
+		} while (found && !invalid);
 		
 		return (adjacencyList, invalid); 
 	}
