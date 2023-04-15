@@ -37,7 +37,7 @@ public class Solution
 	/// </summary>
 	internal bool Find(int top, int bottom, int left, int right)
 	{
-		if (top  < bottom || left > right) return false;
+		if (top > bottom || left > right) return false;
 		if (top == bottom && left == right) return _matrix[top][left] == _target;
 		
 		int mid = right == left ? right : left + (right - left) / 2;
@@ -100,8 +100,8 @@ Output: false
 */
 
 [Theory]
-//[InlineData(true, 5, new[] { 1, 4, 7, 11, 15 }, new[] { 2, 5, 8, 12, 19 }, new[] { 3, 6, 9, 16, 22 }, new[] { 10, 13, 14, 17, 24 }, new[] { 18, 21, 23, 26, 30 })]
-[InlineData(false, 20, new[] { 1, 4, 7, 11, 15 }, new[] { 2, 5, 8, 12, 19 }, new[] { 3, 6, 9, 16, 22 }, new[] { 10, 13, 14, 17, 24 }, new[] { 18, 21, 23, 26, 30 })]
+[InlineData(true, 5, new[] { 1, 4, 7, 11, 15 }, new[] { 2, 5, 8, 12, 19 }, new[] { 3, 6, 9, 16, 22 }, new[] { 10, 13, 14, 17, 24 }, new[] { 18, 21, 23, 26, 30 })]
+//[InlineData(false, 20, new[] { 1, 4, 7, 11, 15 }, new[] { 2, 5, 8, 12, 19 }, new[] { 3, 6, 9, 16, 22 }, new[] { 10, 13, 14, 17, 24 }, new[] { 18, 21, 23, 26, 30 })]
 //[InlineData(true, -5, new[] { -5 })]
 void Test(bool expected, int target, params int[][] matrix)
 {
