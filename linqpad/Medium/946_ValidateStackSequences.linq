@@ -13,27 +13,20 @@ public class Solution
 {
 	public bool ValidateStackSequences(int[] pushed, int[] popped)
 	{
-		/*
+		int n = pushed.Length;
 		Stack<int> test = new Stack<int>();
 		int j = 0;
-		for (int i = 0; i < pushed.Length; i++)
+		foreach (int i in pushed)
 		{
-			if (i == popped[j]) 
+			test.Push(i);
+			while(test.Count > 0 && j < n && test.Peek() == popped[j]) 
 			{
 				test.Pop();
-			}
-			else 
-			{
-				test.Push();
+				j++;
 			}
 		}
-		*/
-		int i = 0;
-		int j = 0;
-		while (pushed[i] != popped[j]) 
-		{
-			i++; 
-		}
+		/**/
+		return j == n;
 		
 	}
 }
@@ -56,7 +49,7 @@ Explanation: 1 cannot be popped before 2.
 
 */
 
-[Fact]
+[Theory]
 [InlineData(new[] {1,2,3,4,5}, new[] {4,5,3,2,1}, true)]
 [InlineData(new[] {1,2,3,4,5}, new[] {4,3,5,1,2}, false)]
 void Test(int[] pushed, int[] popped, bool expected) 
