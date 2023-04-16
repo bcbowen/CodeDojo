@@ -12,12 +12,12 @@ void Main()
 public class Solution
 {
 	private int _n; 
-	private List<IList<string>> _results;
+	private int _result;
 	
-	public IList<IList<string>> SolveNQueens(int n)
+	public int TotalNQueens(int n)
 	{
 		_n = n;
-		_results = new List<IList<string>>(); 
+		_result = 0; 
 
 		for (int x = 0; x < n; x++) 
 		{
@@ -26,14 +26,14 @@ public class Solution
 			FindNext(board, 1); 
 		}
 		
-		return _results;
+		return _result;
 	}
 
 	internal void FindNext(IList<IList<string>> board, int y)
 	{
 		if (y == _n) 
 		{
-			AddResult(board); 
+			_result++; 
 			return;
 		}
 		
@@ -48,17 +48,6 @@ public class Solution
 		}
 	}
 
-	internal void AddResult(IList<IList<string>> board) 
-	{
-		IList<string> serializedBoard = new string[_n];
-		for (int i = 0; i < _n; i++)
-		{
-			serializedBoard[i] = string.Join("", board[i]); 
-		}
-		
-		_results.Add(serializedBoard);
-	}
-	
 	internal IList<IList<string>> CopyBoard(IList<IList<string>> board, int lastRow) 
 	{
 		IList<IList<string>> copy = InitBoard(_n);
@@ -159,9 +148,9 @@ public class Solution
 [InlineData(9, 352)]
 [InlineData(10, 724)]
 [InlineData(11, 2680)]
-void Test(int n, int expectedCount) 
+void Test(int n, int expected) 
 {
-	IList<IList<string>> result = new Solution().SolveNQueens(n); 
-	Assert.Equal(expectedCount, result.Count); 
+	int result = new Solution().TotalNQueens(n); 
+	Assert.Equal(expected, result); 
 }
 
