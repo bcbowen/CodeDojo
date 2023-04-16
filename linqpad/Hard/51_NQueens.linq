@@ -103,9 +103,9 @@ public class Solution
 		col = x - 1;
 
 		// check diag up to left
-		while (x >= 0 && y >= 0) 
+		while (col >= 0 && row >= 0) 
 		{
-			if (board[col][row] == "Q") return false; 
+			if (board[row][col] == "Q") return false; 
 			row--; 
 			col--; 
 		}
@@ -114,9 +114,9 @@ public class Solution
 		row = y + 1;
 		col = x + 1;
 
-		while (x < _n && y < _n)
+		while (col < _n && row < _n)
 		{
-			if (board[col][row] == "Q") return false;
+			if (board[row][col]== "Q") return false;
 			row++;
 			col++;
 		}
@@ -125,9 +125,9 @@ public class Solution
 		row = y - 1;
 		col = x + 1;
 
-		while (x < _n && y >= 0)
+		while (col < _n && row >= 0)
 		{
-			if (board[col][row] == "Q") return false;
+			if (board[row][col] == "Q") return false;
 			row--;
 			col++;
 		}
@@ -136,11 +136,11 @@ public class Solution
 		row = y + 1;
 		col = x - 1;
 
-		while (x >= 0 && y < _n)
+		while (col >= 0 && row < _n)
 		{
-			if (board[col][row] == "Q") return false;
-			row--;
-			col++;
+			if (board[row][col] == "Q") return false;
+			row++;
+			col--;
 		}
 		
 		// no conflicts 
@@ -148,17 +148,21 @@ public class Solution
 	}
 }
 
-#region private::Tests
-
 [Theory]
 [InlineData(1, 1)]
 [InlineData(2, 0)]
 [InlineData(3, 0)]
 [InlineData(4, 2)]
+[InlineData(5, 10)]
+[InlineData(6, 4)]
+[InlineData(7, 40)]
+[InlineData(8, 92)]
+[InlineData(9, 352)]
+[InlineData(10, 724)]
+[InlineData(11, 2680)]
 void Test(int n, int expectedCount) 
 {
 	IList<IList<string>> result = new Solution().SolveNQueens(n); 
-	Assert.Equal(result.Count, expectedCount); 
+	Assert.Equal(expectedCount, result.Count); 
 }
 
-#endregion
