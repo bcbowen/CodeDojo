@@ -13,21 +13,69 @@ public class Solution
 {
 	private int _n; 
 	HashSet<(int, int)> foundQueens; 
+	private List<IList<string>> _results;
+	
 	public IList<IList<string>> SolveNQueens(int n)
 	{
 		_n = n;
-		
-		foundQueens = new HashSet<(int, int)>();
+		_results = new List<IList<string>>(); 
 
 		for (int x = 0; x < n; x++) 
 		{
-			IList<IList<string>> board = InitBoard(n);
-		    int queenCount = 0;
-			SetQueen(x, 0, board); 
+			IList<IList<string>> board = InitBoard(n);	
+			board[0][x] = "Q"; 
+			FindNext(board, 1); 
+		}
+		
+		return _results;
+	}
+
+	internal void FindNext(IList<IList<string>> board, int y)
+	{
+		if (y == _n) 
+		{
+			AddResult(board); 
+			return;
+		}
+		
+		for (int x = 0; x < _n; x++)
+		{
+			IList<IList<string>> copy = CopyBoard(board, y - 1);
+			copy[y][x] = "Q";
+			if (CheckQueen(x, y, copy)) 
+			{
+				FindNext(copy, y + 1);
+			}
 		}
 	}
 
-	internal string[][] FindNext(int x, int y, 
+	internal void AddResult(IList<IList<string>> board) 
+	{
+		IList<string> serializedBoard = new string[_n];
+		for (int i = 0; i < _n; i++)
+		{
+			serializedBoard[i] = string.Join("", board[i]); 
+		}
+		
+		_results.Add(serializedBoard);
+	}
+	
+	internal IList<IList<string>> CopyBoard(IList<IList<string>> board, int lastRow) 
+	{
+		IList<IList<string>> copy = InitBoard(_n);
+		for(int y = 0; y <= lastRow; y++)
+		{
+			for (int x = 0; x < _n; x++)
+			{
+				if (board[y][x] == "Q") 
+				{
+					copy[y][x] = "Q"; 
+					break;
+				}
+			}
+		}
+		return copy;
+	}
 
 	internal IList<IList<string>> InitBoard(int n) 
 	{
@@ -40,73 +88,77 @@ public class Solution
 		return board;
 	}
 
-	internal (IList<IList<string>>, bool) SetQueen(int x, int y, IList<IList<string>> board) 
+	internal bool CheckQueen(int x, int y, IList<IList<string>> board) 
 	{
-		if (board[y][x] == "x")
-		{
-			return (board, true);
-		}
-
-		board[y][x] = "Q";
 		int row, col;
-		for (col = 0; col < _n; col++) 
-		{
-			if (col == x) continue;
-			board[y][col] = "x"; 
-		}
-
+		col = x;
+		// check for Queen in a different row in the same column
 		for (row = 0; row < _n; row++)
 		{
 			if (row == y) continue;
-			board[row][x] = "x"; 
+			if (board[row][col] == "Q") return false; 
 		}
 		
 		row = y - 1; 
 		col = x - 1;
 
+		// check diag up to left
 		while (x >= 0 && y >= 0) 
 		{
-			board[col][row] = "x"; 
+			if (board[col][row] == "Q") return false; 
 			row--; 
 			col--; 
 		}
 
+		// check diag down to right
 		row = y + 1;
 		col = x + 1;
 
 		while (x < _n && y < _n)
 		{
-			board[col][row] = "x";
+			if (board[col][row] == "Q") return false;
 			row++;
 			col++;
 		}
 
+		// check diag up to right
 		row = y - 1;
 		col = x + 1;
 
 		while (x < _n && y >= 0)
 		{
-			board[col][row] = "x";
+			if (board[col][row] == "Q") return false;
 			row--;
 			col++;
 		}
 
+		// check diag down to left
 		row = y + 1;
 		col = x - 1;
 
 		while (x >= 0 && y < _n)
 		{
-			board[col][row] = "x";
+			if (board[col][row] == "Q") return false;
 			row--;
 			col++;
 		}
 		
-		return (board, true);
+		// no conflicts 
+		return true;
 	}
 }
 
 #region private::Tests
 
-[Fact] void Test_Xunit() => Assert.True (1 + 1 == 2);
+[Theory]
+[InlineData(1, 1)]
+[InlineData(2, 0)]
+[InlineData(3, 0)]
+[InlineData(4, 2)]
+void Test(int n, int expectedCount) 
+{
+	IList<IList<string>> result = new Solution().SolveNQueens(n); 
+	Assert.Equal(result.Count, expectedCount); 
+}
 
 #endregion
