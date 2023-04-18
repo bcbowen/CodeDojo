@@ -36,8 +36,36 @@ class Solution
 	}
 }
 
-#region private::Tests
 
-[Fact] void Test_Xunit() => Assert.True(1 + 1 == 2);
+class Tester 
+{
+	[Fact] void Test_Xunit() => Assert.True(1 + 1 == 2);
+	
+	
+}
 
-#endregion
+internal enum Direction 
+{
+	Left, 
+	Up, 
+	Right, 
+	Down	
+}
+
+class TestRobot : Robot 
+{
+	private int _x; 
+	private int _y; 
+	private Direction _d; 
+	
+
+	
+	public TestRobot(IList<IList<int>> map, int x, int y) 
+	{
+		_d = Direction.Up; 
+	}
+	
+	
+	
+}
+
