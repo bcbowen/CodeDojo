@@ -37,35 +37,57 @@ class Solution
 }
 
 
-class Tester 
+class Tester
 {
 	[Fact] void Test_Xunit() => Assert.True(1 + 1 == 2);
-	
-	
+
+
 }
 
-internal enum Direction 
+internal enum Direction
 {
-	Left, 
-	Up, 
-	Right, 
-	Down	
+	Left,
+	Up,
+	Right,
+	Down
 }
 
-class TestRobot : Robot 
+internal enum RoomType
 {
-	private int _x; 
-	private int _y; 
-	private Direction _d; 
-	
+	Room = 0,
+	Wall = 1
+}
 
-	
-	public TestRobot(IList<IList<int>> map, int x, int y) 
+internal class Room
+{
+	public RoomType RoomType { get; set; }
+	public bool Cleaned { get; set; }
+	public int X { get; set; }
+	public int Y { get; set; }
+}
+
+class TestRobot : Robot
+{
+	private int _x;
+	private int _y;
+	private Direction _d;
+
+	private HashSet<Room> _dirtyRooms;
+
+	public TestRobot(IList<IList<Room>> map, int x, int y)
 	{
-		_d = Direction.Up; 
+		_d = Direction.Up;
+		_dirtyRooms = new HashSet<UserQuery.Room>();
+		foreach (IList<Room> section in map)
+		{
+			foreach (Room room in section) 
+			{
+				_dirtyRooms.Add(room);
+			}
+		}
 	}
-	
-	
-	
+
+
+
 }
 
