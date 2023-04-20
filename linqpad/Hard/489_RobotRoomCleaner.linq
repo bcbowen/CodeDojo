@@ -6,7 +6,7 @@
 
 void Main()
 {
-	RunTests();  // Call RunTests() or press Alt+Shift+T to initiate testing.
+	//RunTests();  // Call RunTests() or press Alt+Shift+T to initiate testing.
 }
 
 
@@ -30,64 +30,44 @@ interface Robot
 
 class Solution
 {
-	public void CleanRoom(Robot robot)
-	{
+	private int[][] _directions = new[] { new[] { -1, 0 }, new[] { 0, 1 }, new[] { 1, 0 }, new[] { 0, -1 } };
+	private HashSet<(int, int)> _visited = new HashSet<(int, int)>();
+	private Robot _robot;
 
+	private void GoBack()
+	{
+		_robot.TurnRight();
+		_robot.TurnRight();
+		_robot.Move();
+		_robot.TurnRight();
+		_robot.TurnRight();
 	}
-}
 
-
-class Tester
-{
-	[Fact] void Test_Xunit() => Assert.True(1 + 1 == 2);
-
-
-}
-
-internal enum Direction
-{
-	Left,
-	Up,
-	Right,
-	Down
-}
-
-internal enum RoomType
-{
-	Room = 0,
-	Wall = 1
-}
-
-internal class Room
-{
-	public RoomType RoomType { get; set; }
-	public bool Cleaned { get; set; }
-	public int X { get; set; }
-	public int Y { get; set; }
-}
-
-class TestRobot : Robot
-{
-	private int _x;
-	private int _y;
-	private Direction _d;
-
-	private HashSet<Room> _dirtyRooms;
-
-	public TestRobot(IList<IList<Room>> map, int x, int y)
+	private void Backtrack(int row, int col, int d)
 	{
-		_d = Direction.Up;
-		_dirtyRooms = new HashSet<UserQuery.Room>();
-		foreach (IList<Room> section in map)
+		_visited.Add((row, col));
+		_robot.Clean();
+		for (int i = 0; i < 4; i++)
 		{
-			foreach (Room room in section) 
+			int newD = (d + i) % 4;
+			int newRow = row + _directions[newD][0];
+			int newCol = col + _directions[newD][1];
+
+			if (!_visited.Contains((newRow, newCol)) && _robot.Move()) 
 			{
-				_dirtyRooms.Add(room);
+				Backtrack(newRow, newCol, newD);
+				GoBack();
 			}
+			
+			_robot.TurnRight();
 		}
 	}
 
-
-
+	public void CleanRoom(Robot robot)
+	{
+		_robot = robot;
+		Backtrack(0, 0, 0);
+	}
 }
+
 
