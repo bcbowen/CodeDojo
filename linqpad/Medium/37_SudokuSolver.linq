@@ -30,8 +30,13 @@ public class Solution
 			{
 				for (int col = 0; col < 9; col++) 
 				{
-					more = more || Filter(row, col); 
+					more = Filter(row, col) || more; 
 				}
+			}
+
+			if (!more) 
+			{
+				isSolved = IsFinished();
 			}
 		}
 	}
@@ -64,7 +69,9 @@ public class Solution
 	/// </summary>
 	internal bool Filter(int row, int col)
 	{
-		if (SudokuBoard[row][col].Count == 0) throw new Exception($"Cell at row {row} column {col} is empty."); 
+		if (SudokuBoard[row][col].Count == 0) throw new Exception($"Cell at row {row} column {col} is empty.");
+		if (row < 0 || row > 8) throw new ArgumentException($"Invalid row: {row}"); 
+		if (col < 0 || col > 8) throw new ArgumentException($"Invalid column: {col}"); 
 		
 		bool more = false;
 
@@ -75,10 +82,9 @@ public class Solution
 		else
 		{
 			int val = SudokuBoard[row][col][0];
-			more = more || FilterColumns(row, val);
-			more = more || FilterRows(col, val);
-			more = more || FilterSection(row, col, val);
-
+			more = FilterColumns(row, val) || more;
+			more = FilterRows(col, val) || more;
+			more = FilterSection(row, col, val) || more;
 		}
 		
 		return more;
@@ -96,7 +102,7 @@ public class Solution
 			if (SudokuBoard[row][col].Count > 1 && SudokuBoard[row][col].Contains(val)) 
 			{
 				SudokuBoard[row][col].Remove(val); 
-				more = more || SudokuBoard[row][col].Count > 1;
+				more = SudokuBoard[row][col].Count > 1 || more;
 			}
 		}
 		return more;
@@ -114,7 +120,7 @@ public class Solution
 			if (SudokuBoard[row][col].Count > 1 && SudokuBoard[row][col].Contains(val))
 			{
 				SudokuBoard[row][col].Remove(val);
-				more = more || SudokuBoard[row][col].Count > 1;
+				more = SudokuBoard[row][col].Count > 1 || more;
 			}
 		}
 		return more;
@@ -128,19 +134,21 @@ public class Solution
 	{
 		bool more = false;
 		int startX = 0;
-		while (startX + 3 > col) 
+		while (startX + 3 < col) 
 		{
 			startX += 3; 
 		}
 
 		int startY = 0;
-		while(startY + 3 > row) 
+		while(startY + 3 < row) 
 		{
 			startY += 3; 
 		}
 		
-		int endX = startX + 3; 
-		int endY = startY = 3;
+		int endX = startX + 2; 
+		int endY = startY = 2;
+
+		if (endY > 8 || endX > 8) throw new Exception($"Point outside of board limits. {endY}:{endX}"); 
 
 		for (int x = startX; x <= endX; x++)
 		{
@@ -149,7 +157,7 @@ public class Solution
 				if (SudokuBoard[y][x].Count > 1 && SudokuBoard[y][x].Contains(val))
 				{
 					SudokuBoard[y][x].Remove(val);
-					more = more || SudokuBoard[y][x].Count > 1;
+					more = SudokuBoard[y][x].Count > 1 || more;
 				}
 			}
 		}
@@ -166,78 +174,6 @@ public class Solution
 			}
 		}
 		
-		return true;
-	}
-
-	internal bool CheckVerticals(char[][] board)
-	{
-		bool[] values = new bool[10];
-		for (int x = 0; x < 9; x++)
-		{
-			values = new bool[10];
-			for (int y = 0; y < 9; y++)
-			{
-				int value;
-				if (int.TryParse(board[y][x].ToString(), out value))
-				{
-					if (values[value]) return false;
-					values[value] = true;
-				}
-			}
-		}
-		return true;
-	}
-
-	internal bool CheckHorizontals(char[][] board)
-	{
-		bool[] values = new bool[10];
-		for (int y = 0; y < 9; y++)
-		{
-			values = new bool[10];
-			for (int x = 0; x < 9; x++)
-			{
-				int value;
-				if (int.TryParse(board[y][x].ToString(), out value))
-				{
-					if (values[value]) return false;
-					values[value] = true;
-				}
-			}
-		}
-		return true;
-	}
-
-	internal bool CheckSquares(char[][] board)
-	{
-		int[][] squares = new[] {
-			new [] {0, 0, 2, 2},
-			new []{0, 3, 2, 5},
-			new []{0, 6, 2, 8},
-			new []{3, 0, 5, 2},
-			new []{3, 3, 5, 5},
-			new []{3, 6, 5, 8 },
-			new []{6, 0, 8, 2},
-			new []{6, 3, 8, 5},
-			new []{6, 6, 8, 8},
-		};
-
-		for (int i = 0; i < 9; i++)
-		{
-			bool[] values = new bool[10];
-			for (int y = squares[i][0]; y <= squares[i][2]; y++)
-			{
-				for (int x = squares[i][1]; x <= squares[i][3]; x++)
-				{
-					int value;
-					if (int.TryParse(board[y][x].ToString(), out value))
-					{
-						if (values[value]) return false;
-						values[value] = true;
-					}
-				}
-			}
-		}
-
 		return true;
 	}
 }
