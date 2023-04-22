@@ -1,8 +1,12 @@
-<Query Kind="Program" />
+<Query Kind="Program">
+  <Namespace>Xunit</Namespace>
+</Query>
+
+#load "xunit"
 
 void Main()
 {
-
+	RunTests();  // Call RunTests() or press Alt+Shift+T to initiate testing.
 }
 
 // Definition for a binary tree node.
@@ -101,3 +105,74 @@ public class Codec
 // Codec ser = new Codec();
 // Codec deser = new Codec();
 // TreeNode ans = deser.deserialize(ser.serialize(root));
+
+
+[Fact]
+void SerializeRootTest() 
+{
+	TreeNode root = new TreeNode(1);
+	Codec c = new Codec(); 
+	string expected = "[1,null,null]"; 
+	string result = c.serialize(root); 
+	Assert.Equal(expected, result); 
+}
+
+[Fact]
+void SerializeOneLevelTest()
+{
+	TreeNode root = new TreeNode(1);
+	root.right = new TreeNode(2); 
+	Codec c = new Codec();
+	string expected = "[1,null,2]";
+	string result = c.serialize(root);
+	Assert.Equal(expected, result);
+}
+
+
+[Fact]
+void DeserializeRootTest()
+{
+	string s = "[1]"; 
+	Codec c = new Codec(); 
+	TreeNode root = c.deserialize(s); 
+	Assert.Equal(root.val, 1);
+	Assert.Null(root.left);
+	Assert.Null(root.right);
+}
+
+/*
+                     1
+					/ \
+				   2   3
+				   \
+				     4
+					/ \
+				   5   6
+				    \
+					 7
+
+*/
+
+[Fact]
+void Deserialize4LevelDoubleDiamondTest()
+{
+	string s = "[1,2,3,null,4,null,null,5,6,null,7]";
+	Codec c = new Codec();
+	TreeNode root = c.deserialize(s);
+	Assert.Equal(root.val, 1);
+	// l1
+	Assert.Equal(root.left.val, 2);
+	Assert.Equal(root.right.val, 3);
+	// l2
+	TreeNode current = root.left;
+	Assert.Equal(current.right.val, 4);
+	
+	current = current.right; 
+	Assert.NotNull(current);
+	Assert.Equal(current.left.val, 5); 
+	Assert.Equal(current.right.val, 6);
+
+	current = current.left;
+	Assert.NotNull(current);
+	Assert.Equal(current.right.val, 7);
+}
