@@ -17,55 +17,55 @@ public class Solution
 	{
 		public Section(int beginRow, int beginColumn, int endRow, int endColumn)
 		{
-			BeginRow = beginRow; 
-			BeginColumn = beginColumn; 
-			EndRow = endRow; 
-			EndColumn = endColumn; 
+			BeginRow = beginRow;
+			BeginColumn = beginColumn;
+			EndRow = endRow;
+			EndColumn = endColumn;
 		}
-		
-		public int BeginRow {get; set;} 
-		public int EndRow {get; set;} 
-		
-		public int BeginColumn {get; set;} 
-		public int EndColumn {get; set;}
+
+		public int BeginRow { get; set; }
+		public int EndRow { get; set; }
+
+		public int BeginColumn { get; set; }
+		public int EndColumn { get; set; }
 
 		private static Section[] _sudokuSections = null;
-		public static Section[] SudokuSections 
+		public static Section[] SudokuSections
 		{
 			get
 			{
-				if (_sudokuSections == null) 
+				if (_sudokuSections == null)
 				{
 					_sudokuSections = new Section[9];
-					int i = 0; 
-					for (int row = 0; row < 7; row += 3) 
+					int i = 0;
+					for (int row = 0; row < 7; row += 3)
 					{
 						for (int col = 0; col < 7; col += 3)
 						{
 							Section section = new Section(row, col, row + 2, col + 2);
-							_sudokuSections[i++] = section; 							
+							_sudokuSections[i++] = section;
 						}
 					}
 				}
-				
-				return _sudokuSections; 
+
+				return _sudokuSections;
 			}
 		}
 
 		public static Section GetSection(int row, int col)
 		{
-			for(int i = 8; i >= 0; i--)
+			for (int i = 8; i >= 0; i--)
 			{
 				if (SudokuSections[i].BeginRow <= row && SudokuSections[i].BeginColumn <= col) return SudokuSections[i];
 			}
 
-			throw new ArgumentOutOfRangeException($"Section not found for row {row}, col {col}"); 
+			throw new ArgumentOutOfRangeException($"Section not found for row {row}, col {col}");
 		}
 	}
-	
+
 	public void SolveSudoku(char[][] board)
 	{
-		Solve(board); 
+		Solve(board);
 	}
 
 	internal void Solve(char[][] board)
@@ -73,31 +73,35 @@ public class Solution
 		Initialize(board);
 
 		bool isSolved = false;
-		int reps = 0; 
-		while (!isSolved && reps < 5)
+		int reps = 0;
+		while (!isSolved && reps < 3)
 		{
-			Filter(); 
+			Filter();
+			isSolved = CheckSudokuBoard();
+			
+			if (!isSolved) Eliminate();
 
-			isSolved = IsFinished();
-			 reps++; 
+			isSolved = CheckSudokuBoard();
+			if (isSolved) break;
+			reps++;
 		}
 		//Console.Write($"Solved after {reps} reps"); 
-		
-		
+
+
 		// update board
 		for (int col = 0; col < 9; col++)
 		{
-			for(int row = 0; row < 9; row++)
+			for (int row = 0; row < 9; row++)
 			{
-				if (SudokuBoard[col][row].Count == 1) 
+				if (SudokuBoard[col][row].Count == 1)
 				{
-					board[col][row] = (char)(SudokuBoard[col][row][0] + '0'); 
-				}				
+					board[col][row] = (char)(SudokuBoard[col][row][0] + '0');
+				}
 			}
 		}
 	}
 
-	internal void Initialize(char[][] board) 
+	internal void Initialize(char[][] board)
 	{
 		SudokuBoard = new List<List<List<int>>>();
 		for (int i = 0; i < 9; i++)
@@ -116,7 +120,7 @@ public class Solution
 				}
 			}
 		}
-		
+
 	}
 
 	/// <summary>
@@ -126,7 +130,7 @@ public class Solution
 	internal void Filter()
 	{
 		FilterColumns();
-		FilterRows(); 
+		FilterRows();
 		FilterSections();
 	}
 
@@ -139,7 +143,7 @@ public class Solution
 		for (int col = 0; col < 9; col++)
 		{
 			List<int> singleValues = new List<int>();
-			List<int> multiIndexes = new List<int>(); 
+			List<int> multiIndexes = new List<int>();
 			for (int row = 0; row < 9; row++)
 			{
 				if (SudokuBoard[row][col].Count > 1)
@@ -172,29 +176,29 @@ public class Solution
 		for (int row = 0; row < 9; row++)
 		{
 			List<int> singleValues = new List<int>();
-			List<int> multiIndexes = new List<int>(); 
+			List<int> multiIndexes = new List<int>();
 			for (int col = 0; col < 9; col++)
 			{
-				if (SudokuBoard[row][col].Count > 1) 
+				if (SudokuBoard[row][col].Count > 1)
 				{
 					multiIndexes.Add(col);
 				}
-				else 
+				else
 				{
-					singleValues.Add(SudokuBoard[row][col][0]); 
+					singleValues.Add(SudokuBoard[row][col][0]);
 				}
 			}
 
 			// filter out single values from cells with multiple possibilities
-			foreach(int col in multiIndexes) 
+			foreach (int col in multiIndexes)
 			{
-				SudokuBoard[row][col].RemoveAll(l => singleValues.Contains(l)); 
-				
+				SudokuBoard[row][col].RemoveAll(l => singleValues.Contains(l));
+
 				// if we are left with a single value, clean up the row, col, and section containing this value
-				if (SudokuBoard[row][col].Count == 1) FilterCell(row, col); 
+				if (SudokuBoard[row][col].Count == 1) FilterCell(row, col);
 			}
 		}
-		
+
 	}
 
 	/// <summary>
@@ -212,7 +216,7 @@ public class Solution
 			if (SudokuBoard[row][x].Count > 1 && SudokuBoard[row][x].Contains(val))
 			{
 				SudokuBoard[row][x].Remove(val);
-				
+
 				if (SudokuBoard[row][x].Count == 1) FilterCell(row, x);
 			}
 		}
@@ -223,7 +227,7 @@ public class Solution
 			if (SudokuBoard[y][col].Count > 1 && SudokuBoard[y][col].Contains(val))
 			{
 				SudokuBoard[y][col].Remove(val);
-				if (SudokuBoard[y][col].Count == 1) FilterCell(y,col);
+				if (SudokuBoard[y][col].Count == 1) FilterCell(y, col);
 			}
 		}
 
@@ -236,7 +240,7 @@ public class Solution
 				if (SudokuBoard[y][x].Count > 1 && SudokuBoard[y][x].Contains(val))
 				{
 					SudokuBoard[y][x].Remove(val);
-					if (SudokuBoard[y][x].Count == 1) FilterCell(y,x);
+					if (SudokuBoard[y][x].Count == 1) FilterCell(y, x);
 				}
 			}
 		}
@@ -247,14 +251,14 @@ public class Solution
 	/// </summary>
 	internal void FilterSections()
 	{
-		foreach(Section section in Section.SudokuSections)
+		foreach (Section section in Section.SudokuSections)
 		{
 			List<int> singleValues = new List<int>();
 			List<(int, int)> multiIndexes = new List<(int, int)>();
-			
+
 			for (int row = section.BeginRow; row <= section.EndRow; row++)
 			{
-				
+
 				for (int col = section.BeginColumn; col <= section.EndColumn; col++)
 				{
 					if (SudokuBoard[row][col].Count > 1)
@@ -265,7 +269,7 @@ public class Solution
 					{
 						singleValues.Add(SudokuBoard[row][col][0]);
 					}
-				}				
+				}
 			}
 			// filter out single values from cells with multiple possibilities
 			foreach ((int y, int x) in multiIndexes)
@@ -278,22 +282,134 @@ public class Solution
 		}
 	}
 
+	/// <summary>
+	/// Check for values that can only be one of the cells in a row, col, or section 
+	/// Ex: in a row, one cell has possible values 1, 3, 6, and no other cell in that row can be 6, we know this cell is 6 and we can eliminate the other possibilities
+	/// </summary>
+	internal void Eliminate() 
+	{
+		// check each row
+		for (int row = 0; row < 9; row++)
+		{
+			EliminateRange(0, 8, row, row); 
+		}
+		// check each col
+		for (int col = 0; col < 9; col++)
+		{
+			EliminateRange(col, col, 0, 8);
+		}
+		
+		// check each section
+		for (int i = 0; i < 9; i++)
+		{
+			Section section = Section.SudokuSections[i]; 
+			EliminateRange(section.BeginColumn, section.EndColumn, section.BeginRow, section.EndRow); 
+		}
+	}
+
+	internal void EliminateRange(int beginX, int endX, int beginY, int endY) 
+	{
+		bool[] values = new bool[10];
+		List<List<(int, int)>> possibleCells = new List<List<(int, int)>>();
+		for (int i = 0; i <= 10; i++) 
+		{
+			possibleCells.Add(new List<(int, int)>()); 
+		}
+
+		for (int row = beginY; row <= endY; row++)
+		{
+			for (int col = beginX; col <= endX; col++)
+			{
+				if (SudokuBoard[row][col].Count == 1) 
+				{
+					values[SudokuBoard[row][col][0]] = true;
+				}
+				else
+				{
+					foreach (int val in SudokuBoard[row][col]) 
+					{
+						possibleCells[val].Add((row, col));
+					}
+				}
+			}
+		}
+
+		
+		for (int i = 0; i < possibleCells.Count; i++)
+		{
+			if (possibleCells[i].Count == 1) 
+			{
+				(int y, int x) = possibleCells[i][0];
+				SudokuBoard[y][x] = new List<int> { i };
+				FilterCell(y, x); 	
+			}
+		}
+	}
+	
+/*
 	internal bool IsFinished()
 	{
-		for(int x = 0; x < 9; x++)
+		for (int x = 0; x < 9; x++)
 		{
 			for (int y = 0; y < 9; y++)
 			{
 				if (SudokuBoard[y][x].Count > 1) return false;
 			}
 		}
-		
+
+		return true;
+	}
+*/
+	public bool CheckSudokuBoard()
+	{
+		bool result = true;
+		// vertical 
+		for (int col = 0; col < 9; col++)
+		{
+			result = result && CheckRegion(col, col, 0, 8);
+			if (!result) break;
+		}
+
+		if (result)
+		{
+			for (int row = 0; row < 9; row++)
+			{
+				result = result && CheckRegion(0, 8, row, row);
+				if (!result) break;
+			}
+		}
+
+		if (result)
+		{
+			for (int i = 0; i < 9; i++)
+			{
+				Section section = Section.SudokuSections[i];
+				result = result && CheckRegion(section.BeginColumn, section.EndColumn, section.BeginRow, section.EndRow);
+				if (!result) break;
+			}
+		}
+
+		return result;
+	}
+
+	internal bool CheckRegion(int beginX, int endX, int beginY, int endY)
+	{
+		bool[] values;
+		for (int x = beginX; x <= endX; x++)
+		{
+			values = new bool[10];
+			for (int y = beginY; y <= endY; y++)
+			{
+				if (SudokuBoard[y][x].Count > 1 || values[SudokuBoard[y][x][0]]) return false;
+				values[SudokuBoard[y][x][0]] = true;
+			}
+		}
 		return true;
 	}
 }
 
 [Fact]
-void InitializeTest() 
+void InitializeTest()
 {
 	char[][] board =
 {
@@ -307,12 +423,12 @@ void InitializeTest()
 		new []{'.','.','.','4','1','9','.','.','5'},
 		new []{'.','.','.','.','8','.','.','7','9'}
 	};
-	
-	Solution s = new Solution(); 
-	s.Initialize(board); 
+
+	Solution s = new Solution();
+	s.Initialize(board);
 	Assert.Equal(9, s.SudokuBoard.Count);
 	Assert.Equal(9, s.SudokuBoard[0].Count);
-	Assert.Equal(5, s.SudokuBoard[0][0][0]); 
+	Assert.Equal(5, s.SudokuBoard[0][0][0]);
 	Assert.Equal(9, s.SudokuBoard[0][2].Count);
 	Assert.Equal(9, s.SudokuBoard[0][2][8]);
 }
@@ -347,15 +463,51 @@ void Test()
 	};
 
 
-	new Solution().SolveSudoku(board);
+	Solution s = new Solution();
+	s.SolveSudoku(board);
 	Assert.Equal(expected, board);
+	Assert.True(s.CheckSudokuBoard());
 }
 
 [Fact]
-void SectionInitializerTests() 
+void Test2()
 {
-	Assert.NotNull(Solution.Section.SudokuSections); 
-	Assert.Equal(9, Solution.Section.SudokuSections.Length); 
+	char[][] board =
+	{
+		new []{'.','.','9','7','4','8','.','.','.'},
+		new []{'7','.','.','.','.','.','.','.','.'},
+		new []{'.','2','.','1','.','9','.','.','.'},
+		new []{'.','.','7','.','.','.','2','4','.'},
+		new []{'.','6','4','.','1','.','5','9','.'},
+		new []{'.','9','8','.','.','.','3','.','.'},
+		new []{'.','.','.','8','.','3','.','2','.'},
+		new []{'.','.','.','.','.','.','.','.','6'},
+		new []{'.','.','.','2','7','5','9','.','.'}
+	};
+
+	Solution s = new Solution();
+	s.SolveSudoku(board);
+	Assert.True(s.CheckSudokuBoard());
+}
+
+/*
+
+new []{".",".","9","7","4","8",".",".","."},
+new []{"7",".",".",".",".",".",".",".","."},
+new []{".","2",".","1",".","9",".",".","."},
+new []{".",".","7",".",".",".","2","4","."},
+new []{".","6","4",".","1",".","5","9","."},
+new []{".","9","8",".",".",".","3",".","."},
+new []{".",".",".","8",".","3",".","2","."},
+new []{".",".",".",".",".",".",".",".","6"},
+new []{".",".",".","2","7","5","9",".","."}
+*/
+
+[Fact]
+void SectionInitializerTests()
+{
+	Assert.NotNull(Solution.Section.SudokuSections);
+	Assert.Equal(9, Solution.Section.SudokuSections.Length);
 	// first section
 	Assert.Equal(0, Solution.Section.SudokuSections[0].BeginRow);
 	Assert.Equal(0, Solution.Section.SudokuSections[0].BeginColumn);
@@ -403,15 +555,15 @@ void SectionInitializerTests()
 [InlineData(6, 6, 6, 6)]
 
 
-void GetSectionTest(int row, int col, int expectedBeginRow, int expectedBeginCol) 
+void GetSectionTest(int row, int col, int expectedBeginRow, int expectedBeginCol)
 {
 	Solution.Section section = Solution.Section.GetSection(row, col);
-	Assert.Equal(expectedBeginRow, section.BeginRow); 
+	Assert.Equal(expectedBeginRow, section.BeginRow);
 	Assert.Equal(expectedBeginCol, section.BeginColumn);
 }
 
 [Fact]
-void FilterRowTest() 
+void FilterRowTest()
 {
 	char[][] board =
 	{
@@ -428,10 +580,10 @@ void FilterRowTest()
 	Solution s = new Solution();
 	s.Initialize(board);
 	s.FilterRows();
-	List<int> expected = new List<int> {1, 2, 4, 6, 8, 9}; 
-	Assert.Equal(expected, s.SudokuBoard[0][2]); 
-	expected = new List<int> {1, 2, 3, 4, 5, 6}; 
-	Assert.Equal(expected, s.SudokuBoard[8][0]); 
+	List<int> expected = new List<int> { 1, 2, 4, 6, 8, 9 };
+	Assert.Equal(expected, s.SudokuBoard[0][2]);
+	expected = new List<int> { 1, 2, 3, 4, 5, 6 };
+	Assert.Equal(expected, s.SudokuBoard[8][0]);
 }
 
 [Fact]
@@ -482,8 +634,6 @@ void FilterSectionsTest()
 	Assert.Equal(expected, s.SudokuBoard[6][8]);
 }
 
-
-
 /*
 	char[][] board =
 	{
@@ -498,3 +648,45 @@ void FilterSectionsTest()
 		new []{'.','.','.','.','8','.','.','7','9'}
 	};
 */
+
+[Fact]
+void ValidateValidBoardTest()
+{
+	char[][] board =
+	{
+		new []{'5','3','4','6','7','8','9','1','2'},
+		new []{'6','7','2','1','9','5','3','4','8'},
+		new []{'1','9','8','3','4','2','5','6','7'},
+		new []{'8','5','9','7','6','1','4','2','3'},
+		new []{'4','2','6','8','5','3','7','9','1'},
+		new []{'7','1','3','9','2','4','8','5','6'},
+		new []{'9','6','1','5','3','7','2','8','4'},
+		new []{'2','8','7','4','1','9','6','3','5'},
+		new []{'3','4','5','2','8','6','1','7','9'}
+	};
+
+	Solution s = new Solution();
+	s.Initialize(board);
+	Assert.True(s.CheckSudokuBoard());
+}
+
+[Fact]
+void ValidateInvalidBoardTest()
+{
+	char[][] board =
+	{
+		new []{'5','5','4','6','7','8','9','1','2'},
+		new []{'6','7','2','1','9','5','3','4','8'},
+		new []{'1','9','8','3','4','2','5','6','7'},
+		new []{'8','5','9','7','6','1','4','2','3'},
+		new []{'4','2','6','8','5','3','7','9','1'},
+		new []{'7','1','3','9','2','4','8','5','6'},
+		new []{'9','6','1','5','3','7','2','8','4'},
+		new []{'2','8','7','4','1','9','6','3','5'},
+		new []{'3','4','5','2','8','6','1','7','9'}
+	};
+
+	Solution s = new Solution();
+	s.Initialize(board);
+	Assert.False(s.CheckSudokuBoard());
+}
