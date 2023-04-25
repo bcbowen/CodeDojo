@@ -28,7 +28,7 @@ public class SmallestInfiniteSet
 	{
 		int value = _values[_position];
 		_isPresent[_position] = false;
-		while(!_isPresent[_position] && _position < _values.Length) 
+		while(_position < _values.Length && !_isPresent[_position]) 
 		{
 			_position++; 
 		}
@@ -172,12 +172,18 @@ void PopThemAll()
 {
 	SmallestInfiniteSet set = new SmallestInfiniteSet();
 	int expected = 1; 
-	for(int i = 1; i < 1001; i++)
+	int result;
+	// 1 - 999
+	for(int i = 1; i < 1000; i++)
 	{
-		int result = set.PopSmallest(); 
+		result = set.PopSmallest(); 
 		Assert.Equal(expected, result); 
 		expected++; 
 	}
+
+	// 1000
+	result = set.PopSmallest();
+	Assert.Equal(expected, result);
 }
 
 [Fact]
