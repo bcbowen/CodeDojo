@@ -85,10 +85,6 @@ public class Solution
 	}
 }
 
-#region private::Tests
-
-[Fact] void Test_Xunit() => Assert.True(1 + 1 == 2);
-
 [Theory]
 [InlineData(new[] { 1, 2, 3, 4, 5 }, 2, new[] { 1, 2, 3, 5 })]
 [InlineData(new[] { 1 }, 1, new int[0])]
@@ -142,5 +138,3 @@ Example 3:
 Input: head = [1,2], n = 1
 Output: [1]
 */
-
-#endregion
