@@ -11,36 +11,36 @@ void Main()
 
 public class Solution
 {
+	private int _n; 
+    private int _k; 
+    private List<IList<int>> _output = new List<IList<int>>();
+
 	public IList<IList<int>> Combine(int n, int k)
 	{
-		List<IList<int>> result = new List<IList<int>>();
-		HashSet<(int, int)> found = new HashSet<(int, int)>();
-
-		if (n == 1 && k == 1)
-		{
-			result.Add(new List<int>() { 1 });
-		}
-		else
-		{
-			for (int i = 1; i <= n; i++)
-			{
-				for (int j = 1; j <= n; j++)
-				{
-					if (i == j) continue;
-					int min = Math.Min(i, j);
-					int max = Math.Max(i, j);
-					if (!found.Contains((min, max)))
-					{
-						found.Add((min, max));
-						result.Add(new List<int> { min, max });
-					}
-				}
-			}
-		}
-
-		return result;
+		_n = n; 
+		_k = k; 
+		Backtrack(1, new List<int>()); 
+		return _output;
 	}
+
+    internal void Backtrack(int first, List<int> curr)
+    {
+        if (curr.Count == _k)
+        {
+			List<int> newList = new List<int>(); 
+			newList.AddRange(curr);
+			_output.Add(newList);
+        }
+
+        for (int i = first; i < _n + 1; i++)
+        {
+            curr.Add(i); 
+			Backtrack(i + 1, curr);
+			curr.RemoveAt(curr.Count - 1);
+        }
+    }
 }
+
 
 /*
 Example 1:
