@@ -13,49 +13,93 @@ public class Solution
 {
 	internal List<List<List<int>>> SudokuBoard;
 
-
-
 	public void SolveSudoku(char[][] board)
 	{
-		Solve(board);
+		SudokuSolver solver = new SudokuSolver();
+		solver.Solve(board);
+		board = solver.Board.ToCharArray();
+	}
+}
+
+internal struct Section
+{
+	public Section(int beginRow, int beginColumn, int endRow, int endColumn)
+	{
+		BeginRow = beginRow;
+		BeginColumn = beginColumn;
+		EndRow = endRow;
+		EndColumn = endColumn;
 	}
 
-	internal void Solve(char[][] board)
+	public int BeginRow { get; set; }
+	public int EndRow { get; set; }
+
+	public int BeginColumn { get; set; }
+	public int EndColumn { get; set; }
+
+	private static Section[] _sudokuSections = null;
+	public static Section[] SudokuSections
 	{
-		Initialize(board);
-
-		bool isSolved = false;
-		int reps = 0;
-		while (!isSolved && reps < 3)
+		get
 		{
-			Filter();
-			isSolved = CheckSudokuBoard();
-
-			if (!isSolved) Eliminate();
-
-			isSolved = CheckSudokuBoard();
-			if (isSolved) break;
-			reps++;
-		}
-		//Console.Write($"Solved after {reps} reps"); 
-
-
-		// update board
-		for (int col = 0; col < 9; col++)
-		{
-			for (int row = 0; row < 9; row++)
+			if (_sudokuSections == null)
 			{
-				if (SudokuBoard[col][row].Count == 1)
+				_sudokuSections = new Section[9];
+				int i = 0;
+				for (int row = 0; row < 7; row += 3)
 				{
-					board[col][row] = (char)(SudokuBoard[col][row][0] + '0');
+					for (int col = 0; col < 7; col += 3)
+					{
+						Section section = new Section(row, col, row + 2, col + 2);
+						_sudokuSections[i++] = section;
+					}
 				}
 			}
+
+			return _sudokuSections;
 		}
 	}
 
-	internal void Initialize(char[][] board)
+	public static Section GetSection(int row, int col)
 	{
-		SudokuBoard = new List<List<List<int>>>();
+		for (int i = 8; i >= 0; i--)
+		{
+			if (SudokuSections[i].BeginRow <= row && SudokuSections[i].BeginColumn <= col) return SudokuSections[i];
+		}
+
+		throw new ArgumentOutOfRangeException($"Section not found for row {row}, col {col}");
+	}
+}
+
+internal class SudokuCell
+{
+	public int Value { get; set; }
+	public List<int> PossibleValues { get; set; }
+
+	public bool Contains(int value) 
+	{
+		return PossibleValues.Contains(value);
+	}
+
+	public bool Remove(int value)
+	{
+		return PossibleValues.Remove(value);
+	}
+
+	public int RemoveRange(List<int> values)
+	{
+		return PossibleValues.RemoveAll(value => values.Contains(value));
+	}
+}
+
+internal class SudokuBoard
+{
+	public List<List<SudokuCell>> Board { get; set; }
+
+	public static SudokuBoard Create(char[][] board)
+	{
+		SudokuBoard sudokoBoard = new SudokuBoard();
+
 		for (int i = 0; i < 9; i++)
 		{
 			SudokuBoard.Add(new List<List<int>>());
@@ -73,6 +117,164 @@ public class Solution
 			}
 		}
 
+		return sudokuBoard;
+	}
+
+	public bool CheckSudokuBoard()
+	{
+		bool result = true;
+		// vertical 
+		for (int col = 0; col < 9; col++)
+		{
+			result = result && CheckRegion(col, col, 0, 8);
+			if (!result) break;
+		}
+
+		if (result)
+		{
+			for (int row = 0; row < 9; row++)
+			{
+				result = result && CheckRegion(0, 8, row, row);
+				if (!result) break;
+			}
+		}
+
+		if (result)
+		{
+			for (int i = 0; i < 9; i++)
+			{
+				Section section = Section.SudokuSections[i];
+				result = result && CheckRegion(section.BeginColumn, section.EndColumn, section.BeginRow, section.EndRow);
+				if (!result) break;
+			}
+		}
+
+		return result;
+	}
+
+	internal bool CheckRegion(int beginX, int endX, int beginY, int endY)
+	{
+		bool[] values;
+		for (int x = beginX; x <= endX; x++)
+		{
+			values = new bool[10];
+			for (int y = beginY; y <= endY; y++)
+			{
+				if (Board[y][x].Value == 0 || values[Board[y][x].Value]) return false;
+				values[Board[y][x].Value] = true;
+			}
+		}
+		return true;
+	}
+
+	public char[][] ToCharArray()
+	{
+		char[][] board = new char[9][];
+		for (int i = 0; i < 9; i++)
+		{
+			board[i] = new char[9];
+		}
+
+		// update board
+		for (int col = 0; col < 9; col++)
+		{
+			for (int row = 0; row < 9; row++)
+			{
+				if (Board[col][row].Value > 0)
+				{
+					board[col][row] = (char)(Board[col][row].Value + '0');
+				}
+				else
+				{
+					board[col][row] = '.';
+				}
+			}
+		}
+
+		return board;
+	}
+
+}
+
+internal class SudokuSolver
+{
+	public SudokuBoard Board;
+
+	public void Solve(SudokuBoard board)
+	{
+		Board = board;
+
+		bool isSolved = false;
+		int reps = 0;
+		while (!isSolved && reps < 3)
+		{
+			Filter();
+			isSolved = Board.CheckSudokuBoard();
+
+			if (!isSolved) Eliminate();
+
+			isSolved = Board.CheckSudokuBoard();
+			if (isSolved) break;
+			reps++;
+		}
+		//Console.Write($"Solved after {reps} reps"); 
+	}
+
+	/// <summary>
+	/// When single value is found for cell, eliminate this value for all other cells in 
+	/// row, column, section. Called recursively as additional values are found.
+	/// </summary>
+	internal void FilterCell(int row, int col)
+	{
+		// get val from cell 
+		int val = Board.Board[row][col].Value;
+
+		// remove value from columns in same row
+		for (int x = 0; x < 9; x++)
+		{
+			if (Board.Board[row][x].Contains(val))
+			{
+				Board.Board[row][x].Remove(val);
+
+				if (Board.Board[row][x].PossibleValues.Count == 1) 
+				{
+					Board.Board[row][x].Value = Board.Board[row][x].PossibleValues[0];
+					FilterCell(row, x);
+				}
+			}
+		}
+
+		// remove value from rows in same col
+		for (int y = 0; y < 9; y++)
+		{
+			if (Board.Board[y][col].Contains(val))
+			{
+				Board.Board[y][col].Remove(val);
+				if (Board.Board[y][col].PossibleValues.Count == 1)
+				{
+					Board.Board[y][col].Value = Board.Board[y][col].PossibleValues[0];
+					FilterCell(y, col); 
+				}
+			}
+		}
+
+		// remove value from same section
+		Section section = Section.GetSection(row, col);
+		for (int x = section.BeginColumn; x <= section.EndColumn; x++)
+		{
+			for (int y = section.BeginRow; y <= section.EndRow; y++)
+			{
+				if (Board.Board[y][x].Contains(val))
+				{
+					Board.Board[y][x].Remove(val);
+					if (Board.Board[y][x].PossibleValues.Count == 1) 
+					{
+						Board.Board[y][x].Value = Board.Board[y][x].PossibleValues[0];
+						FilterCell(y, x);
+					}
+				}
+			}
+		}
 	}
 
 	/// <summary>
@@ -98,23 +300,27 @@ public class Solution
 			List<int> multiIndexes = new List<int>();
 			for (int row = 0; row < 9; row++)
 			{
-				if (SudokuBoard[row][col].Count > 1)
+				if (Board.Board[row][col].Value < 1)
 				{
 					multiIndexes.Add(row);
 				}
 				else
 				{
-					singleValues.Add(SudokuBoard[row][col][0]);
+					singleValues.Add(Board.Board[row][col].Value);
 				}
 			}
 
 			// filter out single values from cells with multiple possibilities
 			foreach (int row in multiIndexes)
 			{
-				SudokuBoard[row][col].RemoveAll(l => singleValues.Contains(l));
+				Board.Board[row][col].PossibleValues.RemoveAll(l => singleValues.Contains(l));
 
 				// if we are left with a single value, clean up the row, col, and section containing this value
-				if (SudokuBoard[row][col].Count == 1) FilterCell(row, col);
+				if (Board.Board[row][col].PossibleValues.Count == 1) 
+				{
+					Board.Board[row][col].Value = Board.Board[row][col].PossibleValues[0];
+					FilterCell(row, col); 
+				}
 			}
 		}
 	}
@@ -153,50 +359,7 @@ public class Solution
 
 	}
 
-	/// <summary>
-	/// When single value is found for cell, eliminate this value for all other cells in 
-	/// row, column, section. Called recursively as additional values are found.
-	/// </summary>
-	internal void FilterCell(int row, int col)
-	{
-		// get val from cell 
-		int val = SudokuBoard[row][col][0];
 
-		// remove value from columns in same row
-		for (int x = 0; x < 9; x++)
-		{
-			if (SudokuBoard[row][x].Count > 1 && SudokuBoard[row][x].Contains(val))
-			{
-				SudokuBoard[row][x].Remove(val);
-
-				if (SudokuBoard[row][x].Count == 1) FilterCell(row, x);
-			}
-		}
-
-		// remove value from rows in same col
-		for (int y = 0; y < 9; y++)
-		{
-			if (SudokuBoard[y][col].Count > 1 && SudokuBoard[y][col].Contains(val))
-			{
-				SudokuBoard[y][col].Remove(val);
-				if (SudokuBoard[y][col].Count == 1) FilterCell(y, col);
-			}
-		}
-
-		// remove value from same section
-		Section section = Section.GetSection(row, col);
-		for (int x = section.BeginColumn; x <= section.EndColumn; x++)
-		{
-			for (int y = section.BeginRow; y <= section.EndRow; y++)
-			{
-				if (SudokuBoard[y][x].Count > 1 && SudokuBoard[y][x].Contains(val))
-				{
-					SudokuBoard[y][x].Remove(val);
-					if (SudokuBoard[y][x].Count == 1) FilterCell(y, x);
-				}
-			}
-		}
-	}
 
 	/// <summary>
 	/// Check each section and filter cells that have been found.
@@ -299,155 +462,8 @@ public class Solution
 	}
 
 
-	public bool CheckSudokuBoard()
-	{
-		bool result = true;
-		// vertical 
-		for (int col = 0; col < 9; col++)
-		{
-			result = result && CheckRegion(col, col, 0, 8);
-			if (!result) break;
-		}
-
-		if (result)
-		{
-			for (int row = 0; row < 9; row++)
-			{
-				result = result && CheckRegion(0, 8, row, row);
-				if (!result) break;
-			}
-		}
-
-		if (result)
-		{
-			for (int i = 0; i < 9; i++)
-			{
-				Section section = Section.SudokuSections[i];
-				result = result && CheckRegion(section.BeginColumn, section.EndColumn, section.BeginRow, section.EndRow);
-				if (!result) break;
-			}
-		}
-
-		return result;
-	}
-
-	internal bool CheckRegion(int beginX, int endX, int beginY, int endY)
-	{
-		bool[] values;
-		for (int x = beginX; x <= endX; x++)
-		{
-			values = new bool[10];
-			for (int y = beginY; y <= endY; y++)
-			{
-				if (SudokuBoard[y][x].Count > 1 || values[SudokuBoard[y][x][0]]) return false;
-				values[SudokuBoard[y][x][0]] = true;
-			}
-		}
-		return true;
-	}
-}
-
-internal struct Section
-{
-	public Section(int beginRow, int beginColumn, int endRow, int endColumn)
-	{
-		BeginRow = beginRow;
-		BeginColumn = beginColumn;
-		EndRow = endRow;
-		EndColumn = endColumn;
-	}
-
-	public int BeginRow { get; set; }
-	public int EndRow { get; set; }
-
-	public int BeginColumn { get; set; }
-	public int EndColumn { get; set; }
-
-	private static Section[] _sudokuSections = null;
-	public static Section[] SudokuSections
-	{
-		get
-		{
-			if (_sudokuSections == null)
-			{
-				_sudokuSections = new Section[9];
-				int i = 0;
-				for (int row = 0; row < 7; row += 3)
-				{
-					for (int col = 0; col < 7; col += 3)
-					{
-						Section section = new Section(row, col, row + 2, col + 2);
-						_sudokuSections[i++] = section;
-					}
-				}
-			}
-
-			return _sudokuSections;
-		}
-	}
-
-	public static Section GetSection(int row, int col)
-	{
-		for (int i = 8; i >= 0; i--)
-		{
-			if (SudokuSections[i].BeginRow <= row && SudokuSections[i].BeginColumn <= col) return SudokuSections[i];
-		}
-
-		throw new ArgumentOutOfRangeException($"Section not found for row {row}, col {col}");
-	}
-}
-
-internal class SudokuCell
-{
-	public int Value { get; set; }
-	public List<int> PossibleValues { get; set; }
-
-	public bool Remove(int value)
-	{
-		return PossibleValues.Remove(value);
-	}
-
-	public int RemoveRange(List<int> values)
-	{
-		return PossibleValues.RemoveAll(value => values.Contains(value));
-	}
-}
-
-internal class SudokuBoard
-{
-	private List<List<SudokuCell>> _board; 
-	
-	public static SudokuBoard 
-	
-	public void Initialize(char[][] board)
-	{
-		_board = new List<List<SudokuCell>>();
-
-		for (int i = 0; i < 9; i++)
-		{
-			SudokuBoard.Add(new List<List<int>>());
-			for (int j = 0; j < 9; j++)
-			{
-				SudokuBoard[i].Add(new List<int>());
-				if (board[i][j] != '.')
-				{
-					SudokuBoard[i][j].Add(int.Parse(board[i][j].ToString()));
-				}
-				else
-				{
-					SudokuBoard[i][j].AddRange(Enumerable.Range(1, 9));
-				}
-			}
-		}
-
-		return sudokuBoard;
-	}
 
 }
-
-internal class SudokuSolver
-{
-
 
 }
 
