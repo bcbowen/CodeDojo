@@ -9,30 +9,62 @@ void Main()
 	RunTests();  // Call RunTests() or press Alt+Shift+T to initiate testing.
 }
 
-public class Solution
-{
-	public int NumSquares(int n)
-	{
-		if (n < 2) return 1;
-		
-		double root = Math.Sqrt(n);
-		if (root % 1 == 0) 
-		{
-			return 1;
+public class Solution {
+    public int NumSquares(int n)
+    {
+        int[] squares = GetSquares(n);
+        Queue<(int, int)> totals = new Queue<(int, int)>();
+        bool found = false;
+        int count = 1;
+        HashSet<int> values= new HashSet<int>();
+        foreach (int i in squares) 
+        {
+			if (i == n) return 1;
+			totals.Enqueue((count, i));
 		}
-		
-		int count = 1; 
-		root = Math.Floor(root);
-		int rootSquared = (int)root * (int)root;
+		totals.Enqueue((0, 0));
+		count++;
+		while (!found)
+		{
+			(int c, int v) = totals.Dequeue();
+			if (c == 0)
+			{
+				count++;
+				totals.Enqueue((0, 0));
+				continue;
+			}
+			foreach (int s in squares)
+			{
+				int value = v + s;
+				if (value == n)
+				{
+					found = true;
+					break;
+				}
+				if (value < n && !values.Contains(value))
+				{
+					totals.Enqueue((count, value));
+				}
+			}
 
-		while(n > rootSquared) 
-		{
-			count++; 
-			n -= rootSquared;
 		}
-		
-		count += NumSquares(n);
+
 		return count;
+	}
+
+	private int[] GetSquares(int n)
+	{
+		List<int> squares = new List<int>();
+		int root = 1;
+		int square = 1;
+		while (square <= n)
+		{
+			squares.Add(square);
+			root++;
+			square = root * root;
+		}
+
+		return squares.ToArray();
 	}
 }
 
@@ -41,9 +73,9 @@ public class Solution
 [Theory]
 [InlineData(12, 3)]
 [InlineData(13, 2)]
-void Test(int n, int expected) 
+void Test(int n, int expected)
 {
-	int result = new Solution().NumSquares(n); 
+	int result = new Solution().NumSquares(n);
 	Assert.Equal(expected, result);
 }
 /*
