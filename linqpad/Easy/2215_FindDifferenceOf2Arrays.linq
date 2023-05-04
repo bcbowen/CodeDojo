@@ -30,55 +30,7 @@ public class Solution
 
 		return diffs;
 	}
-	/*
-	public IList<IList<int>> FindDifference(int[] nums1, int[] nums2)
-	{
-		List<List<int>> diffs = new List<List<int>>(); 
-		Array.Sort(nums1); 
-		Array.Sort(nums2); 
-		diffs.Add(new List<int>()); 
-		diffs.Add(new List<int>()); 
-		
-		int i = 0;
-		int j = 0;
-		int last;
-		while (i < nums1.Length || j < nums2.Length)
-		{
-			if (i == nums1.Length) 
-			{
-				diffs[0].Add(nums2[j]);
-				last = nums2[j];
-				while (nums2[j] == last && j < nums2.Length) 
-				{
-					j++;
-				}
-			}
-			else if (j == nums2.Length) 
-			{
-				diffs[1].Add(nums1[i]);
-				last = nums1[i];
-				while (nums1[i] == last && i < nums1.Length) 
-				{
-					i++; 
-				}
-			}
-			else if (nums1[i] == nums2[j]) 
-			{
-				last = nums1[i];
-				while (nums1[i] == last && i < nums1.Length)
-				{
-					i++;	
-				}
-				last = nums2[j];
-				while (nums2[j] == last && j < nums2.Length)
-				{
-					j++;
-				}
-			}
-		}
-		
-	}
-	*/
+	
 }
 
 /*
