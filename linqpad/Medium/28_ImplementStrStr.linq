@@ -30,9 +30,6 @@ public class Solution
 	}
 }
 
-#region private::Tests
-
-[Fact] void Test_Xunit() => Assert.True (1 + 1 == 2);
 /*
 Example 1:
 
@@ -54,7 +51,3 @@ void StrStrTest(string haystack, string needle, int expected)
 	int result = new Solution().StrStr(haystack, needle); 
 	Assert.Equal(expected, result);
 }
-
-
-
-#endregion

@@ -16,7 +16,12 @@ void Main()
 
 	By considering the terms in the Fibonacci sequence whose values do not exceed four million, 
 	find the sum of the even-valued terms.
+	
+	# 774365 
 	*/
+	
+	long result = new Solution().GetEvenFibs(4_000_000); 
+	result.Dump(); 
 }
 
 public class Solution

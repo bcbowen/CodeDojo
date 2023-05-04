@@ -67,9 +67,6 @@ public class Solution
 	}
 }
 
-#region private::Tests
-
-[Fact] void Test_Xunit() => Assert.True(1 + 1 == 2);
 /*
 Input: head = [1,2,3,4,5], k = 2
 Output: [4,5,1,2,3]
@@ -112,5 +109,3 @@ void TestRotateRight(int[] nodes, int n, int[] expected)
 	}
 
 }
-
-#endregion

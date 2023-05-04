@@ -18,58 +18,6 @@ public class Solution
 
 	}
 
-	public void Rotate_1(int[][] matrix)
-	{
-		int s = matrix.Length;
-		int sideBegin = 0;
-		int sideEnd = s - 1;
-		int tx = 0;
-		int ty = 0;
-		int rx = s - 1;
-		int ry = 0;
-		int bx = s - 1;
-		int by = s - 1;
-		int lx = 0;
-		int ly = s - 1;
-
-		while (ty < by)
-		{
-			while (tx < sideEnd)
-			{
-				// swap top and right
-				int temp = matrix[ry][rx];
-				matrix[ry][rx] = matrix[ty][tx];
-				matrix[ty][tx] = temp;
-
-				// swap top and bottom
-				temp = matrix[by][bx];
-				matrix[by][bx] = matrix[ty][tx];
-				matrix[ty][tx] = temp;
-
-				// swap left and top
-				temp = matrix[ly][lx];
-				matrix[ly][lx] = matrix[ty][tx];
-				matrix[ty][tx] = temp;
-
-				tx++;
-				ry++;
-				bx--;
-				ly--;
-			}
-			sideBegin++;
-			sideEnd--;
-			tx = sideBegin;
-			ty = sideBegin;
-			rx = sideEnd;
-			ry = sideBegin;
-			bx = sideEnd;
-			by = sideEnd;
-			lx = sideBegin;
-			ly = sideEnd;
-		}
-
-	}
-
 	internal void Transpose(int[][] matrix)
 	{
 		int s = matrix.Length;

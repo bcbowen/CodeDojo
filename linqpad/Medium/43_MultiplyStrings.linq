@@ -205,7 +205,6 @@ public class Solution
 	}
 }
 
-#region private::Tests
 
 [Theory]
 [InlineData("0", "332620029", "0")]
@@ -318,4 +317,3 @@ public void TestSetSizes(string x, string y, string expectedX, string expectedY)
 
 }
 
-#endregion
