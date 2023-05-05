@@ -1,2 +1,2 @@
-# leetcode
-Leet Code solutions
+# Code Dojo
+Code exercises
