@@ -13,6 +13,7 @@ public class FrequencyTracker
 {
 
 	private Dictionary<int, int> _frequencies;
+	private Dictionary<int, int> _values; 
 
 	/*
 	FrequencyTracker(): Initializes the FrequencyTracker object with an empty array initially.
@@ -20,33 +21,66 @@ public class FrequencyTracker
 	void deleteOne(int number): Deletes one occurence of number from the data structure. The data structure may not contain number, and in this case nothing is deleted.
 	bool hasFrequency(int frequency): Returns true if there is a number in the data structure that occurs
 	frequency number of times, otherwise, it returns false.
+	
+	With one dictionary for values, the largest case fails with TLE and takes 72 seconds in Linqpad. Adding
+	a second dictionary for lookups: 
+	
+	frequencies: counts of frequencies for each value. ex: values [1, 1, 2, 2, 3, 3, 3, 4]: 2 values have a frequency of 2, one 3 and one 1
+	values: the values with the counts. In the above example: 1 has 2, 2 has 2, 3 has 3, 4 has 1. 
+	
+	Having 2 dictionaries is crazy but should save time with the test case with 200k of each operation (ie 200 lookups for frequency 2) 
 	*/
 
 	public FrequencyTracker()
 	{
 		_frequencies = new Dictionary<int, int>();
+		_values = new Dictionary<int, int>(); 
 	}
 
 	public void Add(int number)
 	{
-		if (!_frequencies.ContainsKey(number))
+		if (!_values.ContainsKey(number))
 		{
-			_frequencies.Add(number, 0);
+			_values.Add(number, 0);
 		}
-		_frequencies[number]++;
+		_values[number]++;
+
+		if (_values[number] > 1) 
+		{
+			_frequencies[_values[number] - 1]--; 
+		}
+
+		if (!_frequencies.ContainsKey(_values[number])) 
+		{
+			_frequencies.Add(_values[number], 0); 
+		}
+		_frequencies[_values[number]]++; 
 	}
 
 	public void DeleteOne(int number)
 	{
-		if (_frequencies.ContainsKey(number) && _frequencies[number] > 0)
+		if (!_values.ContainsKey(number)) return;
+		
+		if (_frequencies.ContainsKey(_frequencies[_values[number]]) && _frequencies[_values[number]] > 0)
 		{
-			_frequencies[number]--;
+			_frequencies[_values[number]]--;
 		}
+		
+		if (_values.ContainsKey(number) && _values[number] > 0)
+		{
+			_values[number]--;
+		}
+
+		if (!_frequencies.ContainsKey(_values[number]))
+		{
+			_frequencies.Add(_values[number], 0);
+		}
+		_frequencies[_values[number]]++;
 	}
 
 	public bool HasFrequency(int frequency)
 	{
-		return _frequencies.Values.Any(v => v == frequency);
+		return _frequencies.ContainsKey(frequency) && _frequencies[frequency] > 0;
 	}
 }
 
@@ -95,8 +129,7 @@ void TestExample2()
 	*/
 	FrequencyTracker f = new FrequencyTracker();
 	f.Add(1);
-	f.Add(1);
-	Assert.True(f.HasFrequency(2));
+	f.DeleteOne(1);
 	Assert.False(f.HasFrequency(1));
 }
 
@@ -119,11 +152,25 @@ void TestExample3()
 	frequencyTracker.hasFrequency(1); // Returns true, because 3 occurs once
 	*/
 	FrequencyTracker f = new FrequencyTracker();
+	Assert.False(f.HasFrequency(2));
 	f.Add(2);
 	f.Add(3);
 	Assert.False(f.HasFrequency(2));
 	Assert.True(f.HasFrequency(1));
 }
+
+[Fact]
+void DeleteValueThatDoesNotExist() 
+{
+	/*
+	["FrequencyTracker","deleteOne"]
+[[],[1]]
+	*/
+	FrequencyTracker f = new FrequencyTracker(); 
+	f.DeleteOne(1); 
+	// if this doesn't throw the test passes
+}
+
 
 private static string GetDataDirectoryPath()
 {
@@ -179,4 +226,54 @@ void BigTest()
 	}
 	Console.WriteLine($"true: {trueCount}"); 
 	Console.WriteLine($"false: {falseCount}"); 
+}
+
+
+[Fact]
+void LeetCodeFailedCase1097() 
+{
+	/*
+	["FrequencyTracker","add","add","deleteOne","hasFrequency","hasFrequency","deleteOne","deleteOne","hasFrequency","deleteOne","hasFrequency","hasFrequency","add","deleteOne"]
+	[[],[14],[35],[15],[1],[1],[9],[14],[1],[35],[1],[1],[38],[31]]
+	[null,null,null,null,true,true,null,null,true,null,false,false,null,null]
+	
+	
+	"FrequencyTracker" [] null
+	add 14 null
+	add 35 null
+	deleteOne 15 null
+	hasFrequency 1 true
+	hasFrequency 1 true
+	deleteOne 9 null
+	deleteOne 14 null
+	hasFrequency 1 true
+	deleteOne 35 null
+	hasFrequency 1 false
+	hasFrequency 1 false
+	add 38 null
+	deleteOne 31 null
+	*/
+	
+	FrequencyTracker f = new FrequencyTracker(); 
+	f.Add(14); 
+	f.Add(35); 
+	f.DeleteOne(15); 
+	bool br = f.HasFrequency(1); 
+	bool be = true; 
+	Assert.Equal(be, br); 
+	br = f.HasFrequency(1); 
+	Assert.Equal(be, br);
+	f.DeleteOne(9);
+	f.DeleteOne(14);
+	br = f.HasFrequency(1);
+	Assert.Equal(be, br);
+	f.DeleteOne(35);
+	be = false;
+	br = f.HasFrequency(1);
+	Assert.Equal(be, br);
+	br = f.HasFrequency(1);
+	Assert.Equal(be, br);
+	f.Add(38); 
+	f.DeleteOne(31);
+
 }
