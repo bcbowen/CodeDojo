@@ -59,6 +59,7 @@ class Solution
 [InlineData(10, 23)]
 [InlineData(15, 45)]
 [InlineData(16, 60)]
+[InlineData(1000, 233168)]
 void Test(int limit, int expected) 
 {
 	int result = new Solution().GetTotal(limit); 

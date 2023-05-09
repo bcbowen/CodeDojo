@@ -35,25 +35,25 @@ public class Solution
 		while (v2 < limit) 
 		{
 			next = v1 + v2; 
-			if (next % 2 == 0) result += next;
-			int v3 = v1 + v2; 
+			if (next % 2 == 0 && next < limit) result += next;
 			v1 = v2; 
-			v2 = v3;
+			v2 = next;
 		}
 		return result;
 	}
 }
-
-#region private::Tests
-
+/**/
 [Theory]
+
 [InlineData(5, 2)]
 [InlineData(20, 10)]
 [InlineData(150, 188)]
+[InlineData(10, 10)]
+
+[InlineData(100, 44)]
 void Test(int limit, long expected) 
 {
 	long result = new Solution().GetEvenFibs(limit); 
 	Assert.Equal(expected, result); 
 }
 
-#endregion
