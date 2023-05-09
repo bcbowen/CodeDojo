@@ -50,37 +50,45 @@ public class FrequencyTracker
 			_frequencies[_values[number] - 1]--; 
 		}
 
-		if (!_frequencies.ContainsKey(_values[number])) 
-		{
-			_frequencies.Add(_values[number], 0); 
-		}
-		_frequencies[_values[number]]++; 
+		IncrementFrequency(_values[number]);
 	}
 
 	public void DeleteOne(int number)
 	{
 		if (!_values.ContainsKey(number)) return;
 		
-		if (_frequencies.ContainsKey(_frequencies[_values[number]]) && _frequencies[_values[number]] > 0)
-		{
-			_frequencies[_values[number]]--;
-		}
-		
+		// decrement the current freq
+		DecrementFrequency(_values[number]); 
+
 		if (_values.ContainsKey(number) && _values[number] > 0)
 		{
 			_values[number]--;
 		}
 
-		if (!_frequencies.ContainsKey(_values[number]))
-		{
-			_frequencies.Add(_values[number], 0);
-		}
-		_frequencies[_values[number]]++;
+		IncrementFrequency(_values[number]);
+		
 	}
 
 	public bool HasFrequency(int frequency)
 	{
 		return _frequencies.ContainsKey(frequency) && _frequencies[frequency] > 0;
+	}
+
+	internal void IncrementFrequency(int value)
+	{
+		if (!_frequencies.ContainsKey(value))
+		{
+			_frequencies.Add(value, 0);
+		}
+		_frequencies[value]++;
+	}
+
+	internal void DecrementFrequency(int value)
+	{
+		if (_frequencies.ContainsKey(value) && _frequencies[value] > 0)
+		{
+			_frequencies[value]--;
+		}
 	}
 }
 
@@ -162,10 +170,6 @@ void TestExample3()
 [Fact]
 void DeleteValueThatDoesNotExist() 
 {
-	/*
-	["FrequencyTracker","deleteOne"]
-[[],[1]]
-	*/
 	FrequencyTracker f = new FrequencyTracker(); 
 	f.DeleteOne(1); 
 	// if this doesn't throw the test passes
@@ -236,8 +240,7 @@ void LeetCodeFailedCase1097()
 	["FrequencyTracker","add","add","deleteOne","hasFrequency","hasFrequency","deleteOne","deleteOne","hasFrequency","deleteOne","hasFrequency","hasFrequency","add","deleteOne"]
 	[[],[14],[35],[15],[1],[1],[9],[14],[1],[35],[1],[1],[38],[31]]
 	[null,null,null,null,true,true,null,null,true,null,false,false,null,null]
-	
-	
+		
 	"FrequencyTracker" [] null
 	add 14 null
 	add 35 null
