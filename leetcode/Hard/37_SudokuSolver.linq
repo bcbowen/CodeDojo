@@ -74,13 +74,13 @@ internal class SudokuCell
 {
 	public SudokuCell()
 	{
-		PossibleValues = new List<int>(); 
+		PossibleValues = new List<int>();
 	}
-	
+
 	public int Value { get; set; }
 	public List<int> PossibleValues { get; set; }
 
-	public bool Contains(int value) 
+	public bool Contains(int value)
 	{
 		return PossibleValues.Contains(value);
 	}
@@ -100,7 +100,7 @@ internal class SudokuBoard
 {
 	public SudokuBoard()
 	{
-		Board = new List<System.Collections.Generic.List<UserQuery.SudokuCell>>(); 
+		Board = new List<System.Collections.Generic.List<UserQuery.SudokuCell>>();
 	}
 	public List<List<SudokuCell>> Board { get; set; }
 
@@ -244,7 +244,7 @@ internal class SudokuSolver
 			{
 				Board.Board[row][x].Remove(val);
 
-				if (Board.Board[row][x].PossibleValues.Count == 1) 
+				if (Board.Board[row][x].PossibleValues.Count == 1)
 				{
 					Board.Board[row][x].Value = Board.Board[row][x].PossibleValues[0];
 					FilterCell(row, x);
@@ -261,7 +261,7 @@ internal class SudokuSolver
 				if (Board.Board[y][col].PossibleValues.Count == 1)
 				{
 					Board.Board[y][col].Value = Board.Board[y][col].PossibleValues[0];
-					FilterCell(y, col); 
+					FilterCell(y, col);
 				}
 			}
 		}
@@ -275,7 +275,7 @@ internal class SudokuSolver
 				if (Board.Board[y][x].Contains(val))
 				{
 					Board.Board[y][x].Remove(val);
-					if (Board.Board[y][x].PossibleValues.Count == 1) 
+					if (Board.Board[y][x].PossibleValues.Count == 1)
 					{
 						Board.Board[y][x].Value = Board.Board[y][x].PossibleValues[0];
 						FilterCell(y, x);
@@ -294,11 +294,11 @@ internal class SudokuSolver
 		// Filter Rows
 		for (int row = 0; row < 9; row++)
 		{
-			FilterRange(0, 8, row, row); 
+			FilterRange(0, 8, row, row);
 		}
 
 		// Filter Columns
-		for(int col = 0; col < 9; col++) 
+		for (int col = 0; col < 9; col++)
 		{
 			FilterRange(col, col, 0, 8);
 		}
@@ -327,20 +327,21 @@ internal class SudokuSolver
 					singleValues.Add(Board.Board[y][x].Value);
 				}
 			}
+		}
+		
+		// filter out single values from cells with multiple possibilities
+		foreach ((int row, int col) in multiIndexCells)
+		{
+			Board.Board[row][col].PossibleValues.RemoveAll(l => singleValues.Contains(l));
 
-			// filter out single values from cells with multiple possibilities
-			foreach ((int col, int row) in multiIndexCells)
+			// if we are left with a single value, clean up the row, col, and section containing this value
+			if (Board.Board[row][col].PossibleValues.Count == 1)
 			{
-				Board.Board[col][row].PossibleValues.RemoveAll(l => singleValues.Contains(l));
-
-				// if we are left with a single value, clean up the row, col, and section containing this value
-				if (Board.Board[col][row].PossibleValues.Count == 1)
-				{
-					Board.Board[col][row].Value = Board.Board[col][row].PossibleValues[0];
-					FilterCell(row, col);
-				}
+				Board.Board[row][col].Value = Board.Board[row][col].PossibleValues[0];
+				FilterCell(row, col);
 			}
 		}
+
 	}
 
 	/// <summary>
@@ -372,10 +373,10 @@ internal class SudokuSolver
 	{
 		// index corresponds to value 1-9, bool indicates if the Value is known
 		bool[] values = new bool[10];
-		
+
 		// index corresponds to value, possible cells are cells in the range that could be this value
 		List<List<(int, int)>> possibleCells = new List<List<(int, int)>>();
-		
+
 		for (int i = 0; i <= 9; i++)
 		{
 			possibleCells.Add(new List<(int, int)>());
@@ -594,7 +595,7 @@ public class SudokuTests
 		ss.Board = SudokuBoard.Create(board);
 		ss.Filter();
 		List<int> expected = new List<int> { 1, 3, 5 };
-		Assert.Equal(expected, ss.Board.Board[0][2].PossibleValues);
+		Assert.Equal(expected, ss.Board.Board[0][1].PossibleValues);
 		expected = new List<int> { 3, 5, 7, 8 };
 		Assert.Equal(expected, ss.Board.Board[2][7].PossibleValues);
 	}
