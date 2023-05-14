@@ -70,7 +70,7 @@ internal struct Section
 	}
 }
 
-internal class SudokuCell
+internal class SudokuCell : ICloneable
 {
 	public SudokuCell()
 	{
@@ -94,13 +94,25 @@ internal class SudokuCell
 	{
 		return PossibleValues.RemoveAll(value => values.Contains(value));
 	}
+
+	public object Clone() 
+	{
+		SudokuCell cloned = new SudokuCell();
+		cloned.Value = Value;
+		foreach(int possibleValue in PossibleValues)
+		{
+			cloned.PossibleValues.Add(possibleValue); 
+		}
+		return cloned;
+	}
+
 }
 
-internal class SudokuBoard
+internal class SudokuBoard : ICloneable
 {
 	public SudokuBoard()
 	{
-		Board = new List<System.Collections.Generic.List<UserQuery.SudokuCell>>();
+		Board = new List<List<UserQuery.SudokuCell>>();
 	}
 	public List<List<SudokuCell>> Board { get; set; }
 
@@ -202,6 +214,21 @@ internal class SudokuBoard
 		return board;
 	}
 
+	public object Clone() 
+	{
+		SudokuBoard cloned = new SudokuBoard();
+		foreach(List<SudokuCell> row in Board)
+		{
+			List<SudokuCell> clonedRow = new List<SudokuCell>();
+			foreach (SudokuCell cell in row) 
+			{
+				clonedRow.Add(cell); 
+			}
+			cloned.Board.Add(clonedRow); 
+		}
+		
+		return cloned;
+	}
 }
 
 internal class SudokuSolver
@@ -414,6 +441,40 @@ internal class SudokuSolver
 		}
 	}
 
+	/// <summary>
+	/// Find a cell with the minumum possible values (most likely 2) and test each possibility with the cascading effects. One choice will be right and we'll keep that, 
+	/// we discard bad choices. 
+	/// 
+	/// 
+	/// TODO: We need to move filter, eliminate, and this one to the board object. We don't want them to belong to the solver since at this point the solver 
+	/// needs to work with mutliple possible boards. 
+	/// </summary>
+	internal void PickAndGrin()
+	{
+		Stack<SudokuBoard> boardStack = new Stack<SudokuBoard>();
+		(int y, int x) minCell; 
+		int minCount; 
+		while(!Board.CheckSudokuBoard()) 
+		{
+			minCount = 11; 
+			minCell = (0, 0); 
+			// find candidate with min possible values
+			for(int y = 0; y < 9; y++)
+			{
+				List<SudokuCell> row = Board.Board[y]; 
+				for (int x = 0; x < 9; x++)
+				{
+					SudokuCell cell = row[x];
+					if (cell.PossibleValues.Count < minCount) 
+					{
+						minCell = (y, x); 
+					}
+				}
+			}
+			
+		}
+	}
+
 }
 
 
@@ -482,7 +543,7 @@ public class SudokuTests
 	}
 
 	[Fact]
-	void Test2()
+	void SolveTest2()
 	{
 		char[][] board =
 		{
