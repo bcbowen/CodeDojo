@@ -482,7 +482,7 @@ public class SudokuTests
 	}
 
 	[Fact]
-	void Test2()
+	void SolveTest2()
 	{
 		char[][] board =
 		{
