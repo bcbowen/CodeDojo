@@ -140,6 +140,192 @@ internal class SudokuBoard : ICloneable
 		return sudokuBoard;
 	}
 
+	/// <summary>
+	/// When single value is found for cell, eliminate this value for all other cells in 
+	/// row, column, section. Called recursively as additional values are found.
+	/// </summary>
+	internal void FilterCell(int row, int col)
+	{
+		// get val from cell 
+		int val = Board[row][col].Value;
+
+		// remove value from columns in same row
+		for (int x = 0; x < 9; x++)
+		{
+			if (Board[row][x].Contains(val))
+			{
+				Board[row][x].Remove(val);
+
+				if (Board[row][x].PossibleValues.Count == 1)
+				{
+					Board[row][x].Value = Board[row][x].PossibleValues[0];
+					FilterCell(row, x);
+				}
+			}
+		}
+
+		// remove value from rows in same col
+		for (int y = 0; y < 9; y++)
+		{
+			if (Board[y][col].Contains(val))
+			{
+				Board[y][col].Remove(val);
+				if (Board[y][col].PossibleValues.Count == 1)
+				{
+					Board[y][col].Value = Board[y][col].PossibleValues[0];
+					FilterCell(y, col);
+				}
+			}
+		}
+
+		// remove value from same section
+		Section section = Section.GetSection(row, col);
+		for (int x = section.BeginColumn; x <= section.EndColumn; x++)
+		{
+			for (int y = section.BeginRow; y <= section.EndRow; y++)
+			{
+				if (Board[y][x].Contains(val))
+				{
+					Board[y][x].Remove(val);
+					if (Board[y][x].PossibleValues.Count == 1)
+					{
+						Board[y][x].Value = Board[y][x].PossibleValues[0];
+						FilterCell(y, x);
+					}
+				}
+			}
+		}
+	}
+
+	/// <summary>
+	/// Remove this value from cells in this row, column, and section. 
+	/// Returns true if there are still cells that have multiple possibilities.
+	/// </summary>
+	internal void Filter()
+	{
+		// Filter Rows
+		for (int row = 0; row < 9; row++)
+		{
+			FilterRange(0, 8, row, row);
+		}
+
+		// Filter Columns
+		for (int col = 0; col < 9; col++)
+		{
+			FilterRange(col, col, 0, 8);
+		}
+		// Filter Sections
+		for (int i = 0; i < 9; i++)
+		{
+			Section section = Section.SudokuSections[i];
+			FilterRange(section.BeginColumn, section.EndColumn, section.BeginRow, section.EndRow);
+		}
+	}
+
+	internal void FilterRange(int beginX, int endX, int beginY, int endY)
+	{
+		List<int> singleValues = new List<int>();
+		List<(int, int)> multiIndexCells = new List<(int, int)>();
+		for (int y = beginY; y <= endY; y++)
+		{
+			for (int x = beginX; x <= endX; x++)
+			{
+				if (Board[y][x].Value < 1)
+				{
+					multiIndexCells.Add((y, x));
+				}
+				else
+				{
+					singleValues.Add(Board[y][x].Value);
+				}
+			}
+		}
+
+		// filter out single values from cells with multiple possibilities
+		foreach ((int row, int col) in multiIndexCells)
+		{
+			Board[row][col].PossibleValues.RemoveAll(l => singleValues.Contains(l));
+
+			// if we are left with a single value, clean up the row, col, and section containing this value
+			if (Board[row][col].PossibleValues.Count == 1)
+			{
+				Board[row][col].Value = Board[row][col].PossibleValues[0];
+				FilterCell(row, col);
+			}
+		}
+
+	}
+
+	/// <summary>
+	/// Check for values that can only be one of the cells in a row, col, or section 
+	/// Ex: in a row, one cell has possible values 1, 3, 6, and no other cell in that row can be 6, we know this cell is 6 and we can eliminate the other possibilities
+	/// </summary>
+	internal void Eliminate()
+	{
+		// check each row
+		for (int row = 0; row < 9; row++)
+		{
+			EliminateRange(0, 8, row, row);
+		}
+		// check each col
+		for (int col = 0; col < 9; col++)
+		{
+			EliminateRange(col, col, 0, 8);
+		}
+
+		// check each section
+		for (int i = 0; i < 9; i++)
+		{
+			Section section = Section.SudokuSections[i];
+			EliminateRange(section.BeginColumn, section.EndColumn, section.BeginRow, section.EndRow);
+		}
+	}
+
+	internal void EliminateRange(int beginX, int endX, int beginY, int endY)
+	{
+		// index corresponds to value 1-9, bool indicates if the Value is known
+		bool[] values = new bool[10];
+
+		// index corresponds to value, possible cells are cells in the range that could be this value
+		List<List<(int, int)>> possibleCells = new List<List<(int, int)>>();
+
+		for (int i = 0; i <= 9; i++)
+		{
+			possibleCells.Add(new List<(int, int)>());
+		}
+
+		for (int row = beginY; row <= endY; row++)
+		{
+			for (int col = beginX; col <= endX; col++)
+			{
+				if (Board[row][col].Value > 0)
+				{
+					values[Board[row][col].Value] = true;
+				}
+				else
+				{
+					foreach (int val in Board[row][col].PossibleValues)
+					{
+						possibleCells[val].Add((row, col));
+					}
+				}
+			}
+		}
+
+
+		for (int i = 0; i < possibleCells.Count; i++)
+		{
+			if (possibleCells[i].Count == 1)
+			{
+				(int y, int x) = possibleCells[i][0];
+				Board[y][x].PossibleValues.Clear();
+				Board[y][x].PossibleValues.Add(i);
+				Board[y][x].Value = i;
+				FilterCell(y, x);
+			}
+		}
+	}
+
 	public bool CheckSudokuBoard()
 	{
 		bool result = true;
@@ -240,206 +426,18 @@ internal class SudokuSolver
 		Board = board;
 
 		bool isSolved = false;
-		int reps = 0;
-		while (!isSolved && reps < 3)
-		{
-			Filter();
-			isSolved = Board.CheckSudokuBoard();
+	
+		Board.Filter();
+		isSolved = Board.CheckSudokuBoard();
 
-			if (!isSolved) Eliminate();
+		if (!isSolved) Board.Eliminate();
 
-			isSolved = Board.CheckSudokuBoard();
-			if (isSolved) break;
-			reps++;
-		}
+		isSolved = Board.CheckSudokuBoard();
+	
 		//Console.Write($"Solved after {reps} reps"); 
 	}
 
-	/// <summary>
-	/// When single value is found for cell, eliminate this value for all other cells in 
-	/// row, column, section. Called recursively as additional values are found.
-	/// </summary>
-	internal void FilterCell(int row, int col)
-	{
-		// get val from cell 
-		int val = Board.Board[row][col].Value;
-
-		// remove value from columns in same row
-		for (int x = 0; x < 9; x++)
-		{
-			if (Board.Board[row][x].Contains(val))
-			{
-				Board.Board[row][x].Remove(val);
-
-				if (Board.Board[row][x].PossibleValues.Count == 1)
-				{
-					Board.Board[row][x].Value = Board.Board[row][x].PossibleValues[0];
-					FilterCell(row, x);
-				}
-			}
-		}
-
-		// remove value from rows in same col
-		for (int y = 0; y < 9; y++)
-		{
-			if (Board.Board[y][col].Contains(val))
-			{
-				Board.Board[y][col].Remove(val);
-				if (Board.Board[y][col].PossibleValues.Count == 1)
-				{
-					Board.Board[y][col].Value = Board.Board[y][col].PossibleValues[0];
-					FilterCell(y, col);
-				}
-			}
-		}
-
-		// remove value from same section
-		Section section = Section.GetSection(row, col);
-		for (int x = section.BeginColumn; x <= section.EndColumn; x++)
-		{
-			for (int y = section.BeginRow; y <= section.EndRow; y++)
-			{
-				if (Board.Board[y][x].Contains(val))
-				{
-					Board.Board[y][x].Remove(val);
-					if (Board.Board[y][x].PossibleValues.Count == 1)
-					{
-						Board.Board[y][x].Value = Board.Board[y][x].PossibleValues[0];
-						FilterCell(y, x);
-					}
-				}
-			}
-		}
-	}
-
-	/// <summary>
-	/// Remove this value from cells in this row, column, and section. 
-	/// Returns true if there are still cells that have multiple possibilities.
-	/// </summary>
-	internal void Filter()
-	{
-		// Filter Rows
-		for (int row = 0; row < 9; row++)
-		{
-			FilterRange(0, 8, row, row);
-		}
-
-		// Filter Columns
-		for (int col = 0; col < 9; col++)
-		{
-			FilterRange(col, col, 0, 8);
-		}
-		// Filter Sections
-		for (int i = 0; i < 9; i++)
-		{
-			Section section = Section.SudokuSections[i];
-			FilterRange(section.BeginColumn, section.EndColumn, section.BeginRow, section.EndRow);
-		}
-	}
-
-	internal void FilterRange(int beginX, int endX, int beginY, int endY)
-	{
-		List<int> singleValues = new List<int>();
-		List<(int, int)> multiIndexCells = new List<(int, int)>();
-		for (int y = beginY; y <= endY; y++)
-		{
-			for (int x = beginX; x <= endX; x++)
-			{
-				if (Board.Board[y][x].Value < 1)
-				{
-					multiIndexCells.Add((y, x));
-				}
-				else
-				{
-					singleValues.Add(Board.Board[y][x].Value);
-				}
-			}
-		}
-		
-		// filter out single values from cells with multiple possibilities
-		foreach ((int row, int col) in multiIndexCells)
-		{
-			Board.Board[row][col].PossibleValues.RemoveAll(l => singleValues.Contains(l));
-
-			// if we are left with a single value, clean up the row, col, and section containing this value
-			if (Board.Board[row][col].PossibleValues.Count == 1)
-			{
-				Board.Board[row][col].Value = Board.Board[row][col].PossibleValues[0];
-				FilterCell(row, col);
-			}
-		}
-
-	}
-
-	/// <summary>
-	/// Check for values that can only be one of the cells in a row, col, or section 
-	/// Ex: in a row, one cell has possible values 1, 3, 6, and no other cell in that row can be 6, we know this cell is 6 and we can eliminate the other possibilities
-	/// </summary>
-	internal void Eliminate()
-	{
-		// check each row
-		for (int row = 0; row < 9; row++)
-		{
-			EliminateRange(0, 8, row, row);
-		}
-		// check each col
-		for (int col = 0; col < 9; col++)
-		{
-			EliminateRange(col, col, 0, 8);
-		}
-
-		// check each section
-		for (int i = 0; i < 9; i++)
-		{
-			Section section = Section.SudokuSections[i];
-			EliminateRange(section.BeginColumn, section.EndColumn, section.BeginRow, section.EndRow);
-		}
-	}
-
-	internal void EliminateRange(int beginX, int endX, int beginY, int endY)
-	{
-		// index corresponds to value 1-9, bool indicates if the Value is known
-		bool[] values = new bool[10];
-
-		// index corresponds to value, possible cells are cells in the range that could be this value
-		List<List<(int, int)>> possibleCells = new List<List<(int, int)>>();
-
-		for (int i = 0; i <= 9; i++)
-		{
-			possibleCells.Add(new List<(int, int)>());
-		}
-
-		for (int row = beginY; row <= endY; row++)
-		{
-			for (int col = beginX; col <= endX; col++)
-			{
-				if (Board.Board[row][col].Value > 0)
-				{
-					values[Board.Board[row][col].Value] = true;
-				}
-				else
-				{
-					foreach (int val in Board.Board[row][col].PossibleValues)
-					{
-						possibleCells[val].Add((row, col));
-					}
-				}
-			}
-		}
-
-
-		for (int i = 0; i < possibleCells.Count; i++)
-		{
-			if (possibleCells[i].Count == 1)
-			{
-				(int y, int x) = possibleCells[i][0];
-				Board.Board[y][x].PossibleValues.Clear();
-				Board.Board[y][x].PossibleValues.Add(i);
-				Board.Board[y][x].Value = i;
-				FilterCell(y, x);
-			}
-		}
-	}
+	
 
 	/// <summary>
 	/// Find a cell with the minumum possible values (most likely 2) and test each possibility with the cascading effects. One choice will be right and we'll keep that, 
@@ -471,7 +469,14 @@ internal class SudokuSolver
 					}
 				}
 			}
-			
+
+			foreach(int val in Board.Board[minCell.y][minCell.x].PossibleValues) 
+			{
+				SudokuBoard newBoard = Board.Clone() as SudokuBoard;
+				newBoard.Board[minCell.y][minCell.x].Value = val;
+				newBoard.FilterCell(minCell.y, minCell.x); 
+				boardStack.Push(newBoard); 
+			}
 		}
 	}
 
