@@ -31,5 +31,19 @@ namespace Sudokamatic
         {
 
         }
+
+        private void frmMain_Load(object sender, EventArgs e)
+        {
+            foreach (var control in gbSudokuForm.Controls) 
+            {
+                TextBox t = control as TextBox;
+                if (t != null) 
+                {
+                    t.Text = "-"; 
+                    t.Enabled= false;
+                }
+                
+            }
+        }
     }
 }
