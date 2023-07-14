@@ -40,25 +40,28 @@ namespace SudokerSolver
                     {
                         sudokuBoard.Board[i][j].PossibleValues.AddRange(Enumerable.Range(1, 9));
                     }
+                    sudokuBoard.Board.Add(new List<SudokuCell>()); 
                 }
             }
 
             return sudokuBoard;
         }
 
-        public SudokuBoard Create(string board) 
+        public static SudokuBoard Create(string board) 
         {
             char[][] chars = new char[9][];
             int row = 0; 
-            string[] lines = board.Split(Environment.NewLine.ToCharArray());
+            string[] lines = board.Split("\r\n");
             foreach (string line in lines) 
             {
+                //line = line.Replace("\n", "");
                 string[] cells = line.Split(',');
                 chars[row] = new char[9]; 
                 for (int i = 0; i < 9; i++) 
                 {
-                    chars[row][i] = cells[i][0]; 
+                    chars[row][i] = char.Parse(cells[i].Replace("'", "")); 
                 }
+                row++; 
             }
             return Create(chars); 
         }
