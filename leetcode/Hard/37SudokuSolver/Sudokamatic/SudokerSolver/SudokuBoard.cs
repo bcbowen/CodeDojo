@@ -14,6 +14,14 @@ namespace SudokerSolver
         }
         public List<List<SudokuCell>> Board { get; set; }
 
+        public int this[int y, int x] 
+        {
+            get
+            {
+                return Board[y][x].Value;
+            }
+        }
+
         public static SudokuBoard Create(char[][] board)
         {
             SudokuBoard sudokuBoard = new SudokuBoard();
@@ -36,6 +44,23 @@ namespace SudokerSolver
             }
 
             return sudokuBoard;
+        }
+
+        public SudokuBoard Create(string board) 
+        {
+            char[][] chars = new char[9][];
+            int row = 0; 
+            string[] lines = board.Split(Environment.NewLine.ToCharArray());
+            foreach (string line in lines) 
+            {
+                string[] cells = line.Split(',');
+                chars[row] = new char[9]; 
+                for (int i = 0; i < 9; i++) 
+                {
+                    chars[row][i] = cells[i][0]; 
+                }
+            }
+            return Create(chars); 
         }
 
         /// <summary>

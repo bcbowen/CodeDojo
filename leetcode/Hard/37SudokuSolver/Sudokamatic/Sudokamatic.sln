@@ -5,6 +5,10 @@ VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sudokamatic", "Sudokamatic\Sudokamatic.csproj", "{7F5A146E-12AF-4DA8-9AB0-5B3E49336699}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SudokerSolver", "SudokerSolver\SudokerSolver.csproj", "{2AD94E84-71F6-404F-9813-E7AE5EF54025}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SudokerSolverTests", "SudokerSolverTests\SudokerSolverTests.csproj", "{A5479701-8105-461B-89EC-293698916287}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{7F5A146E-12AF-4DA8-9AB0-5B3E49336699}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F5A146E-12AF-4DA8-9AB0-5B3E49336699}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7F5A146E-12AF-4DA8-9AB0-5B3E49336699}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2AD94E84-71F6-404F-9813-E7AE5EF54025}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2AD94E84-71F6-404F-9813-E7AE5EF54025}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2AD94E84-71F6-404F-9813-E7AE5EF54025}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2AD94E84-71F6-404F-9813-E7AE5EF54025}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5479701-8105-461B-89EC-293698916287}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5479701-8105-461B-89EC-293698916287}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5479701-8105-461B-89EC-293698916287}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5479701-8105-461B-89EC-293698916287}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
