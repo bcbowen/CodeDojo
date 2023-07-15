@@ -4,10 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SudokerSolver
+namespace SudokuSolver
 {
     public class SudokuBoard : ICloneable
     {
+        public event ValueSetHandler<ValueSetEventArgs> ValueSet;
+
+        protected virtual void OnValueSet(int row, int column, int value)
+        {
+            ValueSet?.Invoke(this, new ValueSetEventArgs(row, column, value));
+        }
+
         public SudokuBoard()
         {
             Board = new List<List<SudokuCell>>();
@@ -35,6 +42,7 @@ namespace SudokerSolver
                     if (board[i][j] != '.')
                     {
                         sudokuBoard.Board[i][j].Value = int.Parse(board[i][j].ToString());
+                        OnValueSet(i, j, sudokuBoard[i][j].Value);
                     }
                     else
                     {
@@ -85,6 +93,7 @@ namespace SudokerSolver
                     if (Board[row][x].PossibleValues.Count == 1)
                     {
                         Board[row][x].Value = Board[row][x].PossibleValues[0];
+                        OnValueSet(row, x, Board[row][x].Value);
                         FilterCell(row, x);
                     }
                 }
@@ -99,6 +108,7 @@ namespace SudokerSolver
                     if (Board[y][col].PossibleValues.Count == 1)
                     {
                         Board[y][col].Value = Board[y][col].PossibleValues[0];
+                        OnValueSet(y, col, Board[y][col].Value);
                         FilterCell(y, col);
                     }
                 }
@@ -116,6 +126,7 @@ namespace SudokerSolver
                         if (Board[y][x].PossibleValues.Count == 1)
                         {
                             Board[y][x].Value = Board[y][x].PossibleValues[0];
+                            OnValueSet(y, x, Board[y][x].Value);
                             FilterCell(y, x);
                         }
                     }
@@ -176,6 +187,7 @@ namespace SudokerSolver
                 if (Board[row][col].PossibleValues.Count == 1)
                 {
                     Board[row][col].Value = Board[row][col].PossibleValues[0];
+                    OnValueSet(row, col, Board[row][col].Value);
                     FilterCell(row, col);
                 }
             }
@@ -247,6 +259,7 @@ namespace SudokerSolver
                     Board[y][x].PossibleValues.Clear();
                     Board[y][x].PossibleValues.Add(i);
                     Board[y][x].Value = i;
+                    OnValueSet(y, x, Board[y][x].Value);
                     FilterCell(y, x);
                 }
             }

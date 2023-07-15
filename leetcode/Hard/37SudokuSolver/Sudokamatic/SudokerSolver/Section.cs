@@ -1,4 +1,4 @@
-﻿namespace SudokerSolver
+﻿namespace SudokuSolver
 {
     public struct Section
     {
