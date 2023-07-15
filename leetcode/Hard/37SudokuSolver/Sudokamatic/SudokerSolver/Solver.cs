@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SudokerSolver
+namespace SudokuSolver
 {
+    
+
     public class Solver
     {
         public SudokuBoard Board { get; private set; }
