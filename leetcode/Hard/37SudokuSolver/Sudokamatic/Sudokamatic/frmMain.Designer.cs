@@ -114,6 +114,7 @@
             this.txt1_3 = new System.Windows.Forms.TextBox();
             this.txt1_1 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.txtOutput = new System.Windows.Forms.TextBox();
             this.gbSudokuForm.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -135,6 +136,7 @@
             this.btnSolve.TabIndex = 82;
             this.btnSolve.Text = "Solve";
             this.btnSolve.UseVisualStyleBackColor = true;
+            this.btnSolve.Click += new System.EventHandler(this.btnSolve_Click);
             // 
             // txtInput
             // 
@@ -1133,11 +1135,21 @@
             this.label1.TabIndex = 86;
             this.label1.Text = "Input";
             // 
+            // txtOutput
+            // 
+            this.txtOutput.Location = new System.Drawing.Point(12, 588);
+            this.txtOutput.Multiline = true;
+            this.txtOutput.Name = "txtOutput";
+            this.txtOutput.ReadOnly = true;
+            this.txtOutput.Size = new System.Drawing.Size(494, 62);
+            this.txtOutput.TabIndex = 87;
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 689);
+            this.Controls.Add(this.txtOutput);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.gbSudokuForm);
             this.Controls.Add(this.txtInput);
@@ -1241,6 +1253,7 @@
         private System.Windows.Forms.TextBox txt1_3;
         private System.Windows.Forms.TextBox txt1_1;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox txtOutput;
     }
 }
 

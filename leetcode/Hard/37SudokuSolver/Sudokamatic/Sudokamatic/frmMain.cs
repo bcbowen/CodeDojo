@@ -42,8 +42,25 @@ namespace Sudokamatic
                     t.Text = "-"; 
                     t.Enabled= false;
                 }
+                ShowFeedback("Ready...");
+            }
+        }
+
+        private void btnSolve_Click(object sender, EventArgs e)
+        {
+            try 
+            {
                 
             }
+            catch(Exception ex) 
+            {
+                ShowFeedback($"Error: {ex.Message}"); 
+            }
+        }
+
+        private void ShowFeedback(string message) 
+        {
+            txtOutput.Text = message;
         }
     }
 }
