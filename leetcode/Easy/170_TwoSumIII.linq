@@ -21,13 +21,28 @@ public class TwoSum
 
 	public void Add(int number)
 	{
+		if (_values.Contains(number) && !_dupes.Contains(number)) 
+		{
+			_dupes.Add(number);
+			return;
+		}
+		
 		_values.Add(number);
+		
 	}
 
 	public bool Find(int value)
 	{
-		foreach(int key in _values)
+		int? half = value % 2 == 0 ? value / 2 : null;
+
+		if (half.HasValue && _dupes.Contains(half.Value))
 		{
+			return true; 
+		}
+		
+		foreach(int key in _values)
+		{		
+			if (half.HasValue && key == half.Value) continue; 
 			if (_values.Contains(value - key))
 			{
 				return true;
@@ -93,8 +108,8 @@ void NegativeFindFailsTest()
 
 [Theory]
 [InlineData(-10000, 10001, 1)]
-[InlineData(0, 0, 0)]
-[InlineData(5, 5, 10)]
+[InlineData(-3, 5, 2)]
+[InlineData(-10, 11, 1)]
 void RangeFindSucceedsTests(int low, int high, int value) 
 {
 	TwoSum t = new TwoSum();
