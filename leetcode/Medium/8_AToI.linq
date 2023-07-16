@@ -79,6 +79,13 @@ internal bool IsValid(string s)
 			if (firstDigit == -1) firstDigit = pos; 
 			lastDigit = pos;
 		}
+		else if (s[pos] == ' ' && signLocation != -1) 
+		{
+			// once we've reached the sign, the only valid characters are digits. 
+			// if we haven't found a digit yet, it's not a valid number
+			isValid = firstDigit > -1; 
+			break;
+		}
 		else if (s[pos] != ' ' && firstDigit == -1) 
 		{
 			isValid = false;
@@ -232,6 +239,7 @@ void IsNegativeTest(string value, bool expected)
 [InlineData("   +42  cheesypoofs", true)]
 [InlineData("   +0 123", true)]
 [InlineData("-5-", true)]
+[InlineData("  +  413", false)]
 void IsValidTest(string value, bool expected)
 {
 	bool result = IsValid(value);
