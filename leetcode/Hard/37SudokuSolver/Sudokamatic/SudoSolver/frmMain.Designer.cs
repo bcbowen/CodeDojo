@@ -29,32 +29,33 @@
         private void InitializeComponent()
         {
             this.grpBoard = new System.Windows.Forms.GroupBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.txtBoard = new System.Windows.Forms.TextBox();
             this.btnSolve = new System.Windows.Forms.Button();
             this.btnExit = new System.Windows.Forms.Button();
             this.lstOutput = new System.Windows.Forms.ListBox();
+            this.btnLoad = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // grpBoard
             // 
             this.grpBoard.Location = new System.Drawing.Point(284, 12);
             this.grpBoard.Name = "grpBoard";
-            this.grpBoard.Size = new System.Drawing.Size(504, 517);
+            this.grpBoard.Size = new System.Drawing.Size(504, 633);
             this.grpBoard.TabIndex = 0;
             this.grpBoard.TabStop = false;
             this.grpBoard.Paint += new System.Windows.Forms.PaintEventHandler(this.grpBoard_Paint);
             // 
-            // textBox1
+            // txtBoard
             // 
-            this.textBox1.Location = new System.Drawing.Point(12, 21);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(248, 258);
-            this.textBox1.TabIndex = 1;
+            this.txtBoard.Location = new System.Drawing.Point(12, 21);
+            this.txtBoard.Multiline = true;
+            this.txtBoard.Name = "txtBoard";
+            this.txtBoard.Size = new System.Drawing.Size(248, 258);
+            this.txtBoard.TabIndex = 1;
             // 
             // btnSolve
             // 
-            this.btnSolve.Location = new System.Drawing.Point(185, 290);
+            this.btnSolve.Location = new System.Drawing.Point(176, 321);
             this.btnSolve.Name = "btnSolve";
             this.btnSolve.Size = new System.Drawing.Size(75, 23);
             this.btnSolve.TabIndex = 2;
@@ -63,7 +64,7 @@
             // 
             // btnExit
             // 
-            this.btnExit.Location = new System.Drawing.Point(185, 506);
+            this.btnExit.Location = new System.Drawing.Point(185, 616);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(75, 23);
             this.btnExit.TabIndex = 3;
@@ -77,18 +78,29 @@
             this.lstOutput.ItemHeight = 15;
             this.lstOutput.Location = new System.Drawing.Point(12, 290);
             this.lstOutput.Name = "lstOutput";
-            this.lstOutput.Size = new System.Drawing.Size(120, 244);
+            this.lstOutput.Size = new System.Drawing.Size(120, 349);
             this.lstOutput.TabIndex = 4;
+            // 
+            // btnLoad
+            // 
+            this.btnLoad.Location = new System.Drawing.Point(176, 285);
+            this.btnLoad.Name = "btnLoad";
+            this.btnLoad.Size = new System.Drawing.Size(75, 23);
+            this.btnLoad.TabIndex = 5;
+            this.btnLoad.Text = "Load";
+            this.btnLoad.UseVisualStyleBackColor = true;
+            this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
             // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 541);
+            this.ClientSize = new System.Drawing.Size(800, 657);
+            this.Controls.Add(this.btnLoad);
             this.Controls.Add(this.lstOutput);
             this.Controls.Add(this.btnExit);
             this.Controls.Add(this.btnSolve);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.txtBoard);
             this.Controls.Add(this.grpBoard);
             this.Name = "frmMain";
             this.Text = "Sudoku Solver";
@@ -102,9 +114,10 @@
         #endregion
 
         private GroupBox grpBoard;
-        private TextBox textBox1;
+        private TextBox txtBoard;
         private Button btnSolve;
         private Button btnExit;
         private ListBox lstOutput;
+        private Button btnLoad;
     }
 }
