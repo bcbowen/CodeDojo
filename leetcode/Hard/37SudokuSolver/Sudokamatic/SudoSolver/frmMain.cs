@@ -1,8 +1,11 @@
+using SudoSolver;
+
 namespace SudoSolver
 {
     public partial class frmMain : Form
     {
-        private const int CellWidth = 40; 
+        private const int CellWidth = 40;
+        private Solver solver;
         public frmMain()
         {
             InitializeComponent();
@@ -112,6 +115,18 @@ namespace SudoSolver
             textBox = (TextBox)grpBoard.Controls["txt8_0"];
             y = textBox.Top + textBox.Height + 5;
             graphics.DrawLine(pen, startX, y, endX, y);
+
+        }
+
+        private void btnLoad_Click(object sender, EventArgs e)
+        {
+            string values = txtBoard.Text;
+            if (string.IsNullOrEmpty(values.Trim()))
+            {
+                ShowFeedback("Nothing to load");
+                return;
+            }
+
 
         }
     }
