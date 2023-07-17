@@ -42,6 +42,7 @@
             this.grpBoard.Size = new System.Drawing.Size(504, 517);
             this.grpBoard.TabIndex = 0;
             this.grpBoard.TabStop = false;
+            this.grpBoard.Paint += new System.Windows.Forms.PaintEventHandler(this.grpBoard_Paint);
             // 
             // textBox1
             // 
@@ -92,6 +93,7 @@
             this.Name = "frmMain";
             this.Text = "Sudoku Solver";
             this.Load += new System.EventHandler(this.frmMain_Load);
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.frmMain_Paint);
             this.ResumeLayout(false);
             this.PerformLayout();
 
