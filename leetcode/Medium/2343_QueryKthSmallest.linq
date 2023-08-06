@@ -11,34 +11,46 @@ void Main()
 
 public int[] SmallestTrimmedNumbers(string[] nums, int[][] queries)
 {
-	PriorityQueue<(int, int), int> heap = new PriorityQueue<(int, int), int>();
+	Dictionary<int, (int, string)[]> arrayCache = new Dictionary<int, (int, string)[]>();
+	(int, string)[] trimmedNums = new (int, string)[nums.Length];
 	int[] result = new int[queries.Length];
-	for(int i = 0; i < queries.Length; i++) 
+
+	for (int i = 0; i < queries.Length; i++)
 	{
-		int[] query = queries[i]; 
-		heap.Clear();
-		for(int j = 0; j < nums.Length; j++)
+		int[] query = queries[i];
+		if (arrayCache.ContainsKey(query[1]))
 		{
-			string num = nums[j]; 
-			int value = int.Parse(TrimNumber(num, query[1])); 
-			heap.Enqueue((j, value), value); 
+			trimmedNums = arrayCache[query[1]];
+		}
+		else
+		{
+			for (int j = 0; j < nums.Length; j++)
+			{
+				string num = nums[j];
+				string value = TrimNumber(num, query[1]);
+				trimmedNums[j] = (j, value);
+			}
+			Array.Sort(trimmedNums, CompareTrimmedValues);
+			arrayCache.Add(query[1], trimmedNums);
 		}
 
-		for(int k = 0; k < query[0]; k++) 
-		{
-			(result[i], _) = heap.Dequeue(); 
-		}
+		result[i] = trimmedNums[query[0] - 1].Item1;
 	}
 
 	return result;
 }
 
-internal string TrimNumber(string num, int places) 
+internal int CompareTrimmedValues((int index, string val) v1, (int index, string val) v2)
 {
-	if (places == num.Length) return num; 
-	if (places > num.Length) return num.PadLeft(places, '0'); 
-	
-	return num.Substring(num.Length - places); 
+	return v1.val.CompareTo(v2.val);
+}
+
+internal string TrimNumber(string num, int places)
+{
+	if (places == num.Length) return num;
+	if (places > num.Length) return num.PadLeft(places, '0');
+
+	return num.Substring(num.Length - places);
 }
 
 #region Tests
@@ -51,13 +63,10 @@ internal string TrimNumber(string num, int places)
 [InlineData("1234", 4, "1234")]
 [InlineData("1234", 5, "01234")]
 [InlineData("1234", 1, "4")]
-
-
-
-private void TrimNumberTests(string num, int places, string expected) 
+private void TrimNumberTests(string num, int places, string expected)
 {
-	string result = TrimNumber(num, places); 
-	Assert.Equal(expected, result); 
+	string result = TrimNumber(num, places);
+	Assert.Equal(expected, result);
 }
 
 /*
@@ -81,11 +90,20 @@ Explanation:
 2. Trimmed to the last 2 digits, nums is unchanged. The 2nd smallest number is 24.
 */
 
+[Fact]
+void TroubleshootingTest() 
+{
+	int[][] queries = { new [] { 11, 4 } };
+	string[] nums = { "64333639502", "65953866768", "17845691654", "87148775908", "58954177897", "70439926174", "48059986638", "47548857440", "18418180516", "06364956881", "01866627626", "36824890579", "14672385151", "71207752868" };
+	int[] expected = { 7 };
+	int[] result = SmallestTrimmedNumbers(nums, queries);
+}
+
 [Theory]
 [InlineData(new[] { "102", "473", "251", "814" }, new[] { 2, 2, 1, 0 }, new[] { 1, 1 }, new[] { 2, 3 }, new[] { 4, 2 }, new[] { 1, 2 })]
 [InlineData(new[] { "24", "37", "96", "04" }, new[] { 3, 0 }, new[] { 2, 1 }, new[] { 2, 2 })]
 [InlineData(new[] { "64333639502", "65953866768", "17845691654", "87148775908", "58954177897", "70439926174", "48059986638", "47548857440", "18418180516", "06364956881", "01866627626", "36824890579", "14672385151", "71207752868" },
-new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+new[] { 1, 5, 11, 10, 7, 0, 0, 1, 13, 13, 5, 12 },
 new[] { 9, 4 },
 new[] { 6, 1 },
 new[] { 3, 8 },
@@ -96,11 +114,12 @@ new[] { 2, 7 },
 new[] { 10, 3 },
 new[] { 13, 1 },
 new[] { 13, 1 },
-new[] { 6, 1},
-new[]{5,10})]
+new[] { 6, 1 },
+new[] { 5, 10 })]
 void Test(string[] nums, int[] expected, params int[][] queries)
 {
 	int[] result = SmallestTrimmedNumbers(nums, queries);
+	// result.Dump();
 	Assert.Equal(expected, result);
 }
 
