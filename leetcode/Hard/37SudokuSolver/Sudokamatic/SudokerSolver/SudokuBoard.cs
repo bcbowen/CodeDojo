@@ -8,7 +8,7 @@ namespace SudokuSolver
 {
     public class SudokuBoard : ICloneable
     {
-        public event ValueSetHandler<ValueSetEventArgs> ValueSet;
+        public event EventHandler<ValueSetEventArgs> ValueSet;
 
         protected virtual void OnValueSet(int row, int column, int value)
         {
@@ -42,7 +42,7 @@ namespace SudokuSolver
                     if (board[i][j] != '.')
                     {
                         sudokuBoard.Board[i][j].Value = int.Parse(board[i][j].ToString());
-                        OnValueSet(i, j, sudokuBoard[i][j].Value);
+                        OnValueSet(i, j, sudokuBoard.Board[i][j].Value);
                     }
                     else
                     {
