@@ -13,12 +13,20 @@ public int[] SmallestTrimmedNumbers(string[] nums, int[][] queries)
 {
 	PriorityQueue<(int, int), int> heap = new PriorityQueue<(int, int), int>();
 	int[] result = new int[queries.Length];
-	foreach(int[] query in queries) 
+	for(int i = 0; i < queries.Length; i++) 
 	{
+		int[] query = queries[i]; 
 		heap.Clear();
-		foreach(string num in nums) 
+		for(int j = 0; j < nums.Length; j++)
 		{
-			int value = num.Length 
+			string num = nums[j]; 
+			int value = int.Parse(num.Substring(num.Length - query[0] - 1).PadLeft(query[0], '0'));
+			heap.Enqueue((j, value), value); 
+		}
+
+		for(int k = 0; k < query[1]; k++) 
+		{
+			(result[i], _) = heap.Dequeue(); 
 		}
 	}
 
