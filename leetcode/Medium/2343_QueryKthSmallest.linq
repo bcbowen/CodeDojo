@@ -20,11 +20,11 @@ public int[] SmallestTrimmedNumbers(string[] nums, int[][] queries)
 		for(int j = 0; j < nums.Length; j++)
 		{
 			string num = nums[j]; 
-			int value = int.Parse(num.Substring(num.Length - query[0] - 1).PadLeft(query[0], '0'));
+			int value = int.Parse(TrimNumber(num, query[1])); 
 			heap.Enqueue((j, value), value); 
 		}
 
-		for(int k = 0; k < query[1]; k++) 
+		for(int k = 0; k < query[0]; k++) 
 		{
 			(result[i], _) = heap.Dequeue(); 
 		}
@@ -33,7 +33,32 @@ public int[] SmallestTrimmedNumbers(string[] nums, int[][] queries)
 	return result;
 }
 
-#region private::Tests
+internal string TrimNumber(string num, int places) 
+{
+	if (places == num.Length) return num; 
+	if (places > num.Length) return num.PadLeft(places, '0'); 
+	
+	return num.Substring(num.Length - places); 
+}
+
+#region Tests
+
+[Theory]
+[InlineData("123", 2, "23")]
+[InlineData("23", 2, "23")]
+[InlineData("3", 2, "03")]
+[InlineData("1234", 2, "34")]
+[InlineData("1234", 4, "1234")]
+[InlineData("1234", 5, "01234")]
+[InlineData("1234", 1, "4")]
+
+
+
+private void TrimNumberTests(string num, int places, string expected) 
+{
+	string result = TrimNumber(num, places); 
+	Assert.Equal(expected, result); 
+}
 
 /*
 Example 1:
@@ -59,6 +84,20 @@ Explanation:
 [Theory]
 [InlineData(new[] { "102", "473", "251", "814" }, new[] { 2, 2, 1, 0 }, new[] { 1, 1 }, new[] { 2, 3 }, new[] { 4, 2 }, new[] { 1, 2 })]
 [InlineData(new[] { "24", "37", "96", "04" }, new[] { 3, 0 }, new[] { 2, 1 }, new[] { 2, 2 })]
+[InlineData(new[] { "64333639502", "65953866768", "17845691654", "87148775908", "58954177897", "70439926174", "48059986638", "47548857440", "18418180516", "06364956881", "01866627626", "36824890579", "14672385151", "71207752868" },
+new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+new[] { 9, 4 },
+new[] { 6, 1 },
+new[] { 3, 8 },
+new[] { 12, 9 },
+new[] { 11, 4 },
+new[] { 4, 9 },
+new[] { 2, 7 },
+new[] { 10, 3 },
+new[] { 13, 1 },
+new[] { 13, 1 },
+new[] { 6, 1},
+new[]{5,10})]
 void Test(string[] nums, int[] expected, params int[][] queries)
 {
 	int[] result = SmallestTrimmedNumbers(nums, queries);
