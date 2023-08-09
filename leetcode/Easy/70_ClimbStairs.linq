@@ -30,7 +30,7 @@ public class Solution
 	}
 }
 
-#region private::Tests
+#region Tests
 
 [Theory]
 [InlineData(2, 2)]
