@@ -78,7 +78,7 @@ public class Solution
 	}
 }
 
-#region private::Tests
+#region Tests
 
 [Theory]
 [InlineData(new[] { 7, 1, 5, 3, 6, 4 }, 5)]
