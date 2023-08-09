@@ -46,6 +46,7 @@ internal bool SearchRow(int[] row, int target)
 		return SearchRow(subarray, target);
 	}
 }
+
 #region private::Tests
 
 [Theory]
