@@ -11,8 +11,10 @@ void Main()
 
 public int MaxProfit(int[] prices)
 {
-	if (prices.Length < 2) return 0; 
+	if (prices.Length < 2) return 0;
 	
+	return 3;
+
 }
 
 #region Tests
@@ -40,10 +42,13 @@ Explanation: There is no way to make a positive profit, so we never buy the stoc
 */
 
 [Theory]
-[InlineData()]
-void Test()
+[InlineData(new[] { 7, 1, 5, 3, 6, 4 }, 7)]
+[InlineData(new[] { 1, 2, 3, 4, 5 }, 4)]
+[InlineData(new[] { 7, 6, 4, 3, 1 }, 0)]
+void Test(int[] prices, int expected)
 {
-	
+	int result = MaxProfit(prices);
+	Assert.Equal(expected, result);
 }
 
 #endregion
