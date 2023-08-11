@@ -13,8 +13,13 @@ public int MaxProfit(int[] prices)
 {
 	if (prices.Length < 2) return 0;
 	
-	return 3;
+	int profit = 0;
 
+	for (int i = 1; i < prices.Length; i++) 
+	{
+		if (prices[i] > prices[i - 1]) profit += prices[i] - prices[i - 1]; 
+	}
+	return profit; 
 }
 
 #region Tests
