@@ -11,8 +11,18 @@ void Main()
 
 public int MaxProfit(int[] prices)
 {
-	if (prices.Length < 2) return 0; 
-	if (prices.Length == 2) return Math.Max(prices[1] - prices[2], 9); 
+	int sold = int.MinValue; 
+	int held = int.MinValue; 
+	int rest = 0;
+
+	foreach(int price in prices) 
+	{
+		sold = held + price; 
+		held = Math.Max(held, rest - price);
+		rest = Math.Max(rest, sold); 
+	}
+	
+	return Math.Max(sold, rest); 
 }
 
 #region Tests
@@ -29,7 +39,7 @@ Input: prices = [1]
 Output: 0
 */
 
-[Fact]
+[Theory]
 [InlineData(new[] { 1, 2, 3, 0, 2 }, 3)]
 [InlineData(new[] { 1 }, 0)]
 void Test(int[] prices, int expected)
