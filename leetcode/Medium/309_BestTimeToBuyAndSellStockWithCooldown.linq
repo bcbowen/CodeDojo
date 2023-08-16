@@ -17,9 +17,10 @@ public int MaxProfit(int[] prices)
 
 	foreach(int price in prices) 
 	{
+		int presold = sold; 
 		sold = held + price; 
 		held = Math.Max(held, rest - price);
-		rest = Math.Max(rest, sold); 
+		rest = Math.Max(rest, presold); 
 	}
 	
 	return Math.Max(sold, rest); 
