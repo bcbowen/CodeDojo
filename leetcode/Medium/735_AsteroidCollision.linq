@@ -12,42 +12,46 @@ void Main()
 public int[] AsteroidCollision(int[] asteroids)
 {
 	Stack<int> asStack = new Stack<int>();
-	foreach (int rock in asteroids)
+	foreach(int rock in asteroids)
 	{
-		if (asStack.Count == 0 || !CollisionPending(rock, asStack.Peek()))
+		if (rock < 0)
 		{
-			asStack.Push(rock);
-			continue;
-		}
-
-		bool rockGone = false;
-		while (asStack.Count > 0)
-		{
-			rockGone = false;
-			int last = asStack.Pop();
-			if (Math.Abs(last) >= Math.Abs(rock))
+			if (asStack.Count == 0)
+			{ 
+				asStack.Push(rock);
+			}
+			else
 			{
-				rockGone = true;
-				if (Math.Abs(last) == Math.Abs(rock))
+				int peek = asStack.Peek();
+				bool isCrushed = false;
+				while(asStack.Count > 0 && peek > 0)
 				{
-					break;
+					if (Math.Abs(peek) > Math.Abs(rock))
+					{
+						isCrushed = true; 
+						break;
+					}
+					else if (Math.Abs(peek) == Math.Abs(rock)) 
+					{
+						isCrushed = true; 
+						asStack.Pop(); 
+						break;
+					}
+					else
+					{
+						asStack.Pop(); 
+						if (asStack.Count > 0) peek = asStack.Peek(); 
+					}
 				}
-				else
-				{
-					asStack.Push(last);
-				}
-
-				break;
+				if (!isCrushed) asStack.Push(rock); 
 			}
 		}
-		if (!rockGone)
+		else 
 		{
 			asStack.Push(rock);
 		}
-
-
 	}
-
+	
 	List<int> result = new List<int>();
 	while (asStack.Count > 0)
 	{
@@ -57,12 +61,8 @@ public int[] AsteroidCollision(int[] asteroids)
 	return result.ToArray();
 }
 
-internal bool CollisionPending(int x, int y)
-{
-	return ((x < 0) != (y < 0));
-}
 
-#region private::Tests
+#region Tests
 
 [Theory]
 [InlineData(new[] { 5, 10, -5 }, new[] { 5, 10 })]
