@@ -11,7 +11,18 @@ void Main()
 
 public int MinDeletions(string s)
 {
-
+	Dictionary<char, int> charCounts = new Dictionary<char, int>();
+	foreach(char c in s) 
+	{
+		if (!charCounts.ContainsKey(c))
+		{
+			charCounts.Add(c, 0);
+		}
+		
+		charCounts[c]++; 
+	}
+	
+	
 }
 
 /*
