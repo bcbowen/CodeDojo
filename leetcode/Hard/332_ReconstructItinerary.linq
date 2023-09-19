@@ -25,6 +25,12 @@ public class Solution
 			trips[ticket[0]].Add(ticket[1]);
 		}
 
+		foreach (string key in trips.Keys)
+		{
+			trips[key].Sort();
+		}
+
+		/*
 		Stack<string> departureStack = new Stack<string>();
 		departureStack.Push("JFK");
 		while (departureStack.Count > 0)
@@ -41,6 +47,26 @@ public class Solution
 			{
 				departureStack.Push(origin);
 			}
+		}
+		*/
+		string dest = "JFK";
+		while (dest != string.Empty)
+		{
+			if (result.Count() == 0 || result[result.Count() - 1] != dest)
+			{
+				result.Add(dest);
+			}
+			
+			if (trips[dest].Count() > 0)
+			{
+				dest = trips[dest][0]; 
+				trips[dest].RemoveAt(0);
+			}
+			else 
+			{
+				dest = "";
+			}
+		
 		}
 
 		return result;
