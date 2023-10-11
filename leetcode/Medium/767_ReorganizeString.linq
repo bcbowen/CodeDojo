@@ -8,113 +8,6 @@ void Main()
 {
 	RunTests();  // Call RunTests() or press Alt+Shift+T to initiate testing.
 }
-/*
-internal class NoDupeList 
-{
-	public Node Head { get; set; }
-	public Node Tail { get; set;}
-
-	public bool IsFaulted() 
-	{
-		Node current = Head;
-		while (current.Next != null)
-		{
-			if (current.Value == current.Next.Value) return true; 
-			current = current.Next;
-		}
-		
-		return false;
-	}
-
-	public bool Insert(Node node)
-	{
-		bool isFault = false;
-		if (Head == null) 
-		{
-			Head = node; 
-			Tail = node;
-		}
-		else 
-		{
-			Node current = Head;
-			while(current.Value == node.Value || (current.Next != null && current.Next.Value == node.Value)) 
-			{
-				current = node.Next;
-				if (current.Next == null) break;
-			}
-			
-			if (current.Next == null)
-			{
-				if (current.Value == node.Value) 
-				{
-					SetHead(node); 
-					isFault = true;
-				}
-				else 
-				{
-					Tail.Next = node; 
-					Tail = node;
-				}
-			}
-			else
-			{
-				if (node.Value == current.Value || node.Value == current.Next.Value) 
-				{
-					isFault = true; 
-					SetHead(node);
-				}
-				else 
-				{
-					node.Next = current.Next; 
-					current.Next = node;
-				}
-			}
-		}
-		
-		return isFault;
-
-	}
-
-	public bool Default()
-	{
-		while (IsFaulted()) 
-		{
-			Node retry = Head; 
-			Head = Head.Next;
-			bool result = Insert(retry); 
-			if (!result) return false;
-		}
-		return true;
-	}
-	
-	public void SetHead(Node node) 
-	{
-		node.Next = Head; 
-		Head = node;
-	}
-
-	public override string ToString()
-	{
-		if (Head == null) return ""; 
-		Node current = Head;
-		StringBuilder sb = new StringBuilder();
-		while (current != null) 
-		{
-			sb.Append(current.Value); 
-			current = current.Next;
-		}
-		return sb.ToString(); 
-	}
-}
-
-internal class Node 
-{
-	public Node(char value) => Value = value;
-	
-	public char Value {get; set;}
-	public Node Next {get; set;}	
-}
-*/
 
 public string ReorganizeString(string s)
 {
@@ -149,14 +42,14 @@ public string ReorganizeString(string s)
 			char secondary = charQ.Dequeue(); 
 			result[index++] = secondary; 
 			charCounts[secondary]--;
-			charQ.Enqueue(secondary, charCounts[secondary]); 
+			charQ.Enqueue(secondary, -charCounts[secondary]); 
 		}
 		else 
 		{
 			result[index++] = primary; 
 			charCounts[primary]--;
 		}
-		charQ.Enqueue(primary, charCounts[primary]); 
+		charQ.Enqueue(primary, -charCounts[primary]); 
 	}
 	return new string(result); 
 }
