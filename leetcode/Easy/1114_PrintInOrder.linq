@@ -12,28 +12,33 @@ void Main()
 
 public class Foo
 {
-	private int lastStep = 0; 
+	public ManualResetEventSlim slimEvent { get; set; }
+	public ManualResetEventSlim secondslimEvent { get; set; }
+	
 	public Foo()
 	{
-
+		slimEvent = new ManualResetEventSlim(false);
+		secondslimEvent = new ManualResetEventSlim(false);
 	}
 
 	public void First(Action printFirst)
 	{
-
 		// printFirst() outputs "first". Do not change or remove this line.
 		printFirst();
+		slimEvent.Set();
 	}
 
 	public void Second(Action printSecond)
 	{
-
+		slimEvent.Wait();
 		// printSecond() outputs "second". Do not change or remove this line.
 		printSecond();
+		secondslimEvent.Set(); 
 	}
 
 	public void Third(Action printThird)
 	{
+		secondslimEvent.Wait(); 
 
 		// printThird() outputs "third". Do not change or remove this line.
 		printThird();
@@ -42,41 +47,42 @@ public class Foo
 
 public class FooCaller 
 {
-	private Foo _foo; 
-	private Action[] _invocations;
-	
-	public FooCaller(int[] schedule) 
+	public static void DoTheFoo(int[] schedule)
 	{
-		_foo = new Foo();
-		_invocations = new Action[3];
-		_invocations[schedule[0] - 1] =  Console.WriteLine("first");
-		_invocations[schedule[1] - 1] = PrintSecond;
-		_invocations[schedule[2] - 1] = PrintThird;
+		Foo foo = new Foo();
+		foreach (int pos in schedule)
+		{
+			switch(pos) 
+			{
+				case 1: 
+					Task.Run (() => foo.First (PrintFirst));
+					break;
+				case 2: 
+					Task.Run (() =>foo.Second(PrintSecond));
+					break;
+				case 3:
+					Task.Run (() =>foo.Third(PrintThird));
+					break;
+			}
+		}
 	}
 
-	public void DoTheFoo() 
-	{
-		_foo.First (() => _invocations[0]()); 
-	}
-
-	private void PrintFirst() 
+	private static void PrintFirst() 
 	{
 		Console.Write("first");
 	}
 	
-	private void PrintSecond()
+	private static void PrintSecond()
 	{
 		Console.Write("second");
 	}
 	
-	private void PrintThird()
+	private static void PrintThird()
 	{
 		Console.Write("third");
 	}
 }
 
-
-#region private::Tests
 
 [Theory]
 [InlineData(new[] { 1, 2, 3})]
@@ -87,8 +93,7 @@ public class FooCaller
 [InlineData(new[] { 3, 2, 1 })]
 void Test(int[] nums)
 {
-	new FooCaller(nums);
+	FooCaller.DoTheFoo(nums);
 	Console.WriteLine(); 
 }
 
-#endregion
