@@ -13,7 +13,7 @@ void Main()
 public class ZeroEvenOdd
 {
 	private int n;
-	private int remaining; 
+	private int current; 
 	private System.Threading.ManualResetEventSlim _zeroEvent; 
 	private System.Threading.ManualResetEventSlim _oddEvent;
 	private System.Threading.ManualResetEventSlim _evenEvent;
@@ -21,72 +21,58 @@ public class ZeroEvenOdd
 	public ZeroEvenOdd(int n)
 	{
 		this.n = n;
-		remaining = n * 2; 
+		current = 1;
 		_zeroEvent = new ManualResetEventSlim(true);
 		_evenEvent = new ManualResetEventSlim(false);
 		_oddEvent = new ManualResetEventSlim(false); 
 	}
 
-	// printNumber(x) outputs "x", where x is an integer.
 	public void Zero(Action<int> printNumber)
 	{
-		while (remaining > 0)
+		for (int i = 0; i < n; i++)
 		{
 			_zeroEvent.Wait(); 
-			
-			if (remaining > 0) printNumber(0);
-			Interlocked.Decrement(ref remaining); 
+			printNumber(0);
 			_zeroEvent.Reset();
-			_oddEvent.Set();
 			
-			_zeroEvent.Wait();
-			
-			if (remaining > 0) printNumber(0);
-			Interlocked.Decrement(ref remaining);
-			_zeroEvent.Reset();
-			_evenEvent.Set();
+			if (current++ % 2 == 0)
+				_evenEvent.Set();
+			else 
+				_oddEvent.Set();
 		}
+	
 	}
 
 	public void Even(Action<int> printNumber)
 	{
-		int val = 2; 
-		
-		while (remaining > 0) 
+		for (int val = 2; val <= n; val += 2) 
 		{
 			_evenEvent.Wait();
-			
-			if (remaining > 0) printNumber(val); 
-			val += 2; 
-			Interlocked.Decrement(ref remaining); 
+			printNumber(val); 
 			_zeroEvent.Set(); 
 			_evenEvent.Reset(); 
 		}
 	}
 
 	public void Odd(Action<int> printNumber)
-	{
-		int val = 1;
-		
-		while (remaining > 0)
+	{	
+		for (int val = 1; val <= n; val += 2)
 		{
 			_oddEvent.Wait();
-			if (remaining > 0) printNumber(val);
-			val += 2;
-			Interlocked.Decrement(ref remaining); 
+			printNumber(val);
 			_zeroEvent.Set(); 
 			_oddEvent.Reset();
 		}
 	}
 }
 
-
-
 [Theory]
 [InlineData(1)]
 [InlineData(2)]
 [InlineData(5)]
 [InlineData(19)]
+[InlineData(100)]
+[InlineData(1000)]
 void Test(int n) 
 {
 	ZeroEvenOdd z = new ZeroEvenOdd(n);
@@ -94,9 +80,9 @@ void Test(int n)
 	Action<int> printNumber = (n) => Console.Write(n);
 	Task[] tasks = new Task[] 
 	{
-		Task.Run (() => z.Zero(x => printNumber(x))),
 		Task.Run (() => z.Odd(x => printNumber(x))),
 		Task.Run (() => z.Even(x => printNumber(x))),
+		Task.Run (() => z.Zero(x => printNumber(x)))
 	}; 
 	Task.WaitAll(tasks); 
 	Console.WriteLine(); 
