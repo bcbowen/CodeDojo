@@ -67,23 +67,99 @@ public class ZeroEvenOdd
 }
 
 [Theory]
-[InlineData(1)]
-[InlineData(2)]
-[InlineData(5)]
-[InlineData(19)]
-[InlineData(100)]
-[InlineData(1000)]
-void Test(int n) 
+[InlineData(1, "01")]
+[InlineData(2, "0102")]
+[InlineData(5, "0102030405")]
+[InlineData(19, "010203040506070809010011012013014015016017018019")]
+void Test(int n, string expected) 
 {
 	ZeroEvenOdd z = new ZeroEvenOdd(n);
 	Console.WriteLine($"Processing n:{n}");
-	Action<int> printNumber = (n) => Console.Write(n);
-	Task[] tasks = new Task[] 
+	using (StringWriter sw = new StringWriter())
 	{
-		Task.Run (() => z.Odd(x => printNumber(x))),
-		Task.Run (() => z.Even(x => printNumber(x))),
-		Task.Run (() => z.Zero(x => printNumber(x)))
-	}; 
-	Task.WaitAll(tasks); 
-	Console.WriteLine(); 
+		TextWriter defaultConsoleOut = Console.Out;
+		string output = ""; 
+		try 
+		{
+			Console.SetOut(sw); 
+			Action<int> printNumber = (n) => Console.Write(n);
+			Task[] tasks = new Task[]
+			{
+				Task.Run (() => z.Odd(x => printNumber(x))),
+				Task.Run (() => z.Even(x => printNumber(x))),
+				Task.Run (() => z.Zero(x => printNumber(x)))
+			};
+			Task.WaitAll(tasks);
+			output = sw.ToString();
+			sw.Close(); 
+		}
+		finally 
+		{
+			Console.SetOut(defaultConsoleOut); 	
+		}
+		
+		
+		Assert.Equal(output, expected); 
+	}
+
+	//Console.WriteLine(); 
+}
+
+[Theory]
+[InlineData(100, "0910920930940950960970980990100")]
+[InlineData(1000, "099609970998099901000")]
+void BigTest(int n, string expectedEnd)
+{
+	const string expectedBegin = "01020304050607"; 
+	ZeroEvenOdd z = new ZeroEvenOdd(n);
+	Console.WriteLine($"Processing n:{n}");
+	using (StringWriter sw = new StringWriter())
+	{
+		TextWriter defaultConsoleOut = Console.Out;
+		string output = "";
+		try 
+		{
+			Console.SetOut(sw);
+			Action<int> printNumber = (n) => Console.Write(n);
+			Task[] tasks = new Task[]
+			{
+				Task.Run (() => z.Odd(x => printNumber(x))),
+				Task.Run (() => z.Even(x => printNumber(x))),
+				Task.Run (() => z.Zero(x => printNumber(x)))
+			};
+			Task.WaitAll(tasks);
+			output = sw.ToString();
+		}
+		finally 
+		{
+			Console.SetOut(defaultConsoleOut);
+		}
+		
+		Assert.True(output.StartsWith(expectedBegin));
+		Assert.True(output.EndsWith(expectedEnd));
+	}
+	//Console.WriteLine();
+}
+
+[Fact]
+public void TestConsoleOutput()
+{
+	// Arrange: Redirect Console.Out to a StringWriter
+	using (StringWriter sw = new StringWriter())
+	{
+		Console.SetOut(sw);
+
+		// Act: Run your test code that writes to the console
+		YourTestCode();
+
+		// Assert: Check the captured output
+		string consoleOutput = sw.ToString();
+		Assert.Contains("expected text", consoleOutput);
+	} // StringWriter is automatically disposed, which restores Console.Out
+}
+
+// Replace this with your actual test code that writes to the console
+private void YourTestCode()
+{
+	Console.WriteLine("expected text");
 }
