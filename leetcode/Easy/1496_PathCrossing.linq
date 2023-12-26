@@ -15,6 +15,7 @@ public bool IsPathCrossing(string path)
 {
 	HashSet<(int, int)> visited = new HashSet<(int, int)>();
 	(int x, int y) pos = (0, 0);
+	visited.Add(pos); 
 	foreach (char c in path)
 	{
 		switch(c) 
