@@ -9,7 +9,55 @@ void Main()
 	RunTests();  
 }
 
-public bool IsMatch(string s, string p)
+class Solution 
+{
+	bool?[][] memo; 
+
+	public bool IsMatch(string s, string p) 
+	{
+		memo = new bool?[s.Length + 1][];
+		for (int i = 0; i < memo.Length; i++) 
+		{
+			memo[i] = new bool?[p.Length + 1];
+		}
+		return Dp(0, 0, s, p); 
+	}
+
+	public bool Dp(int i, int j, string text, string pattern)
+	{
+		if (memo[i][j] != null)
+		{
+			return memo[i][j].Value;
+		}
+
+		bool ans;
+		if (j == pattern.Length)
+		{
+			ans = i == text.Length;
+		}
+		else
+		{
+			bool firstMatch = (i < text.Length && (pattern[j] == text[i] ||
+			pattern[j] == '.'));
+
+			if (j + 1 < pattern.Length && pattern[j + 1] == '*') 
+			{
+				ans = (Dp(i, j + 2, text, pattern) || firstMatch && Dp(i + 1, j, text, pattern));
+			}
+			else 
+			{
+				ans = firstMatch && Dp(i + 1, j + 1, text, pattern); 
+			}
+		}
+		
+		memo[i][j] = ans;
+		return ans; 
+	}
+	
+}
+
+
+public bool IsMatch1(string s, string p)
 {
 	int si = 0; 
 	int pi = 0;
@@ -57,7 +105,7 @@ public bool IsMatch(string s, string p)
 			}
 
 			// edge case: we have a * followed by the same character, so we don't want to go all the way to the end
-			bool backup = (pi < p.Length && s[si] == p[pi] && s[i] == token[0]);  
+			bool backup = (pi < p.Length && s[si] == p[pi] && s[si] == token[0]);  
 			while(si < s.Length && s[si] == token[0]) 
 			{
 				si++; 
@@ -114,12 +162,17 @@ s = "aaa"
 p = "a*a"
 true
 
+s = "aaa"
+p = "ab*a*c*a"
+true
+
 */
 
 [Theory]
 [InlineData("aa", "a", false)]
 [InlineData("ab", ".*c", false)]
 [InlineData("aaa", ".*aaaa", false)]
+[InlineData("aaa", "ab*a*c*a", true)]
 [InlineData("abc", ".*c", true)]
 [InlineData("aa", "a*", true)]
 [InlineData("ab", ".*", true)]
@@ -127,7 +180,7 @@ true
 [InlineData("aaa", "a*a", true)]
 void Test(string s, string p, bool expected) 
 {
-	bool result = IsMatch(s, p); 
+	bool result = new Solution().IsMatch(s, p); 
 	Assert.Equal(expected, result); 
 }
 
