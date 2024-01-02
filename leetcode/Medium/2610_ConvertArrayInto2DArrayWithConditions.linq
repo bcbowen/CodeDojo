@@ -12,6 +12,25 @@ void Main()
 public IList<IList<int>> FindMatrix(int[] nums)
 {
 	List<IList<int>> list = new List<IList<int>>();
+	int[] counts = new int[nums.Length + 1];
+	list.Add(new List<int>());
+
+	foreach (int num in nums)
+	{
+		if (counts[num] > list.Count - 1)
+		{
+			list.Add(new List<int>());
+		}
+		list[counts[num]].Add(num);
+		counts[num]++;
+	}
+
+	return list;
+}
+
+public IList<IList<int>> FindMatrix2(int[] nums)
+{
+	List<IList<int>> list = new List<IList<int>>();
 	Dictionary<int, int> counts = new Dictionary<int, int>();
 	list.Add(new List<int>());
 	for (int i = 1; i <= nums.Length; i++) 
