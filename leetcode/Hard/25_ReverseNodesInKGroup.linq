@@ -23,7 +23,34 @@ public class ListNode
 public ListNode ReverseKGroup(ListNode head, int k)
 {
 	List<ListNode> segments = new List<ListNode>(); 
-	ListNode current = head; 
+	ListNode segment;
+	ListNode remaining = head;
+	do
+	{
+		(segment, remaining) = GetSegment(remaining, k); 
+		segments.Add(segment);
+
+	} while (remaining != null);
+	for(int i = 0; i < segments.Count - 1; i++)
+	{
+		segments[i] = ReverseList(segments[i]); 
+	}
+	
+	int length; 
+	ListNode tail;
+	(length, tail) = GetListLength(segments[segments.Count - 1]);
+	if (length == k) 
+	{
+		segments[segments.Count - 1] = ReverseList(segments[segments.Count - 1]); 
+	}
+
+	head = segments[0];
+	for (int i = 1; i < segments.Count; i++)
+	{
+		(length, tail) = GetListLength(head); 
+		tail.next = segments[i]; 
+	}
+		
 	
 	return head;
 }
@@ -102,10 +129,23 @@ internal List<int> GetValues(ListNode head)
 	return result;
 }
 
+/*
+
+Input: head = [1,2,3,4,5], k = 2
+Output: [2,1,4,3,5]
+
+Input: head = [1,2,3,4,5], k = 3
+Output: [3,2,1,4,5]
+*/
 [Theory]
-void Test() 
+[InlineData(new[] {1,2,3,4,5 },2 , new[] {2,1,4,3,5})]
+[InlineData(new[] { 1,2,3,4,5},3 , new[] {3,2,1,4,5})]
+void Test(int[] listValues, int k, int[] expectedValues) 
 {
-	
+	ListNode head = BuildList(listValues); 
+	ListNode result = ReverseKGroup(head, k);
+	int[] resultValues = GetValues(result).ToArray();
+	Assert.Equal(expectedValues, resultValues); 
 }
 
 [Theory]
