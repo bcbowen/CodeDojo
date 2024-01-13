@@ -35,6 +35,21 @@ internal ListNode BuildList(int[] values)
 	return head;
 }
 
+internal List<int> GetValues(ListNode head)
+{
+	List<int> result = new List<int>();
+	if (head != null)
+	{
+		ListNode current = head;
+		while (current != null)
+		{
+			result.Add(current.val);
+			current = current.next;
+		}
+	}
+	return result;
+}
+
 public ListNode Partition(ListNode head, int x)
 {
 	ListNode p1Tail; 
@@ -45,6 +60,39 @@ public ListNode Partition(ListNode head, int x)
 	{
 		p1Tail = partition; 
 		partition = partition.next;
+	}
+
+    p2Head = partition.next;
+	ListNode current; 
+	// left of partition
+	if (head != partition)
+	{
+		current = head;
+		while (current.val > x && current != partition)
+		{
+			if (partition.next == null)
+			{
+				partition.next = current; 
+				p2Head = current; 
+				current = head = current.next;
+				p2Head.next = null;
+			}
+			else 
+			{
+				partition.next = current; 
+				current = head = current.next; 
+				partition.next.next = p2Head; 
+				p2Head = partition.next;
+			}
+		}
+		
+		while (current != partition)
+		{
+			if (current.next.val > x) 
+			{
+				
+			}
+		}
 	}
 }
 
