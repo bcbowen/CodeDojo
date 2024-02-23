@@ -16,6 +16,9 @@
 # Mono auto generated files
 mono_crash.*
 
+# Jupyter checkpoints
+.ipynb_checkpoints
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
