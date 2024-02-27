@@ -1,0 +1,9 @@
+# Task 1: 
+mkdir ~/super-secret-stuff
+echo "Soylent green is people" > ~/super-secret-stuff/top_secret.txt
+sudo updatedb
+locate top_secret.txt > ~/secret_place.txt
+
+
+# Task 2: 
+sudo find / -maxdepth 4 -type f -size +1M -exec ls -lh {} \; | sort -k 5hr
