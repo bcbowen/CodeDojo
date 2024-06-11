@@ -52,14 +52,6 @@ int SantaBasement(string input)
 	}
 	return -1;
 }
-/*
-private string GetQueryDirectory()
-{
-	FileInfo file = new FileInfo(Util.CurrentQueryPath);
-	return file.DirectoryName;
-}
-*/
-
 
 /*
 (()) and ()() both result in floor 0.
