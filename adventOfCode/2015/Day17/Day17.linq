@@ -3,7 +3,7 @@
 </Query>
 
 #load "xunit"
-
+#load "..\..\Utilities.linq"
 void Main()
 {
 	RunTests();
@@ -16,7 +16,7 @@ void Part1And2(string fileName, int total)
 	_minContainers = int.MaxValue;
 	
 	int[] used = new int[0]; 
-	string path = Path.Combine(GetQueryDirectory(), fileName);
+	string path = Path.Combine(Utility.GetInputDirectory(), fileName);
 	string[] lines = File.ReadAllLines(path);
 	foreach (string line in lines) 
 	{
