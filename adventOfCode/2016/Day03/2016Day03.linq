@@ -8,12 +8,27 @@ void Main()
 {
 	RunTests(); 
 	Part1(); 
+	Part2(); 
 }
 
 void Part1() 
 {
 	int valids = CountValidTriangles("input.txt");
 	Console.WriteLine($"Part1 valid count: {valids}"); 
+}
+
+void Part2() 
+{
+	List<(int, int, int)> triangles = LoadTriangles("input.txt");
+	int count = 0; 
+	for(int i = 0; i < triangles.Count - 2; i += 3) 
+	{
+		if (IsValid(triangles[i].Item1, triangles[i + 1].Item1, triangles[i + 2].Item1)) count++; 
+		if (IsValid(triangles[i].Item2, triangles[i + 1].Item2, triangles[i + 2].Item2)) count++; 
+		if (IsValid(triangles[i].Item3, triangles[i + 1].Item3, triangles[i + 2].Item3)) count++; 
+	}
+
+	Console.WriteLine($"Count valid vertical triangles: {count}"); 
 }
 
 private int CountValidTriangles(string fileName) 
