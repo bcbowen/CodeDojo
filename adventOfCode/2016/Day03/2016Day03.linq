@@ -29,9 +29,9 @@ private int CountValidTriangles(string fileName)
 
 private bool IsValid(int a, int b, int c) 
 {
-	if (a + b < c) return false; 
-	if (a + c < b) return false; 
-	if (c + b < a) return false; 
+	if (a + b <= c) return false; 
+	if (a + c <= b) return false; 
+	if (c + b <= a) return false; 
 	return true;
 }
 
@@ -41,21 +41,38 @@ private List<(int, int, int)> LoadTriangles(string filename)
 	string path = Path.Combine(Utility.GetInputDirectory(), filename);
 	string[] lines = File.ReadAllLines(path);
 	string pattern = @"\s*(\d+)\s+(\d+)\s+(\d+)"; 
+	int lineCount = 0; 
 	foreach (string line in lines) 
 	{
 		Match match = Regex.Match(line, pattern); 
 		//match.Dump(); 
-		triangles.Add((int.Parse(match.Groups[1].Value),int.Parse(match.Groups[2].Value),int.Parse(match.Groups[3].Value))); 
+		int a = int.Parse(match.Groups[1].Value);
+		int b = int.Parse(match.Groups[2].Value);
+		int c = int.Parse(match.Groups[3].Value);
+		triangles.Add((a, b, c));
+		//Console.WriteLine($"line: {line} parsed: {a} {b} {c}");
+		lineCount++;
 	}
-	
+	Console.WriteLine($"{lineCount} lines parsed. "); 
 	return triangles; 
 }
 
+
+/*
+  5  10  25 I
+  5  10  7 V
+  7  10  5 V
+  10  7  5 V
+  5  3  8 I
+  5  8  3 I
+  3  5  8 I
+  8  3  5 I
+*/
 [Fact]
 void Test() 
 {
 	int valids = CountValidTriangles("sample.txt"); 
-	int expected = 0; 
+	int expected = 3; // Vs above 
 	Assert.Equal(expected, valids); 
 }
 
