@@ -23,6 +23,32 @@ public IList<string> LetterCombinations(string digits)
 	letters.Add(7, "pqrs");
 	letters.Add(8, "tuv");
 	letters.Add(9, "wxyz");
+
+	Queue<string> workingQ = new Queue<string>();
+	foreach(char c in letters[digits[0] - '0'])
+	{
+		workingQ.Enqueue(c.ToString());
+	}
+	for(int i = 1; i < digits.Length; i++)
+	{
+		int qSize = workingQ.Count;
+		for (int j = 0; j < qSize; j++)
+		{
+			string val = workingQ.Dequeue();
+			foreach (char c in letters[digits[i] - '0']) 
+			{
+				workingQ.Enqueue(val + c); 
+			}
+		}
+	}
+
+	List<string> result = new List<string>();
+	while (workingQ.Count > 0) 
+	{
+		result.Add(workingQ.Dequeue()); 
+	}
+	
+	return result;
 }
 
 /*
