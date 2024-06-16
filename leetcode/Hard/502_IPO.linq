@@ -6,37 +6,55 @@
 
 void Main()
 {
-	RunTests();  // Call RunTests() or press Alt+Shift+T to initiate testing.
+	RunTests();
+}
+
+internal class Project 
+{
+	public int Profit { get; set; }
+	public int Capital { get; set; }
+	public Project(int profit, int capital) 
+	{
+		Profit = profit; 
+		Capital = capital; 
+	}
 }
 
 public int FindMaximizedCapital(int k, int w, int[] profits, int[] capital)
 {
-	Dictionary<int, PriorityQueue<int, int>> projects = new Dictionary<int, PriorityQueue<int, int>>();
+	PriorityQueue<Project, int> projects = new PriorityQueue<Project, int>();
+	Dictionary<int, List<Project>> futureProjects = new Dictionary<int, List<Project>>(); 
+	
 	for (int i = 0; i < capital.Length; i++)
 	{
-		int key = capital[i] > w ? capital[i] : 0; 
-		if (!projects.ContainsKey(key)) 
+		Project project = new Project(profits[i], capital[i]); 
+		if (capital[i] <= w) 
 		{
-			projects.Add(key, new PriorityQueue<int, int>());
+			projects.Enqueue(project, -profits[i]);
 		}
-		projects[key].Enqueue(profits[i], -profits[i]);
+		else
+		{
+			if (!futureProjects.ContainsKey(capital[i])) 
+			{
+				futureProjects.Add(capital[i], new List<Project>()); 
+			}
+			futureProjects[capital[i]].Add(project);
+		}
+		
 	}
 	for (int jobs = 0; jobs < k; jobs++)
 	{
-		int bestChoiceIndex = -1;
-		int bestChoice = -1;
-		foreach (int i in projects.Keys.Where(key => projects[key].Count > 0 && key <= w))
+		foreach (int i in futureProjects.Keys.Where(key => futureProjects[key].Count > 0 && key <= w))
 		{
-			// find job available for current capital that offers the most profit
-			if (projects[i].Peek() > bestChoice)
+			foreach (Project p in futureProjects[i]) 
 			{
-				bestChoice = projects[i].Peek();
-				bestChoiceIndex = i;
-			}			
+				projects.Enqueue(p, -p.Profit);
+			}
+			futureProjects.Remove(i);
 		}
 		// if there are no projects in budget, we're done
-		if (bestChoiceIndex == -1) break; 
-		w += projects[bestChoiceIndex].Dequeue();
+		if (projects.Count == 0) break; 
+		w += projects.Dequeue().Profit;
 	}
 
 	return w;
@@ -56,6 +74,7 @@ Output: 6
 [InlineData(1, 0, new[] { 1, 2, 3 }, new[] { 1, 1, 2 }, 0)]
 [InlineData(2, 0, new[] { 1, 2, 3 }, new[] { 0, 1, 1 }, 4)]
 [InlineData(3, 0, new[] { 1, 2, 3 }, new[] { 0, 1, 2 }, 6)]
+[InlineData(10, 0, new[] { 1, 2, 3 }, new[] { 0, 1, 2 }, 6)]
 void Test(int k, int w, int[] profits, int[] capital, int expected)
 {
 	int result = FindMaximizedCapital(k, w, profits, capital);
