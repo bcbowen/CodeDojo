@@ -1,0 +1,245 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"csharp","items":[{"aliases":[],"languageName":"csharp","name":"csharp"}]}}
+
+#!csharp
+
+class Job 
+{
+	public Job(int difficulty, int profit) 
+	{
+		Difficulty = difficulty; 
+		Profit = profit; 
+	}
+	
+	public int Difficulty { get; set; }
+	public int Profit {get; set;}
+}
+
+#!csharp
+
+public int MaxProfitAssignment_1(int[] difficulty, int[] profit, int[] worker)
+{
+	int maxProfit = 0;
+	List<Job> jobs = new List<Job>();
+	for (int i = 0; i < difficulty.Length; i++) 
+	{
+		jobs.Add(new Job(difficulty[i], profit[i]));
+	}
+	foreach (int w in worker) 
+	{
+		Job j = jobs.Where(j => j.Difficulty <= w).OrderByDescending(j => j.Profit).FirstOrDefault();
+		if (j != null) maxProfit += j.Profit;
+	}
+	return maxProfit; 
+}
+
+#!csharp
+
+class Solution 
+{
+	public int MaxProfitAssignment2(int[] difficulty, int[] profit, int[] worker)
+	{
+		int maxProfit = 0;
+		
+		Array.Sort(worker); 
+		
+		List<Job> jobs = new List<Job>();
+		for (int i = 0; i < difficulty.Length; i++)
+		{
+			if (difficulty[i] <= worker[^1]) 
+			{
+				jobs.Add(new Job(difficulty[i], profit[i]));
+			}
+			
+		}
+		foreach (int w in worker)
+		{
+			Job j = jobs.Where(j => j.Difficulty <= w).OrderByDescending(j => j.Profit).FirstOrDefault();
+			if (j != null) maxProfit += j.Profit;
+		}
+		return maxProfit;
+	}
+
+	public int MaxProfitAssignment(int[] difficulty, int[] profit, int[] worker)
+	{
+		int maxProfit = 0;
+
+		Array.Sort(worker);
+		int[] profitByDifficulty = new int[worker[^1]];
+		//Console.WriteLine($"pbd len: {profitByDifficulty.Length}"); 
+		for (int i = 0; i < difficulty.Length; i++)
+		{
+			if (difficulty[i] < profitByDifficulty.Length && profitByDifficulty[difficulty[i]] < profit[i])
+			{
+				profitByDifficulty[difficulty[i]] = profit[i]; 
+			}
+		} 
+		int runningMax = 0; 
+		for(int i = 0; i < profitByDifficulty.Length; i++)
+		{
+			if (runningMax < profitByDifficulty[i])
+			{
+				runningMax = profitByDifficulty[i];
+			} 
+			else if (profitByDifficulty[i] < runningMax) 
+			{
+				profitByDifficulty[i] = runningMax;
+			}
+		}
+
+		foreach (int w in worker)
+		{
+			maxProfit += profitByDifficulty[w]; 
+		}
+		return maxProfit;
+	}
+}
+
+#!csharp
+
+void RunTests()
+{
+    int[] difficulty, profit, worker;
+    int expected;
+    bool pass = true;
+
+    difficulty =  new[] { 2, 4, 6, 8, 10 };
+    profit =  new[] { 10, 20, 30, 40, 50 };
+    worker =  new[] { 4, 5, 6, 7 };
+    expected = 100;
+
+    int result = Test(difficulty, profit, worker); 
+    if (expected != result)
+    {
+        Console.WriteLine($"Test 1 fail, expected {expected} but got {result}");
+        pass = false;
+    }
+    return;
+    difficulty =  new[] { 85, 47, 57 };
+    profit =  new[] { 24, 66, 99 };
+    worker =  new[] { 40, 25, 25 };
+    expected = 0;
+
+    result = Test(difficulty, profit, worker); 
+    if (expected != result)
+    {
+        Console.WriteLine($"Test 2 fail, expected {expected} but got {result}");
+        pass = false;
+    }
+
+    if (pass)
+    {
+        Console.WriteLine("PASS");
+    }
+    else
+    {
+        Console.WriteLine("FAIL");
+    }
+}
+  
+public int Test(int[] difficulty, int[] profit, int[] worker)
+{
+    int result = new Solution().MaxProfitAssignment(difficulty, profit, worker);
+    return result;
+}
+
+private static string GetDataDirectoryPath()
+{
+    DirectoryInfo queryPath = new FileInfo(NotebookUtils.GetNotebookFilePath()).Directory;
+    Console.WriteLine(queryPath); 
+    DirectoryInfo dataDirectory = queryPath.GetDirectories().FirstOrDefault(d => d.Name == "Data");
+    if (dataDirectory == null)
+    {
+        throw new DirectoryNotFoundException("Data directory not found.");
+    }
+    return dataDirectory.FullName;
+}
+
+#!csharp
+
+#r "nuget: Newtonsoft.Json, 13.0.1"
+
+using System.IO;
+using Newtonsoft.Json;
+
+
+public void BigTest()
+{
+    DateTime start = DateTime.Now;
+    string path = Path.Combine(GetDataDirectoryPath(), "826_Difficulty.txt");
+    if(!File.Exists(path)) Console.WriteLine($"File {path} does not exist.");
+    int[] difficulty = JsonConvert.DeserializeObject<int[]>(File.ReadAllText(path));
+
+    path = Path.Combine(GetDataDirectoryPath(), "826_Profit.txt");
+    if(!File.Exists(path)) Console.WriteLine($"File {path} does not exist.");
+    int[] profit = JsonConvert.DeserializeObject<int[]>(File.ReadAllText(path));
+
+    path = Path.Combine(GetDataDirectoryPath(), "826_Worker.txt");
+    if(!File.Exists(path)) Console.WriteLine($"File {path} does not exist.");
+    int[] worker = JsonConvert.DeserializeObject<int[]>(File.ReadAllText(path));
+
+    int expected = 492582978;
+    int result = new Solution().MaxProfitAssignment(difficulty, profit, worker);
+    if(expected == result)
+    {
+        Console.WriteLine("Big test passes");
+        Console.WriteLine($"{DateTime.Now.Subtract(start).TotalSeconds} seconds.");
+    }
+    else
+    {
+        Console.WriteLine($"Big test fail: expected {expected}, got {result}"); 
+    }
+}
+
+#!csharp
+
+RunTests(); 
+//BigTest(); 
+
+#!csharp
+
+using System;
+using System.Diagnostics;
+using System.IO;
+
+public class NotebookUtils
+{
+    public static string GetNotebookFilePath()
+    {
+        // Get the current process
+        var currentProcess = Process.GetCurrentProcess();
+
+        // Retrieve the command line arguments used to launch the process
+        string[] commandLineArgs = Environment.GetCommandLineArgs();
+
+        // Find the argument containing the notebook file path
+        string notebookFilePath = null;
+        for (int i = 0; i < commandLineArgs.Length; i++)
+        {
+            if (commandLineArgs[i].EndsWith(".ipynb", StringComparison.OrdinalIgnoreCase))
+            {
+                notebookFilePath = commandLineArgs[i];
+                break;
+            }
+        }
+
+        if (notebookFilePath != null)
+        {
+            notebookFilePath = Path.GetFullPath(notebookFilePath);
+            notebookFilePath = Path.GetDirectoryName(notebookFilePath);
+        }
+        else
+        {
+            // Fallback to a default path or handle the case when notebook path is not found
+            notebookFilePath = Environment.CurrentDirectory;
+        }
+
+        return notebookFilePath;
+    }
+}
+
+// Example usage:
+string notebookFilePath = NotebookUtils.GetNotebookFilePath();
+ // Print or use as needed
+Console.WriteLine(notebookFilePath); 

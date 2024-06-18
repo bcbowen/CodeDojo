@@ -19,6 +19,8 @@ mono_crash.*
 # Jupyter checkpoints
 .ipynb_checkpoints
 
+.vscode
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
