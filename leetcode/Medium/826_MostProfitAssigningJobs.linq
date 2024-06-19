@@ -41,25 +41,38 @@ public int MaxProfitAssignment_1(int[] difficulty, int[] profit, int[] worker)
 
 public int MaxProfitAssignment(int[] difficulty, int[] profit, int[] worker)
 {
+
 	int maxProfit = 0;
-	
-	Array.Sort(worker); 
-	
-	List<Job> jobs = new List<Job>();
+
+	Array.Sort(worker);
+	int[] profitByDifficulty = new int[worker[^1] + 1];
+	//Console.WriteLine($"pbd len: {profitByDifficulty.Length}"); 
 	for (int i = 0; i < difficulty.Length; i++)
 	{
-		if (difficulty[i] <= worker[^1]) 
+		if (difficulty[i] < profitByDifficulty.Length && profitByDifficulty[difficulty[i]] < profit[i])
 		{
-			jobs.Add(new Job(difficulty[i], profit[i]));
+			profitByDifficulty[difficulty[i]] = profit[i];
 		}
-		
 	}
+	int runningMax = 0;
+	for (int i = 0; i < profitByDifficulty.Length; i++)
+	{
+		if (runningMax < profitByDifficulty[i])
+		{
+			runningMax = profitByDifficulty[i];
+		}
+		else if (profitByDifficulty[i] < runningMax)
+		{
+			profitByDifficulty[i] = runningMax;
+		}
+	}
+
 	foreach (int w in worker)
 	{
-		Job j = jobs.Where(j => j.Difficulty <= w).OrderByDescending(j => j.Profit).FirstOrDefault();
-		if (j != null) maxProfit += j.Profit;
+		maxProfit += profitByDifficulty[w];
 	}
 	return maxProfit;
+
 }
 
 /*
