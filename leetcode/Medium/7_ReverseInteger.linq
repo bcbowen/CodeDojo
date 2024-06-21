@@ -85,6 +85,7 @@ uint max Value = 4294967295
 [InlineData(2147483647, 0)]
 [InlineData(1534236469, 0)]
 [InlineData(-2147483648, 0)]
+[InlineData(2147483641, 1463847412)]
 void Test(int x, int expected) 
 {
 	int result = new Solution().Reverse(x);
