@@ -6,7 +6,7 @@
 
 void Main()
 {
-	RunTests();  // Call RunTests() or press Alt+Shift+T to initiate testing.
+	RunTests(); 
 }
 
 public class Solution
