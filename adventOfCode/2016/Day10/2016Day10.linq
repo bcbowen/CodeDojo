@@ -20,7 +20,12 @@ ChipFactory Part1()
 
 void Part2(ChipFactory factory) 
 {
-	Console.WriteLine($"Part2: {factory.Outputs[0].Chips[1] * factory.Outputs[1].Chips[1] * factory.Outputs[2].Chips[1]}"); 
+	//Console.WriteLine($"Part2: {factory.Bots[0].Chips[0] * factory.Bots[1].Chips[0] * factory.Outputs[0].Chips[0]}"); 
+	
+	int output0 = factory.Outputs.First(o => o.Value == 0).Chips[0];
+	int output1 = factory.Outputs.First(o => o.Value == 1).Chips[0];
+	int output2 = factory.Outputs.First(o => o.Value == 2).Chips[0];
+	Console.WriteLine("Part2: " + output0 * output1 * output2); 
 }
 
 class ChipFactory 
@@ -136,8 +141,9 @@ class ChipFactory
 
 		bot.LoTarget = lowReceiver;
 		bot.HiTarget = hiReceiver;
-		if (bot.Chips.Count == 2) 
+		if (bot.Chips.Count == 2)
 		{
+			//if (new[] {123, 191, 182}.Contains(bot.Value)) Console.WriteLine(bot.Chips.Min(c => c));
 			bot.LoTarget.Receive(bot.Chips.Min(c => c)); 
 			bot.HiTarget.Receive(bot.Chips.Max(c => c)); 
 		}
