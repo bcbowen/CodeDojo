@@ -27,6 +27,8 @@ public class Solution
 {
 	public TreeNode BalanceBST(TreeNode root)
 	{
+		if (IsBalanced(root)) return root; 
+		
 		int[] values = Traverse(root).ToArray();
 		return Balance(values); 
 	}
@@ -56,7 +58,7 @@ public class Solution
 			int mid = values.Length / 2; 
 			node = new TreeNode(values[mid]);
 			node.left = Balance(values.Take(mid).ToArray());
-			node.right = Balance(values.Skip(mid).ToArray()); 
+			node.right = Balance(values.Skip(mid + 1).ToArray()); 
 		}
 		return node;
 	}
@@ -225,12 +227,26 @@ Input: root = [2,1,3]
 Output: [2,1,3]
 */
 
-[Theory]
-[InlineData(new int[] {1,2,3,4})]
-[InlineData(new int[] {2, 1, 3})]
-void MainTest(int[] values) 
+[Fact]
+void Example1Test() 
 {
-	TreeNode node = Solution.Hydrate(values); 
+	TreeNode node = new TreeNode(1); 
+	node.right = new TreeNode(2); 
+	node.right.right = new TreeNode(3); 
+	node.right.right.right = new TreeNode(4); 
 	TreeNode result = new Solution().BalanceBST(node); 
 	Assert.True(Solution.IsBalanced(result)); 
+}
+
+[Fact]
+void Example2Test()
+{
+	TreeNode node = new TreeNode(2);
+	node.left = new TreeNode(1);
+	node.right = new TreeNode(3);
+	TreeNode result = new Solution().BalanceBST(node);
+	Assert.True(Solution.IsBalanced(result));
+	Assert.Equal(2, result.val); 
+	Assert.Equal(1, result.left.val); 
+	Assert.Equal(3, result.right.val); 
 }
