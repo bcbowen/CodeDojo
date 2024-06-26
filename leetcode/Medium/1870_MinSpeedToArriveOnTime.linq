@@ -12,7 +12,8 @@ void Main()
 public int MinSpeedOnTime(int[] dist, double hour)
 {
 	int result = -1; 
-	
+	int minPossible = dist.Length; 
+	if (minPossible > hour) return result;
 	
 	return result; 
 }
