@@ -9,6 +9,15 @@ void Main()
 	RunTests(); 
 }
 
+private void IncrementCount(Dictionary<char, int> counts, char key) 
+{
+	if (!counts.ContainsKey(key)) 
+	{
+		counts.Add(key, 0); 
+	}
+	counts[key]++;
+}
+
 public int NumberOfSpecialSubstrings(string s)
 {
 	int n = 1;
@@ -17,34 +26,28 @@ public int NumberOfSpecialSubstrings(string s)
 	// handle n = 1 first
 	count += s.Length;
 	n++;
-	while(n < s.Length)
+	while(n <= s.Length)
 	{
 		charCounts.Clear(); 
 		int l = 0; 
 		charCounts.Add(s[0], 1);
-		int r = 1;
-		while (r <= n - 1)
+		int r;
+		for (r = 1; r < n - 1; r++)
 		{
-			if (!charCounts.ContainsKey(s[r]))
-			{
-				charCounts.Add(s[r], 0); 
-			}
-			charCounts[s[r]]++;
-			r++;
+			IncrementCount(charCounts, s[r]); 
 		}
+		IncrementCount(charCounts, s[r]); 
+		
 		if (!charCounts.Values.Any(v => v > 1)) count++; 
-		while(r < s.Length - 1) 
+		while (r < s.Length - 1)
 		{
 			charCounts[s[l]]--; 
 			l++;
 			r++;
-			if (!charCounts.ContainsKey(s[r]))
-			{
-				charCounts.Add(s[r], 0);
-			}
-			charCounts[s[r]]++;
+
+			IncrementCount(charCounts, s[r]); 
 			if (!charCounts.Values.Any(v => v > 1)) count++; 
-		}
+		} 
 		n++;
 	}
 	return count; 
