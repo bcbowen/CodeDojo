@@ -25,11 +25,6 @@ Output: ["Bob","Alice","Bob"]
 Explanation: The first Bob is the tallest, followed by Alice and the second Bob.
 """
 
-# names, heights, outputs
-run_cases = [
-    (["Mary","John","Emma"],[180,165,170], ["Mary","Emma","John"]),
-    (["Alice","Bob","Bob"],[155,185,150], ["Bob","Alice","Bob"])
-]
 
 @pytest.mark.parametrize("names, heights, expected", [
     (["Mary","John","Emma"], [180,165,170], ["Mary","Emma","John"]),
