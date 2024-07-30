@@ -11,13 +11,16 @@ class Solution(object):
         counts = []
         counts.append([0, s[0], 0])
         for i in range (1, len(s)):
-            counts.append([s[i - 1][0] + 1 if s[i - 1][1] == 'b' else s[i - 1][0], s[i], 0])
+            bCount = counts[i - 1][0]
+            if s[i - 1] == 'b': 
+                bCount += 1
+            counts.append([bCount, s[i], 0])
 
-        for i in range(len(s) - 2, -1, -1): 
-            if s[i + 1][1] == 'a': 
-                s[i][2] = s[i + 1][2] + 1
-            else:
-                s[i][2] = s[i + 1][2]
+        for i in range(len(s) - 2, -1, -1):
+            aCount = counts[i + 1][2]
+            if s[i + 1] == 'a': 
+                aCount += 1 
+            counts[i][2] = aCount
         
 
         min  = float("inf")
@@ -53,8 +56,8 @@ Explanation: The only solution is to delete the first two characters.
     ("bbaaaaabb", 2),
 ])
 def test_number_of_pairs(value, expected):
-    result = Solution().sortPeople(minimumDeletions, heights)
-    print(f"hey dude {minimumDeletions} --> {result} [{expected}] ")
+    result = Solution().minimumDeletions(value)
+    print(f"hey dude {value} --> {result} [{expected}] ")
     assert result == expected
 
 if __name__ == "__main__":
