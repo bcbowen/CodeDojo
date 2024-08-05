@@ -17,13 +17,6 @@ def get_total_distance(route: list[int], paths: list[list[int]]) -> int:
     dist = 0
     
     for i in range(len(route) - 1): 
-        #next_dist = 0
-        #path = paths[i]
-        #next_dist = path[route[i + 1]]
-        #if next_dist == 0: 
-        #    path = paths[i + 1]
-        #    next_dist = path[route[i]]
-        #dist += next_dist
         dist += get_distance_to_city(route[i], route[i + 1], paths)
     return dist
 
