@@ -38,8 +38,3 @@ def get_failure(data):
     processing = get_processing(pending[1])
     return ("Unknown error, retrying...", processing[1])
     
-    """
-    Return a tuple with the string "Unknown error, retrying..." 
-    and the data after it has been prepared and processed into a CSV string, 
-    by combining the steps for Pending and Processing.
-    """
