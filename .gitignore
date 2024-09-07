@@ -21,6 +21,11 @@ mono_crash.*
 
 .vscode
 
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
