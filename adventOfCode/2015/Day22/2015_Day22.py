@@ -1,24 +1,20 @@
 from pathlib import Path
 
-min_cost = float("inf")
-
-def get_data_path() -> str: 
-    path = str(Path(__file__).parent)
-    data_path = path.replace("CodeDojo\\adventOfCode", "adventOfCodePrivateFiles")
-    return data_path
 
 
-class Effect: 
-    def __init__(self, name: str, armor: int, damage: int, mana: int, duration: int):
+class Spell: 
+    def __init__(self, cost: int,  name: str, armor: int, damage: int, mana: int, heal: int, duration: int, description: str):
         self.name = name
         self.armor = armor
         self.damage = damage
         self.mana = mana
+        self.heal = heal
         self.duration = duration
+        self.description = description
 
 
 class RunParams: 
-    def __init__(self, player_hp, mana, boss_hp, boss_damage): 
+    def __init__(self, player_hp: int, mana: int, boss_hp: int, boss_damage: int): 
         self.player_hp = player_hp
         self.mana = mana
         self.boss_hp = boss_hp
@@ -28,7 +24,7 @@ class RunParams:
         return f"player_hp: {self.player_hp}; mana: {self.mana}; boss_hp: {self.boss_hp}; boss damage: {self.boss_damage}"
 
     def load(player_hp, mana, file_name):
-        data_path = get_data_path()
+        data_path = RunParams.get_data_path()
         file_path = Path(data_path, file_name).resolve()
         boss_hp = 0
         boss_damage = 0
@@ -39,96 +35,166 @@ class RunParams:
             boss_damage = int(lines[1].split(':')[1])
             file.close()
         return RunParams(player_hp, mana, boss_hp, boss_damage)
+    
+    def get_data_path() -> str: 
+        path = str(Path(__file__).parent)
+        data_path = path.replace("CodeDojo\\adventOfCode", "adventOfCodePrivateFiles")
+        return data_path
 
-def play_game(params: RunParams) -> int: 
-    move(params.player_hp, params.mana, params.boss_hp, {}, "LFG", params, 0)
-    print(f"Lowest mana cost: {min_cost}")
-    return min_cost
-"""
-- Magic Missile costs 53 mana. It instantly does 4 damage.
-- Drain costs 73 mana. It instantly does 2 damage and heals you for 2 hit points.
-- Shield costs 113 mana. It starts an effect that lasts for 6 turns. While it is active, your armor is increased by 7.
-- Poison costs 173 mana. It starts an effect that lasts for 6 turns. At the start of each turn while it is active, it deals the boss 3 damage.
-- Recharge costs 229 mana. It starts an effect that lasts for 5 turns. At the start of each turn while it is active, it gives you 101 new mana.
-"""
-def move(player_hp: int, player_mana: int, boss_hp: int, effects: dict[Effect], spell: str, params: RunParams, total_mana_cost: int):
+class Game: 
+    #min_cost = float("inf")
 
-    missile_cost = 53
-    drain_cost = 73
-    shield_cost = 113
-    poison_cost = 173
-    recharge_cost = 229
+    """
+    - Magic Missile costs 53 mana. It instantly does 4 damage.
+    - Drain costs 73 mana. It instantly does 2 damage and heals you for 2 hit points.
+    - Shield costs 113 mana. It starts an effect that lasts for 6 turns. While it is active, your armor is increased by 7.
+    - Poison costs 173 mana. It starts an effect that lasts for 6 turns. At the start of each turn while it is active, it deals the boss 3 damage.
+    - Recharge costs 229 mana. It starts an effect that lasts for 5 turns. At the start of each turn while it is active, it gives you 101 new mana.
+    """
+    def load_spells(self) -> dict[str, Spell]: 
+        spellBook = {}
+        spellBook["Magic Missile"] = Spell(cost=53, name="Magic Missile", armor=0, damage=4, mana=0, heal=0, duration=0, description="Player casts Magic Missile, causing 4 damage")
+        spellBook["Drain"] = Spell(cost=73, name="Drain", armor=0, damage=2, mana=0, heal=2, duration=0, description="Player casts Drain, causing 2 damage and healing for 2")
+        spellBook["Shield"] = Spell(cost=113, name="Shield", armor=7, damage=0, mana=0, heal=0, duration=6, description="Player casts Shield, providing 6 armor and lasting for 6 turns")
+        spellBook["Poison"] = Spell(cost=173, name="Poison", armor=0, damage=3, mana=0, heal=0, duration=6, description="Player casts Poison, causing 3 damage per turn lasting 6 turns")
+        spellBook["Recharge"] = Spell(cost=229, name="Recharge", armor=0, damage=0, mana=101, heal=0, duration=5, description="Player casts Recharge, increasing mana by 101 and lasting for 5 turns")
+        
+        return spellBook
 
-    armor_bonus = 0
-    global min_cost
-    print(f"move: player {player_hp} hp, {player_mana} mana; boss: {boss_hp} hp; casting {spell}")
-    # apply effects: 
-    depleted = [] 
-    for key, item in effects.items(): 
-        match key: 
+    def __init__(self): 
+        self.min_cost = float("inf")
+        self.spellBook = self.load_spells(); 
+
+    def play_game(self, player_hp: int, mana: int, file_name: str) -> int:
+        global min_cost
+        min_cost = float("inf")
+        params = RunParams.load(player_hp, mana, file_name) 
+        self.move(params.player_hp, params.mana, params.boss_hp, {}, "LFG", params, 0)
+        print(f"Lowest mana cost: {min_cost}")
+        return min_cost
+
+
+    def __add_effect__(self, spell: str, effects: dict[str, Spell]): 
+        if spell in ["Shield", "Poison", "Recharge"]: 
+            effects[spell] = self.spellBook[spell]
+    """
+    -- Player turn --
+
+    - Player has 10 hit points, 0 armor, 250 mana
+    - Boss has 14 hit points
+    Player casts Recharge.
+
+    -- Boss turn --
+
+    - Player has 10 hit points, 0 armor, 21 mana
+    - Boss has 14 hit points
+    Recharge provides 101 mana; its timer is now 4.
+    Boss attacks for 8 damage!
+    """
+    def move(self, player_hp: int, mana: int, boss_hp: int, effects: dict[str, Spell], spell: str, params: RunParams, total_mana_cost: int):
+        global min_cost
+        armor = 0
+
+        print("-- Player turn --")
+        print()
+        print(f"- Player has {player_hp} hit points, {armor} armor, {mana} mana")
+        print(f"- Boss has {boss_hp} hit points"); 
+        key = "Shield"
+        if key in effects: 
+            armor += effects[key].armor
+            effects[key].duration -= 1
+            print(f"{key} provides {effects[key]} armor, raising armor to {armor}; its timer is now {effects[key].duration}")
+            if effects[key].duration == 0: 
+                del effects[key]
+        key = "Recharge"
+        if key in effects: 
+            mana += effects[key].mana
+            effects[key].duration -= 1
+            print(f"Recharge provides {effects[key].mana} mana; its timer is now {effects[key].duration}."); 
+            if effects[key].duration == 0: 
+                del effects[key]
+        castSpell : Spell = self.spellBook[spell]
+        print(castSpell.description)
+        player_hp += castSpell.heal
+        mana += castSpell.mana
+        boss_hp -= castSpell.damage
+        total_mana_cost += castSpell.cost
+        self.__add_effect__(spell, effects=effects)
+        
+
+        """
+          Recharge provides 101 mana; its timer is now 3.
+          Player casts Shield, increasing armor by 7.
+        """
+
+
+        # apply effects: 
+        depleted = [] 
+        for key, item in effects.items(): 
+            match key: 
+                case "Shield": 
+                    armor_bonus += 7
+                case "Poison":
+                    boss_hp -= 3
+                case "Recharge": 
+                    player_mana += 101
+            item.duration -= 1
+            if item.duration < 1: 
+                depleted.append(key)
+        # remove depleted effects 
+        for key in depleted: 
+            del effects[key]
+        #apply spell: 
+        cost = 0
+        match spell: 
+            case "Magic Missile": 
+                cost = missile_cost
+                boss_hp -= 4
+            case "Drain": 
+                cost = drain_cost
+                player_hp += 2
+                boss_hp -= 2
             case "Shield": 
+                cost = shield_cost
                 armor_bonus += 7
-            case "Poison":
-                boss_hp -= 3
+                effects[spell] = Effect(spell, 7, 0, 0, 5)
+            case "Poison": 
+                cost = poison_cost
+                effects[spell] = Effect(spell, 0, 3, 0, 6)
             case "Recharge": 
-                player_mana += 101
-        item.duration -= 1
-        if item.duration < 1: 
-            depleted.append(key)
-    # remove depleted effects 
-    for key in depleted: 
-        del effects[key]
-    #apply spell: 
-    cost = 0
-    match spell: 
-        case "Magic Missile": 
-            cost = missile_cost
-            boss_hp -= 4
-        case "Drain": 
-            cost = drain_cost
-            player_hp += 2
-            boss_hp -= 2
-        case "Shield": 
-            cost = shield_cost
-            armor_bonus += 7
-            effects[spell] = Effect(spell, 7, 0, 0, 5)
-        case "Poison": 
-            cost = poison_cost
-            effects[spell] = Effect(spell, 0, 3, 0, 6)
-        case "Recharge": 
-            cost = recharge_cost
-            effects[spell] = Effect(spell, 0, 0, 101, 5)
-    total_mana_cost += cost
-    player_mana -= cost
+                cost = recharge_cost
+                effects[spell] = Effect(spell, 0, 0, 101, 5)
+        total_mana_cost += cost
+        player_mana -= cost
 
-    # boss attacks 
-    if spell != "LFG": 
-        # boss doesn't attack on the first turn
-        damage = max(params.boss_damage - armor_bonus, 1)
-        player_hp -= damage
-        print(f"Boss hits for {damage} hp"); 
+        # boss attacks 
+        if spell != "LFG": 
+            # boss doesn't attack on the first turn
+            damage = max(params.boss_damage - armor_bonus, 1)
+            player_hp -= damage
+            print(f"Boss hits for {damage} hp"); 
 
-    if boss_hp <= 0: 
-        print("Player wins: boss is dead!!")
-        min_cost = min(total_mana_cost, min_cost)
-    elif player_hp <= 0: 
-        print("Player dies")
-    elif total_mana_cost > min_cost: 
-        print("We've already exceeded the optimum cost, pruning!!")
-    elif player_mana < 53: 
-        print("No more mana, you lose, dickface")
-    else: 
-        # make some moves: 
-        if player_mana >= missile_cost: 
-            move(player_hp, player_mana, boss_hp, effects, "Magic Missile", params, total_mana_cost)
-        if player_mana >= drain_cost: 
-            move(player_hp, player_mana, boss_hp, effects, "Drain", params, total_mana_cost)
-        if player_mana >= shield_cost and not "Shield" in effects: 
-            move(player_hp, player_mana, boss_hp, effects, "Shield", params, total_mana_cost)
-        if player_mana >= poison_cost and not "Poison" in effects: 
-            move(player_hp, player_mana, boss_hp, effects, "Poison", params, total_mana_cost)
-        if player_mana >= recharge_cost and not "Recharge" in effects: 
-            move(player_hp, player_mana, boss_hp, effects, "Recharge", params, total_mana_cost)    
+        if boss_hp <= 0: 
+            print("Player wins: boss is dead!!")
+            min_cost = min(total_mana_cost, min_cost)
+        elif player_hp <= 0: 
+            print("Player dies")
+        elif total_mana_cost > min_cost: 
+            print("We've already exceeded the optimum cost, pruning!!")
+        elif player_mana < 53: 
+            print("No more mana, you lose, dickface")
+        else: 
+            # make some moves: 
+            if player_mana >= missile_cost: 
+                move(player_hp, player_mana, boss_hp, effects, "Magic Missile", params, total_mana_cost)
+            if player_mana >= drain_cost: 
+                move(player_hp, player_mana, boss_hp, effects, "Drain", params, total_mana_cost)
+            if player_mana >= shield_cost and not "Shield" in effects: 
+                move(player_hp, player_mana, boss_hp, effects, "Shield", params, total_mana_cost)
+            if player_mana >= poison_cost and not "Poison" in effects: 
+                move(player_hp, player_mana, boss_hp, effects, "Poison", params, total_mana_cost)
+            if player_mana >= recharge_cost and not "Recharge" in effects: 
+                move(player_hp, player_mana, boss_hp, effects, "Recharge", params, total_mana_cost)    
 
 """
 
@@ -216,9 +282,34 @@ Now, suppose the same initial conditions, except that the boss has 14 hit points
 """
 
 def main(): 
+    game = Game()
+    
+    print("Part 1 Test 1")
+    player_hp = 10
+    mana = 250
+    file_name = "sample1.txt"
+    expected = 226
+    result = game.play_game(player_hp=player_hp, mana=mana, file_name=file_name); 
+    print("Test 1, 226 expected")
+
+    if result != expected: 
+        print(f"FAIL!! expected: {expected}, result: {result}")
+    else: 
+        print("Test 1 PASS")
+
+    test1Params = RunParams(player_hp = 10, mana = 250, boss_hp = 13, boss_damage = 8)
+    expected = 226
+
+
     print("Part 1")
-    player_hp = 50
+
+    
+    
+player_hp = 50
     mana = 500 
+
+
+
     params = RunParams.load(player_hp, mana, "input.txt")
     print(params)
     part1Result = play_game(params)
@@ -254,14 +345,7 @@ def main():
     ```"""
 
 
-    test1Params = RunParams(player_hp = 10, mana = 250, boss_hp = 13, boss_damage = 8)
-    expected = 226
-    print("Test 1, 226 expected")
-    result = play_game(test1Params)
-    if result != expected: 
-        print(f"FAIL!! Expected {expected}, result: {result}")
-    else: 
-        print("Test 1 PASS")
+
 
 
 
