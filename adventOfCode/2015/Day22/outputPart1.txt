@@ -1,0 +1,114 @@
+Part 1
+-- Player turn --
+ 
+- Player has 50 hit points, 0 armor, 500 mana
+- Boss has 51 hit points
+Player casts Magic Missile, causing 4 damage
+ 
+-- Boss turn --
+ 
+- Player has 50 hit points, 0 armor, 447 mana
+- Boss has 47 hit points
+Boss attacks for 9 damage!
+-- Player turn --
+ 
+- Player has 41 hit points, 0 armor, 447 mana
+- Boss has 47 hit points
+Player casts Poison, causing 3 damage per turn lasting 6 turns
+ 
+-- Boss turn --
+ 
+- Player has 41 hit points, 0 armor, 274 mana
+- Boss has 47 hit points
+Poison deals 3; its timer is now 5
+Boss attacks for 9 damage!
+-- Player turn --
+ 
+- Player has 32 hit points, 0 armor, 274 mana
+- Boss has 44 hit points
+Poison deals 3; its timer is now 4
+Player casts Recharge, increasing mana by 101 and lasting for 5 turns
+ 
+-- Boss turn --
+ 
+- Player has 32 hit points, 0 armor, 45 mana
+- Boss has 41 hit points
+Poison deals 3; its timer is now 3
+Recharge provides 101 mana; its timer is now 4.
+Boss attacks for 9 damage!
+-- Player turn --
+ 
+- Player has 23 hit points, 0 armor, 146 mana
+- Boss has 38 hit points
+Poison deals 3; its timer is now 2
+Recharge provides 101 mana; its timer is now 3.
+Player casts Magic Missile, causing 4 damage
+ 
+-- Boss turn --
+ 
+- Player has 23 hit points, 0 armor, 194 mana
+- Boss has 31 hit points
+Poison deals 3; its timer is now 1
+Recharge provides 101 mana; its timer is now 2.
+Boss attacks for 9 damage!
+-- Player turn --
+ 
+- Player has 14 hit points, 0 armor, 295 mana
+- Boss has 28 hit points
+Poison deals 3; its timer is now 0
+Recharge provides 101 mana; its timer is now 1.
+Player casts Poison, causing 3 damage per turn lasting 6 turns
+ 
+-- Boss turn --
+ 
+- Player has 14 hit points, 0 armor, 223 mana
+- Boss has 25 hit points
+Poison deals 3; its timer is now 5
+Recharge provides 101 mana; its timer is now 0.
+Boss attacks for 9 damage!
+-- Player turn --
+ 
+- Player has 5 hit points, 0 armor, 324 mana
+- Boss has 22 hit points
+Poison deals 3; its timer is now 4
+Player casts Shield, providing 6 armor and lasting for 6 turns
+ 
+-- Boss turn --
+ 
+- Player has 5 hit points, 0 armor, 211 mana
+- Boss has 19 hit points
+Shield's timer is now 5
+Poison deals 3; its timer is now 3
+Boss attacks for 2 damage!
+-- Player turn --
+ 
+- Player has 3 hit points, 0 armor, 211 mana
+- Boss has 16 hit points
+Shield provides 7 armor, raising armor to 7; its timer is now 4
+Poison deals 3; its timer is now 2
+Player casts Magic Missile, causing 4 damage
+ 
+-- Boss turn --
+ 
+- Player has 3 hit points, 7 armor, 158 mana
+- Boss has 9 hit points
+Shield's timer is now 3
+Poison deals 3; its timer is now 1
+Boss attacks for 1 damage!
+-- Player turn --
+ 
+- Player has 2 hit points, 0 armor, 158 mana
+- Boss has 6 hit points
+Shield provides 7 armor, raising armor to 7; its timer is now 2
+Poison deals 3; its timer is now 0
+Player casts Magic Missile, causing 4 damage
+ 
+-- Boss turn --
+ 
+- Player has 2 hit points, 7 armor, 105 mana
+- Boss has -1 hit points
+Shield's timer is now 1
+Boss attacks for 1 damage!
+Player 1 wins: boss is dead!!
+New min mana cost: 900
+Part 1 result: 900

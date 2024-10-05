@@ -1,6 +1,7 @@
 from pathlib import Path
 from contextlib import redirect_stdout
 import pytest
+import copy
 
 
 class Spell: 
@@ -13,6 +14,10 @@ class Spell:
         self.heal = heal
         self.duration = duration
         self.description = description
+
+    def copy(self) -> 'Spell': 
+        spell = Spell(cost = self.cost, name = self.name, armor = self.armor, damage = self.damage, mana = self.mana, heal  = self.heal, duration = self.duration, description = self.description)
+        return spell 
 
 
 class RunParams: 
@@ -78,7 +83,7 @@ class Game:
 
     def __add_effect__(self, spell: str, effects: dict[str, Spell]): 
         if spell in ["Shield", "Poison", "Recharge"]:
-            copySpell  = self.spellBook[spell] 
+            copySpell = self.spellBook[spell].copy()
             effects[spell] = Spell(cost=copySpell.cost, name=copySpell.name, armor=copySpell.armor, damage=copySpell.damage, mana=copySpell.mana, heal=copySpell.heal, duration=copySpell.duration, description=copySpell.description)
     """
     -- Player turn --
@@ -96,7 +101,7 @@ class Game:
     """
     def move(self, player_hp: int, mana: int, boss_hp: int, effects: dict[str, Spell], spell: str, params: RunParams, total_mana_cost: int, player_id: int, output: list[str]):
         armor = 0
-        updated_effects = effects.copy()
+        updated_effects = copy.deepcopy(effects)
         if spell != "LFG": 
             # first turn skip attacks, we just start iterating through possible move combinations
 
@@ -125,7 +130,7 @@ class Game:
                 output.append(f"Recharge provides {updated_effects[key].mana} mana; its timer is now {updated_effects[key].duration}."); 
                 if updated_effects[key].duration < 1: 
                     del updated_effects[key]
-            castSpell : Spell = self.spellBook[spell]
+            castSpell : Spell = self.spellBook[spell].copy()
             output.append(castSpell.description)
             if spell not in ["Shield", "Poison", "Recharge"]: 
                 # This spell has instant effect, the others are over time and start next turn
@@ -191,35 +196,35 @@ class Game:
         else: 
             # make some moves: 
             key = "Magic Missile"
-            nextSpell = self.spellBook[key]
+            nextSpell = self.spellBook[key].copy()
             if mana >= nextSpell.cost: 
                 if spell == "LFG":
                     player_id += 1 
                 self.move(player_hp, mana, boss_hp, updated_effects, key, params, total_mana_cost, player_id, output.copy())
             
             key = "Drain"
-            nextSpell = self.spellBook[key]
+            nextSpell = self.spellBook[key].copy()
             if mana >= nextSpell.cost: 
                 if spell == "LFG":
                     player_id += 1
                 self.move(player_hp, mana, boss_hp, updated_effects, key, params, total_mana_cost, player_id, output.copy())
 
             key = "Shield"
-            nextSpell = self.spellBook[key]    
+            nextSpell = self.spellBook[key].copy()
             if mana >= nextSpell.cost:
                 if spell == "LFG":
                     player_id += 1 
                 self.move(player_hp, mana, boss_hp, updated_effects, key, params, total_mana_cost, player_id, output.copy())
 
             key = "Poison"
-            nextSpell = self.spellBook[key] 
+            nextSpell = self.spellBook[key].copy()
             if mana >= nextSpell.cost:
                 if spell == "LFG":
                     player_id += 1 
                 self.move(player_hp, mana, boss_hp, updated_effects, key, params, total_mana_cost, player_id, output.copy())
             
             key = "Recharge"
-            nextSpell = self.spellBook[key] 
+            nextSpell = self.spellBook[key].copy() 
             if mana >= nextSpell.cost:
                 if spell == "LFG":
                     player_id += 1 
@@ -314,8 +319,6 @@ Now, suppose the same initial conditions, except that the boss has 14 hit points
 ```
 
 """
-
-
 
 def main(): 
     game = Game()

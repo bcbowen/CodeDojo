@@ -14,7 +14,7 @@ Boss attacks for 9 damage!
  
 - Player has 41 hit points, 0 armor, 372 mana
 - Boss has 51 hit points
-Recharge provides 101 mana; its timer is now -8.
+Recharge provides 101 mana; its timer is now 3.
 Player casts Recharge, increasing mana by 101 and lasting for 5 turns
  
 -- Boss turn --
@@ -27,7 +27,7 @@ Boss attacks for 9 damage!
  
 - Player has 32 hit points, 0 armor, 345 mana
 - Boss has 51 hit points
-Recharge provides 101 mana; its timer is now -8.
+Recharge provides 101 mana; its timer is now 3.
 Player casts Recharge, increasing mana by 101 and lasting for 5 turns
  
 -- Boss turn --
@@ -40,7 +40,7 @@ Boss attacks for 9 damage!
  
 - Player has 23 hit points, 0 armor, 318 mana
 - Boss has 51 hit points
-Recharge provides 101 mana; its timer is now -8.
+Recharge provides 101 mana; its timer is now 3.
 Player casts Recharge, increasing mana by 101 and lasting for 5 turns
  
 -- Boss turn --
@@ -49,30 +49,4 @@ Player casts Recharge, increasing mana by 101 and lasting for 5 turns
 - Boss has 51 hit points
 Recharge provides 101 mana; its timer is now 4.
 Boss attacks for 9 damage!
--- Player turn --
- 
-- Player has 14 hit points, 0 armor, 291 mana
-- Boss has 51 hit points
-Recharge provides 101 mana; its timer is now -8.
-Player casts Recharge, increasing mana by 101 and lasting for 5 turns
- 
--- Boss turn --
- 
-- Player has 14 hit points, 0 armor, 163 mana
-- Boss has 51 hit points
-Recharge provides 101 mana; its timer is now 4.
-Boss attacks for 9 damage!
--- Player turn --
- 
-- Player has 5 hit points, 0 armor, 264 mana
-- Boss has 51 hit points
-Recharge provides 101 mana; its timer is now -3.
-Player casts Recharge, increasing mana by 101 and lasting for 5 turns
- 
--- Boss turn --
- 
-- Player has 5 hit points, 0 armor, 136 mana
-- Boss has 51 hit points
-Recharge provides 101 mana; its timer is now 4.
-Boss attacks for 9 damage!
-Player 5 dies
+We've already exceeded the optimum cost of 900, pruning 5!!
