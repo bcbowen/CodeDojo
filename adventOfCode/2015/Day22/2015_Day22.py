@@ -70,10 +70,12 @@ class Game:
         self.min_cost = float("inf")
         self.next_id = 1
         self.min_cost_log = []
-        self.spellBook = self.load_spells(); 
+        self.spellBook = self.load_spells()
+        self.hardMode = False
 
-    def play(self, player_hp: int, mana: int, file_name: str) -> tuple[int, list[str]]:
+    def play(self, player_hp: int, mana: int, file_name: str, hardMode : bool = False) -> tuple[int, list[str]]:
         self.min_cost = float("inf")
+        self.hardMode = hardMode
         self.min_cost_log = []
         params = RunParams.load(player_hp, mana, file_name) 
         self.move(player_hp=params.player_hp, mana=params.mana, boss_hp=params.boss_hp, effects={}, spell="LFG", params=params, total_mana_cost=0, player_id=0, output=[])
@@ -85,20 +87,7 @@ class Game:
         if spell in ["Shield", "Poison", "Recharge"]:
             copySpell = self.spellBook[spell].copy()
             effects[spell] = Spell(cost=copySpell.cost, name=copySpell.name, armor=copySpell.armor, damage=copySpell.damage, mana=copySpell.mana, heal=copySpell.heal, duration=copySpell.duration, description=copySpell.description)
-    """
-    -- Player turn --
-
-    - Player has 10 hit points, 0 armor, 250 mana
-    - Boss has 14 hit points
-    Player casts Recharge.
-
-    -- Boss turn --
-
-    - Player has 10 hit points, 0 armor, 21 mana
-    - Boss has 14 hit points
-    Recharge provides 101 mana; its timer is now 4.
-    Boss attacks for 8 damage!
-    """
+ 
     def move(self, player_hp: int, mana: int, boss_hp: int, effects: dict[str, Spell], spell: str, params: RunParams, total_mana_cost: int, player_id: int, output: list[str]):
         armor = 0
         updated_effects = copy.deepcopy(effects)
@@ -106,9 +95,16 @@ class Game:
             # first turn skip attacks, we just start iterating through possible move combinations
 
             output.append("-- Player turn --")
+            if self.hardMode: 
+                output.append("- Hard Mode! Player loses 1 hp per turn!")
+                player_hp -= 1
+                if player_hp < 1: 
+                    output.append(f"Player {player_id} dies")
+                    return
             output.append(" ")
             output.append(f"- Player has {player_hp} hit points, {armor} armor, {mana} mana")
-            output.append(f"- Boss has {boss_hp} hit points"); 
+            output.append(f"- Boss has {boss_hp} hit points");
+             
             key = "Shield"
             if key in updated_effects: 
                 armor += updated_effects[key].armor
@@ -141,12 +137,6 @@ class Game:
             mana -= castSpell.cost
             self.__add_effect__(spell, effects=updated_effects)
             
-
-            """
-            Recharge provides 101 mana; its timer is now 3.
-            Player casts Shield, increasing armor by 7.
-            """
-
             output.append(" ")
             output.append("-- Boss turn --")
             output.append(" ")
@@ -186,13 +176,13 @@ class Game:
                 self.min_cost_log = output.copy()
         elif player_hp <= 0: 
             output.append(f"Player {player_id} dies")
-            self.take_a_dump(player_id, output)
+            #self.take_a_dump(player_id, output)
         elif total_mana_cost > self.min_cost: 
             output.append(f"We've already exceeded the optimum cost of {self.min_cost}, pruning {player_id}!!")
-            self.take_a_dump(player_id, output)
+            #self.take_a_dump(player_id, output)
         elif mana < 53: 
             output.append(f"No more mana, you lose, dickface {player_id}")
-            self.take_a_dump(player_id, output)
+            #self.take_a_dump(player_id, output)
         else: 
             # make some moves: 
             key = "Magic Missile"
@@ -236,123 +226,12 @@ class Game:
             for line in log: 
                 f.write(line + '\n')
             f.close()
-"""
 
-
-Now, suppose the same initial conditions, except that the boss has 14 hit points instead:
-
-```
--- Player turn --
-
-- Player has 10 hit points, 0 armor, 250 mana
-- Boss has 14 hit points
-  Player casts Recharge.
-
--- Boss turn --
-
-- Player has 10 hit points, 0 armor, 21 mana
-- Boss has 14 hit points
-  Recharge provides 101 mana; its timer is now 4.
-  Boss attacks for 8 damage!
-
--- Player turn --
-
-- Player has 2 hit points, 0 armor, 122 mana
-- Boss has 14 hit points
-  Recharge provides 101 mana; its timer is now 3.
-  Player casts Shield, increasing armor by 7.
-
--- Boss turn --
-
-- Player has 2 hit points, 7 armor, 110 mana
-- Boss has 14 hit points
-  Shield's timer is now 5.
-  Recharge provides 101 mana; its timer is now 2.
-  Boss attacks for 8 - 7 = 1 damage!
-
--- Player turn --
-
-- Player has 1 hit point, 7 armor, 211 mana
-- Boss has 14 hit points
-  Shield's timer is now 4.
-  Recharge provides 101 mana; its timer is now 1.
-  Player casts Drain, dealing 2 damage, and healing 2 hit points.
-
--- Boss turn --
-
-- Player has 3 hit points, 7 armor, 239 mana
-- Boss has 12 hit points
-  Shield's timer is now 3.
-  Recharge provides 101 mana; its timer is now 0.
-  Recharge wears off.
-  Boss attacks for 8 - 7 = 1 damage!
-
--- Player turn --
-
-- Player has 2 hit points, 7 armor, 340 mana
-- Boss has 12 hit points
-  Shield's timer is now 2.
-  Player casts Poison.
-
--- Boss turn --
-
-- Player has 2 hit points, 7 armor, 167 mana
-- Boss has 12 hit points
-  Shield's timer is now 1.
-  Poison deals 3 damage; its timer is now 5.
-  Boss attacks for 8 - 7 = 1 damage!
-
--- Player turn --
-
-- Player has 1 hit point, 7 armor, 167 mana
-- Boss has 9 hit points
-  Shield's timer is now 0.
-  Shield wears off, decreasing armor by 7.
-  Poison deals 3 damage; its timer is now 4.
-  Player casts Magic Missile, dealing 4 damage.
-
--- Boss turn --
-
-- Player has 1 hit point, 0 armor, 114 mana
-- Boss has 2 hit points
-  Poison deals 3 damage. This kills the boss, and the player wins.
-```
-
-"""
-
-def main(): 
+def part1(): 
     game = Game()
     path = Path(Path(__file__).parent, "output.txt").resolve()
     with open(path, 'w') as f:
         with redirect_stdout(f):
-            """
-            print("Part 1 Test 1")
-            player_hp = 10
-            mana = 250
-            file_name = "sample1.txt"
-            expected = 226
-            result = game.play(player_hp=player_hp, mana=mana, file_name=file_name); 
-            print(f"Test 1, {expected} expected")
-
-            if result != expected: 
-                print(f"FAIL!! expected: {expected}, result: {result}")
-            else: 
-                print("Test 1 PASS")
-
-            print("Part 1 Test 2")
-            player_hp = 10
-            mana = 250
-            file_name = "sample2.txt"
-            expected = 229 + 113 + 73 + 173 + 53
-
-            result = game.play(player_hp=player_hp, mana=mana, file_name=file_name); 
-            print(f"Test 2, {expected} expected")
-
-            if result != expected: 
-                print(f"FAIL!! expected: {expected}, result: {result}")
-            else: 
-                print("Test 2 PASS")
-            """
             print("Part 1")   
 
             player_hp = 50
@@ -365,45 +244,23 @@ def main():
                 print(line)
             print(f"Part 1 result: {part1Result}")
 
-    """
-    -- Player turn --
 
-    - Player has 10 hit points, 0 armor, 250 mana
-    - Boss has 13 hit points
-    Player casts Poison. 
-    (173)
+def part2(): 
+    game = Game()
+    path = Path(Path(__file__).parent, "output.txt").resolve()
+    with open(path, 'w') as f:
+        with redirect_stdout(f):
+            print("Part 2")   
 
-    -- Boss turn --
-
-    - Player has 10 hit points, 0 armor, 77 mana
-    - Boss has 13 hit points
-    Poison deals 3 damage; its timer is now 5.
-    Boss attacks for 8 damage.
-
-    -- Player turn --
-
-    - Player has 2 hit points, 0 armor, 77 mana
-    - Boss has 10 hit points
-    Poison deals 3 damage; its timer is now 4.
-    Player casts Magic Missile, dealing 4 damage.
-    (53)
-
-    -- Boss turn --
-
-    - Player has 2 hit points, 0 armor, 24 mana
-    - Boss has 3 hit points
-    Poison deals 3 damage. This kills the boss, and the player wins.
-    ```"""
-
-"""
- print("Part 1 Test 1")
-            player_hp = 10
-            mana = 250
-            file_name = "sample1.txt"
-            expected = 226
-            result = game.play(player_hp=player_hp, mana=mana, file_name=file_name); 
-            print(f"Test 1, {expected} expected")
-"""
+            player_hp = 50
+            mana = 500 
+            file_name = "input.txt"
+            params = RunParams.load(player_hp, mana, file_name)
+            #print(params)
+            part2Result, log = game.play(player_hp=player_hp, mana=mana, file_name=file_name, hardMode=True); 
+            for line in log: 
+                print(line)
+            print(f"Part 2 result: {part2Result}")
 
 
 @pytest.mark.parametrize("name, player_hp, mana, file_name, expected", [
@@ -420,4 +277,5 @@ def test_wiz_part1(name: str, player_hp: int, mana: int, file_name: str, expecte
 
 if __name__ == "__main__":
     pytest.main([__file__])
-    main()
+    #part1()
+    part2()
