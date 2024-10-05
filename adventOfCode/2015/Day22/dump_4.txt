@@ -14,39 +14,58 @@ Boss attacks for 9 damage!
  
 - Player has 41 hit points, 0 armor, 327 mana
 - Boss has 48 hit points
-Poison deals 3; its timer is now -11
+Poison deals 3; its timer is now 4
 Player casts Recharge, increasing mana by 101 and lasting for 5 turns
  
 -- Boss turn --
  
 - Player has 41 hit points, 0 armor, 98 mana
 - Boss has 45 hit points
+Poison deals 3; its timer is now 3
 Recharge provides 101 mana; its timer is now 4.
 Boss attacks for 9 damage!
 -- Player turn --
  
 - Player has 32 hit points, 0 armor, 199 mana
-- Boss has 45 hit points
-Recharge provides 101 mana; its timer is now -7.
+- Boss has 42 hit points
+Poison deals 3; its timer is now 2
+Recharge provides 101 mana; its timer is now 3.
 Player casts Poison, causing 3 damage per turn lasting 6 turns
  
 -- Boss turn --
  
 - Player has 32 hit points, 0 armor, 127 mana
-- Boss has 45 hit points
+- Boss has 39 hit points
 Poison deals 3; its timer is now 5
+Recharge provides 101 mana; its timer is now 2.
 Boss attacks for 9 damage!
 -- Player turn --
  
-- Player has 23 hit points, 0 armor, 127 mana
-- Boss has 42 hit points
-Poison deals 3; its timer is now -2
-Player casts Shield, providing 6 armor and lasting for 6 turns
+- Player has 23 hit points, 0 armor, 228 mana
+- Boss has 36 hit points
+Poison deals 3; its timer is now 4
+Recharge provides 101 mana; its timer is now 1.
+Player casts Poison, causing 3 damage per turn lasting 6 turns
  
 -- Boss turn --
  
-- Player has 23 hit points, 0 armor, 14 mana
-- Boss has 39 hit points
-Shield's timer is now 5
-Boss attacks for 2 damage!
-No more mana, you lose, dickface 4
+- Player has 23 hit points, 0 armor, 156 mana
+- Boss has 33 hit points
+Poison deals 3; its timer is now 5
+Recharge provides 101 mana; its timer is now 0.
+Boss attacks for 9 damage!
+-- Player turn --
+ 
+- Player has 14 hit points, 0 armor, 257 mana
+- Boss has 30 hit points
+Poison deals 3; its timer is now 4
+Player casts Recharge, increasing mana by 101 and lasting for 5 turns
+ 
+-- Boss turn --
+ 
+- Player has 14 hit points, 0 armor, 28 mana
+- Boss has 27 hit points
+Poison deals 3; its timer is now 3
+Recharge provides 101 mana; its timer is now 4.
+Boss attacks for 9 damage!
+We've already exceeded the optimum cost of 900, pruning 4!!
