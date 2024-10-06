@@ -1,0 +1,26 @@
+-- Player turn --
+ 
+- Player has 10 hit points, 0 armor, 250 mana. Mana used: 0
+- Boss has 13 hit points
+Player casts Poison for 173 mana, causing 3 damage per turn lasting 6 turns
+ 
+-- Boss turn --
+ 
+- Player has 10 hit points, 0 armor, 77 mana. Mana used: 173
+- Boss has 13 hit points
+Poison deals 3; its timer is now 5
+Boss attacks for 8 damage!
+-- Player turn --
+ 
+- Player has 2 hit points, 0 armor, 77 mana. Mana used: 173
+- Boss has 10 hit points
+Poison deals 3; its timer is now 4
+Player casts Magic Missile for 53 mana, causing 4 damage
+ 
+-- Boss turn --
+ 
+- Player has 2 hit points, 0 armor, 24 mana. Mana used: 226
+- Boss has 3 hit points
+Poison deals 3; its timer is now 3
+Player wins! Boss is dead! And there was much rejoicing!
+New min mana cost: 226
