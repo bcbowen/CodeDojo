@@ -225,38 +225,6 @@ class Game:
                 nextStats.player_id += f"{key[0]}_"
                 self.move(stats=nextStats, effects=copy.deepcopy(effects), spell=key, output=output.copy())
             
-        """
-        # bust some moves: 
-        key = "Magic Missile"
-        nextSpell = self.spellBook[key].copy()
-        if stats.mana >= nextSpell.cost: 
-            stats.player_id += "MM_" 
-            self.move(stats=copy.deepcopy(stats), effects=copy.deepcopy(effects), spell=key, output=output.copy())
-        
-        key = "Drain"
-        nextSpell = self.spellBook[key].copy()
-        if stats.mana >= nextSpell.cost: 
-            stats.player_id += "D_"
-            self.move(stats=copy.deepcopy(stats), effects=copy.deepcopy(effects), spell=key, output=output.copy())
-
-        key = "Shield"
-        nextSpell = self.spellBook[key].copy()
-        if stats.mana >= nextSpell.cost and not key in effects:
-            stats.player_id += "S_" 
-            self.move(stats=copy.deepcopy(stats), effects=copy.deepcopy(effects), spell=key, output=output.copy())
-
-        key = "Poison"
-        nextSpell = self.spellBook[key].copy()
-        if stats.mana >= nextSpell.cost and not key in effects:
-            stats.player_id += "P_"
-            self.move(stats=copy.deepcopy(stats), effects=copy.deepcopy(effects), spell=key, output=output.copy())
-        
-        key = "Recharge"
-        nextSpell = self.spellBook[key].copy() 
-        if stats.mana >= nextSpell.cost and not key in effects:
-            stats.player_id += "R_" 
-            self.move(stats=copy.deepcopy(stats), effects=copy.deepcopy(effects), spell=key, output=output.copy())    
-        """
 
     def take_a_dump(self, player_id: int, log: list[str]): 
         path = Path(Path(__file__).parent, f"dump_{player_id}.txt").resolve()
@@ -313,4 +281,4 @@ def test_wiz_part1(name: str, player_hp: int, mana: int, file_name: str, expecte
 if __name__ == "__main__":
     pytest.main([__file__])
     part1()
-    #part2()
+    part2()
