@@ -1,2 +1,152 @@
 Part 2
-Part 2 result: inf
+-- Player turn --
+ 
+- Hard Mode! Player loses 1 hp per turn!
+- Player has 49 hit points, 0 armor, 500 mana. Mana used: 0
+- Boss has 51 hit points
+Player casts Shield for 113 mana, providing 7 armor and lasting for 6 turns
+ 
+-- Boss turn --
+ 
+- Player has 49 hit points, 0 armor, 387 mana. Mana used: 113
+- Boss has 51 hit points
+Shield provides 7 armor, raising armor to 7; its timer is now 5
+Boss attacks for 2 damage!
+-- Player turn --
+ 
+- Hard Mode! Player loses 1 hp per turn!
+- Player has 46 hit points, 7 armor, 387 mana. Mana used: 113
+- Boss has 51 hit points
+Shield provides 7 armor, raising armor to 7; its timer is now 4
+Player casts Recharge for 229 mana, increasing mana by 101 and lasting for 5 turns
+ 
+-- Boss turn --
+ 
+- Player has 46 hit points, 7 armor, 158 mana. Mana used: 342
+- Boss has 51 hit points
+Shield provides 7 armor, raising armor to 7; its timer is now 3
+Recharge provides 101 mana; its timer is now 4.
+Boss attacks for 2 damage!
+-- Player turn --
+ 
+- Hard Mode! Player loses 1 hp per turn!
+- Player has 43 hit points, 7 armor, 259 mana. Mana used: 342
+- Boss has 51 hit points
+Shield provides 7 armor, raising armor to 7; its timer is now 2
+Recharge provides 101 mana; its timer is now 3.
+Player casts Poison for 173 mana, causing 3 damage per turn lasting 6 turns
+ 
+-- Boss turn --
+ 
+- Player has 43 hit points, 7 armor, 187 mana. Mana used: 515
+- Boss has 51 hit points
+Shield provides 7 armor, raising armor to 7; its timer is now 1
+Poison deals 3; its timer is now 5
+Recharge provides 101 mana; its timer is now 2.
+Boss attacks for 2 damage!
+-- Player turn --
+ 
+- Hard Mode! Player loses 1 hp per turn!
+- Player has 40 hit points, 7 armor, 288 mana. Mana used: 515
+- Boss has 48 hit points
+Shield provides 7 armor, raising armor to 7; its timer is now 0
+Poison deals 3; its timer is now 4
+Recharge provides 101 mana; its timer is now 1.
+Player casts Magic Missile for 53 mana, causing 4 damage
+ 
+-- Boss turn --
+ 
+- Player has 40 hit points, 7 armor, 336 mana. Mana used: 568
+- Boss has 41 hit points
+Poison deals 3; its timer is now 3
+Recharge provides 101 mana; its timer is now 0.
+Boss attacks for 9 damage!
+-- Player turn --
+ 
+- Hard Mode! Player loses 1 hp per turn!
+- Player has 30 hit points, 0 armor, 437 mana. Mana used: 568
+- Boss has 38 hit points
+Poison deals 3; its timer is now 2
+Player casts Shield for 113 mana, providing 7 armor and lasting for 6 turns
+ 
+-- Boss turn --
+ 
+- Player has 30 hit points, 0 armor, 324 mana. Mana used: 681
+- Boss has 35 hit points
+Shield provides 7 armor, raising armor to 7; its timer is now 5
+Poison deals 3; its timer is now 1
+Boss attacks for 2 damage!
+-- Player turn --
+ 
+- Hard Mode! Player loses 1 hp per turn!
+- Player has 27 hit points, 7 armor, 324 mana. Mana used: 681
+- Boss has 32 hit points
+Shield provides 7 armor, raising armor to 7; its timer is now 4
+Poison deals 3; its timer is now 0
+Player casts Recharge for 229 mana, increasing mana by 101 and lasting for 5 turns
+ 
+-- Boss turn --
+ 
+- Player has 27 hit points, 7 armor, 95 mana. Mana used: 910
+- Boss has 29 hit points
+Shield provides 7 armor, raising armor to 7; its timer is now 3
+Recharge provides 101 mana; its timer is now 4.
+Boss attacks for 2 damage!
+-- Player turn --
+ 
+- Hard Mode! Player loses 1 hp per turn!
+- Player has 24 hit points, 7 armor, 196 mana. Mana used: 910
+- Boss has 29 hit points
+Shield provides 7 armor, raising armor to 7; its timer is now 2
+Recharge provides 101 mana; its timer is now 3.
+Player casts Poison for 173 mana, causing 3 damage per turn lasting 6 turns
+ 
+-- Boss turn --
+ 
+- Player has 24 hit points, 7 armor, 124 mana. Mana used: 1083
+- Boss has 29 hit points
+Shield provides 7 armor, raising armor to 7; its timer is now 1
+Poison deals 3; its timer is now 5
+Recharge provides 101 mana; its timer is now 2.
+Boss attacks for 2 damage!
+-- Player turn --
+ 
+- Hard Mode! Player loses 1 hp per turn!
+- Player has 21 hit points, 7 armor, 225 mana. Mana used: 1083
+- Boss has 26 hit points
+Shield provides 7 armor, raising armor to 7; its timer is now 0
+Poison deals 3; its timer is now 4
+Recharge provides 101 mana; its timer is now 1.
+Player casts Magic Missile for 53 mana, causing 4 damage
+ 
+-- Boss turn --
+ 
+- Player has 21 hit points, 7 armor, 273 mana. Mana used: 1136
+- Boss has 19 hit points
+Poison deals 3; its timer is now 3
+Recharge provides 101 mana; its timer is now 0.
+Boss attacks for 9 damage!
+-- Player turn --
+ 
+- Hard Mode! Player loses 1 hp per turn!
+- Player has 11 hit points, 0 armor, 374 mana. Mana used: 1136
+- Boss has 16 hit points
+Poison deals 3; its timer is now 2
+Player casts Magic Missile for 53 mana, causing 4 damage
+ 
+-- Boss turn --
+ 
+- Player has 11 hit points, 0 armor, 321 mana. Mana used: 1189
+- Boss has 9 hit points
+Poison deals 3; its timer is now 1
+Boss attacks for 9 damage!
+-- Player turn --
+ 
+- Hard Mode! Player loses 1 hp per turn!
+- Player has 1 hit points, 0 armor, 321 mana. Mana used: 1189
+- Boss has 6 hit points
+Poison deals 3; its timer is now 0
+Player casts Magic Missile for 53 mana, causing 4 damage
+Player wins! Boss is dead! And there was much rejoicing!
+New min mana cost: 1242
+Part 2 result: 1242
