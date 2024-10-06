@@ -8,9 +8,10 @@ class GameState(Enum):
     Running = 1
     PlayerWins = 2
     BossWins = 3
+    TooMuchManaUsed = 4
 
 class Stats: 
-    def __init__(self, player_hp: int, mana: int, boss_hp: int, boss_damage: int, armor: int, total_mana: int, player_id: int):
+    def __init__(self, player_hp: int, mana: int, boss_hp: int, boss_damage: int, armor: int, total_mana: int, player_id: str):
         self.player_hp = player_hp
         self.mana = mana
         self.boss_hp = boss_hp 
@@ -73,11 +74,11 @@ class Game:
     """
     def load_spells(self) -> dict[str, Spell]: 
         spellBook = {}
-        spellBook["Magic Missile"] = Spell(cost=53, name="Magic Missile", armor=0, damage=4, mana=0, heal=0, duration=0, description="Player casts Magic Missile, causing 4 damage")
-        spellBook["Drain"] = Spell(cost=73, name="Drain", armor=0, damage=2, mana=0, heal=2, duration=0, description="Player casts Drain, causing 2 damage and healing for 2")
-        spellBook["Shield"] = Spell(cost=113, name="Shield", armor=7, damage=0, mana=0, heal=0, duration=6, description="Player casts Shield, providing 6 armor and lasting for 6 turns")
-        spellBook["Poison"] = Spell(cost=173, name="Poison", armor=0, damage=3, mana=0, heal=0, duration=6, description="Player casts Poison, causing 3 damage per turn lasting 6 turns")
-        spellBook["Recharge"] = Spell(cost=229, name="Recharge", armor=0, damage=0, mana=101, heal=0, duration=5, description="Player casts Recharge, increasing mana by 101 and lasting for 5 turns")
+        spellBook["Magic Missile"] = Spell(cost=53, name="Magic Missile", armor=0, damage=4, mana=0, heal=0, duration=0, description="Player casts Magic Missile for 53 mana, causing 4 damage")
+        spellBook["Drain"] = Spell(cost=73, name="Drain", armor=0, damage=2, mana=0, heal=2, duration=0, description="Player casts Drain for 73 mana, causing 2 damage and healing for 2")
+        spellBook["Shield"] = Spell(cost=113, name="Shield", armor=7, damage=0, mana=0, heal=0, duration=6, description="Player casts Shield for 113 mana, providing 7 armor and lasting for 6 turns")
+        spellBook["Poison"] = Spell(cost=173, name="Poison", armor=0, damage=3, mana=0, heal=0, duration=6, description="Player casts Poison for 173 mana, causing 3 damage per turn lasting 6 turns")
+        spellBook["Recharge"] = Spell(cost=229, name="Recharge", armor=0, damage=0, mana=101, heal=0, duration=5, description="Player casts Recharge for 229 mana, increasing mana by 101 and lasting for 5 turns")
         
         return spellBook
 
@@ -87,34 +88,48 @@ class Game:
         self.min_cost_log = []
         self.spellBook = self.load_spells()
         self.hard_mode = False
+        self.verbose = False
 
-    def play(self, initial_player_hp: int, initial_mana: int, file_name: str, hard_mode : bool = False) -> tuple[int, list[str]]:
+    def play(self, initial_player_hp: int, initial_mana: int, file_name: str, hard_mode : bool = False, verbose : bool = False) -> tuple[int, list[str]]:
         self.min_cost = float("inf")
         self.hard_mode = hard_mode
+        self.verbose = verbose
         self.min_cost_log = []
         params = RunParams.load(initial_player_hp, initial_mana, file_name) 
-        stats = Stats(initial_player_hp, initial_mana, params.initial_boss_hp, params.boss_damage, armor=0, total_mana=0, player_id=0)
+        stats = Stats(initial_player_hp, initial_mana, params.initial_boss_hp, params.boss_damage, armor=0, total_mana=0, player_id="")
         self.move(stats=stats, effects={}, spell="LFG", output=[])
         #print(f"Lowest mana cost: {self.min_cost}")
         return (self.min_cost, self.min_cost_log)
 
-    def check_run_state(self, stats: Stats, output: list[str]) -> GameState: 
+    def check_run_state(self, stats: Stats, output: list[str], check_mana: bool) -> GameState: 
         min_mana = self.spellBook["Magic Missile"].cost
         if stats.player_hp < 1: 
             output.append(f"Boss wins! Player is dead! Hasta la vista, buddy")
+            if self.verbose: 
+                self.take_a_dump(stats.player_id, output)
             return GameState.BossWins
-        if stats.mana < min_mana: 
+        if stats.mana < min_mana and check_mana: 
             output.append(f"Boss wins! Player doesn't have enough mana! Should have eaten your Wheaties!")
+            if self.verbose: 
+                self.take_a_dump(stats.player_id, output)
             return GameState.BossWins
         if stats.boss_hp < 1: 
             output.append("Player wins! Boss is dead! And there was much rejoicing!")
+            if self.verbose: 
+                self.take_a_dump(stats.player_id, output)
 
             if stats.total_mana < self.min_cost: 
                 output.append(f"New min mana cost: {stats.total_mana}")
                 self.min_cost = stats.total_mana
                 self.min_cost_log = output.copy()
+            elif self.verbose: 
+                self.take_a_dump(stats.player_id, output)
             return GameState.PlayerWins
-        
+        if stats.total_mana > self.min_cost: 
+            output.append(f"Min mana already exceeded. Min: {self.min_cost}; Current Total: {stats.total_mana}")
+            if self.verbose: 
+                self.take_a_dump(stats.player_id, output)
+            return GameState.TooMuchManaUsed
         return GameState.Running
 
     def __add_effect__(self, spell: str, effects: dict[str, Spell]): 
@@ -123,17 +138,20 @@ class Game:
             effects[spell] = Spell(cost=copySpell.cost, name=copySpell.name, armor=copySpell.armor, damage=copySpell.damage, mana=copySpell.mana, heal=copySpell.heal, duration=copySpell.duration, description=copySpell.description)
  
     def write_stats(self, stats: Stats, output: list[str]):
-        output.append(f"- Player has {stats.player_hp} hit points, {stats.armor} armor, {stats.mana} mana")
+        output.append(f"- Player has {stats.player_hp} hit points, {stats.armor} armor, {stats.mana} mana. Mana used: {stats.total_mana}")
         output.append(f"- Boss has {stats.boss_hp} hit points");
 
     def apply_effects(self, stats: Stats, effects: dict[str, Spell], output: list[str]) -> GameState:
             key = "Shield"
             if key in effects: 
-                stats.armor += effects[key].armor
+                stats.armor = effects[key].armor
                 effects[key].duration -= 1
                 output.append(f"{key} provides {effects[key].armor} armor, raising armor to {stats.armor}; its timer is now {effects[key].duration}")
                 if effects[key].duration < 1: 
                     del effects[key]
+            else: 
+                stats.armor = 0
+
             key = "Poison"
             if key in effects: 
                 stats.boss_hp -= effects[key].damage
@@ -141,7 +159,7 @@ class Game:
                 output.append(f"{key} deals {effects[key].damage}; its timer is now {effects[key].duration}")
                 if effects[key].duration < 1: 
                     del effects[key]
-                if self.check_run_state(stats, output) == GameState.PlayerWins: 
+                if self.check_run_state(stats, output, False) == GameState.PlayerWins: 
                     return GameState.PlayerWins
             key = "Recharge"
             if key in effects: 
@@ -154,7 +172,7 @@ class Game:
             return GameState.Running
 
     def move(self, stats: Stats, effects: dict[str, Spell], spell: str, output: list[str]):
-        updated_effects = copy.deepcopy(effects)
+        #updated_effects = copy.deepcopy(effects)
         if spell != "LFG": 
             # first turn skip attacks, we just start iterating through possible move combinations
 
@@ -163,73 +181,82 @@ class Game:
             if self.hard_mode: 
                 output.append("- Hard Mode! Player loses 1 hp per turn!")
                 stats.player_hp -= 1
-                if self.check_run_state(stats=stats, output=output) == GameState.BossWins: 
+                if self.check_run_state(stats=stats, output=output, check_mana=False) == GameState.BossWins: 
                     return
             self.write_stats(stats=stats, output=output)
             
-            if self.apply_effects(stats=stats, effects=updated_effects, output=output) == GameState.PlayerWins: 
+            if self.apply_effects(stats=stats, effects=effects, output=output) == GameState.PlayerWins: 
                 return
             
             castSpell : Spell = self.spellBook[spell].copy()
             output.append(castSpell.description)
+            stats.total_mana += castSpell.cost
+            stats.mana -= castSpell.cost
             if spell not in ["Shield", "Poison", "Recharge"]: 
                 # This spell has instant effect, the others are over time and start next turn
                 stats.player_hp += castSpell.heal
                 stats.mana += castSpell.mana
                 stats.boss_hp -= castSpell.damage
-                if self.check_run_state(stats=stats, output=output) == GameState.PlayerWins: 
+                if self.check_run_state(stats=stats, output=output, check_mana=False) != GameState.Running: 
                     return
-            stats.total_mana += castSpell.cost
-            stats.mana -= castSpell.cost
-            self.__add_effect__(spell, effects=updated_effects)
+            
+            self.__add_effect__(spell, effects=effects)
             
             output.append(" ")
             output.append("-- Boss turn --")
             output.append(" ")
             self.write_stats(stats=stats, output=output)
-            if self.apply_effects(stats=stats, effects=updated_effects, output=output) == GameState.PlayerWins: 
+            if self.apply_effects(stats=stats, effects=effects, output=output) == GameState.PlayerWins: 
                 return
             damage = max(stats.boss_damage - stats.armor, 1)
             output.append(f"Boss attacks for {damage} damage!")
             stats.player_hp -= damage
-            if self.check_run_state(stats=stats, output=output) == GameState.BossWins: 
+            if self.check_run_state(stats=stats, output=output, check_mana=False) != GameState.Running: 
                 return
 
+        if self.check_run_state(stats=stats, output=output, check_mana=True) != GameState.Running: 
+            return
+
+        for key in self.spellBook: 
+            nextSpell = self.spellBook[key].copy()
+            if stats.mana >= nextSpell.cost and not key in effects: 
+                #stats.player_id += f"{key[0]}_" 
+                nextStats = copy.deepcopy(stats)
+                nextStats.player_id += f"{key[0]}_"
+                self.move(stats=nextStats, effects=copy.deepcopy(effects), spell=key, output=output.copy())
+            
+        """
         # bust some moves: 
         key = "Magic Missile"
         nextSpell = self.spellBook[key].copy()
         if stats.mana >= nextSpell.cost: 
-            if spell == "LFG":
-                stats.player_id += 1 
-            self.move(stats=stats, effects=updated_effects, spell=key, output=output.copy())
+            stats.player_id += "MM_" 
+            self.move(stats=copy.deepcopy(stats), effects=copy.deepcopy(effects), spell=key, output=output.copy())
         
         key = "Drain"
         nextSpell = self.spellBook[key].copy()
         if stats.mana >= nextSpell.cost: 
-            if spell == "LFG":
-                stats.player_id += 1
-            self.move(stats=stats, effects=updated_effects, spell=key, output=output.copy())
+            stats.player_id += "D_"
+            self.move(stats=copy.deepcopy(stats), effects=copy.deepcopy(effects), spell=key, output=output.copy())
 
         key = "Shield"
         nextSpell = self.spellBook[key].copy()
-        if stats.mana >= nextSpell.cost:
-            if spell == "LFG":
-                stats.player_id += 1 
-            self.move(stats=stats, effects=updated_effects, spell=key, output=output.copy())
+        if stats.mana >= nextSpell.cost and not key in effects:
+            stats.player_id += "S_" 
+            self.move(stats=copy.deepcopy(stats), effects=copy.deepcopy(effects), spell=key, output=output.copy())
 
         key = "Poison"
         nextSpell = self.spellBook[key].copy()
-        if stats.mana >= nextSpell.cost:
-            if spell == "LFG":
-                stats.player_id += 1 
-            self.move(stats=stats, effects=updated_effects, spell=key, output=output.copy())
+        if stats.mana >= nextSpell.cost and not key in effects:
+            stats.player_id += "P_"
+            self.move(stats=copy.deepcopy(stats), effects=copy.deepcopy(effects), spell=key, output=output.copy())
         
         key = "Recharge"
         nextSpell = self.spellBook[key].copy() 
-        if stats.mana >= nextSpell.cost:
-            if spell == "LFG":
-                stats.player_id += 1 
-            self.move(stats=stats, effects=updated_effects, spell=key, output=output.copy())    
+        if stats.mana >= nextSpell.cost and not key in effects:
+            stats.player_id += "R_" 
+            self.move(stats=copy.deepcopy(stats), effects=copy.deepcopy(effects), spell=key, output=output.copy())    
+        """
 
     def take_a_dump(self, player_id: int, log: list[str]): 
         path = Path(Path(__file__).parent, f"dump_{player_id}.txt").resolve()
@@ -268,19 +295,22 @@ def part2():
             print(f"Part 2 result: {part2Result}")
 
 
-@pytest.mark.parametrize("name, player_hp, mana, file_name, expected", [
-    ("test1", 10, 250, "sample1.txt", 226),
-    ("test2", 10, 250, "sample2.txt", 641)
+@pytest.mark.parametrize("name, player_hp, mana, file_name, expected, verbose", [
+    ("test1", 10, 250, "sample1.txt", 226, False),
+    ("test2", 10, 250, "sample2.txt", 641, False)
 ])
-def test_wiz_part1(name: str, player_hp: int, mana: int, file_name: str, expected: int):
+def test_wiz_part1(name: str, player_hp: int, mana: int, file_name: str, expected: int, verbose: bool):
     print(f"*** TEST {name}***")
     game = Game()
-    result, output = game.play(initial_player_hp=player_hp, initial_mana=mana, file_name=file_name,hard_mode=False); 
-    for line in output: 
-        print(line)
-    assert result == expected
+    path = Path(Path(__file__).parent, f"{name}.txt").resolve()
+    with open(path, 'w') as f:
+        with redirect_stdout(f):
+            result, output = game.play(initial_player_hp=player_hp, initial_mana=mana, file_name=file_name,hard_mode=False, verbose=verbose); 
+            for line in output: 
+                print(line)
+            assert result == expected
 
 if __name__ == "__main__":
     pytest.main([__file__])
-    #part1()
+    part1()
     #part2()
