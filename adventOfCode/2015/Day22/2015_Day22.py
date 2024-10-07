@@ -263,17 +263,19 @@ def part2():
             print(f"Part 2 result: {part2Result}")
 
 
-@pytest.mark.parametrize("name, player_hp, mana, file_name, expected, verbose", [
-    ("test1", 10, 250, "sample1.txt", 226, False),
-    ("test2", 10, 250, "sample2.txt", 641, False)
+@pytest.mark.parametrize("name, player_hp, mana, file_name, expected, hard_mode, verbose", [
+    ("test1", 10, 250, "sample1.txt", 226, False, False),
+    ("test2", 10, 250, "sample2.txt", 641, False, False),
+    ("part1", 50, 500, "input.txt", 900, False, False),
+    ("part2", 50, 500, "input.txt", 1216, True, False)
 ])
-def test_wiz_part1(name: str, player_hp: int, mana: int, file_name: str, expected: int, verbose: bool):
+def test_wiz_part1(name: str, player_hp: int, mana: int, file_name: str, expected: int, hard_mode: bool, verbose: bool):
     print(f"*** TEST {name}***")
     game = Game()
     path = Path(Path(__file__).parent, f"{name}.txt").resolve()
     with open(path, 'w') as f:
         with redirect_stdout(f):
-            result, output = game.play(initial_player_hp=player_hp, initial_mana=mana, file_name=file_name,hard_mode=False, verbose=verbose); 
+            result, output = game.play(initial_player_hp=player_hp, initial_mana=mana, file_name=file_name,hard_mode=hard_mode, verbose=verbose); 
             for line in output: 
                 print(line)
             assert result == expected
