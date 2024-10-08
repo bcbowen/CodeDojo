@@ -6,12 +6,55 @@
 
 void Main()
 {
-	//RunTests();  // Call RunTests() or press Alt+Shift+T to initiate testing.
+	RunTests();  // Call RunTests() or press Alt+Shift+T to initiate testing.
 }
 
 public int NumTeams(int[] rating)
 {
+	int count = 0; 
+	int a = 0;
+	// asc
+	while (a < rating.Length - 2) 
+	{
+		int b = a + 1;
+		while (b < rating.Length - 1)
+		{
+			int c = b + 1;
+			while (rating[a] < rating[b] && c < rating.Length)
+			{
+				if (rating[a] < rating[b] && rating[b] < rating[c])
+				{
+					count++; 
+				}
+				c++; 
+			}
+			b++; 
+		}
+		a++; 
+	}
 
+	// desc
+	a = 0;
+	while (a < rating.Length - 2)
+	{
+		int b = a + 1;
+		while (b < rating.Length - 1)
+		{
+			int c = b + 1;
+			while (rating[a] > rating[b] && c < rating.Length)
+			{
+				if (rating[a] > rating[b] && rating[b] > rating[c])
+				{
+					count++;
+				}
+				c++;
+			}
+			b++;
+		}
+		a++;
+	}
+
+	return count; 
 }
 
 
