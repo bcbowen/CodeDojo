@@ -1,7 +1,7 @@
 import pytest
-from enum import Enum
+from ordered_enum import OrderedEnum
 
-class Hand(Enum): 
+class Hand(OrderedEnum): 
     FiveOfAKind = 7, 
     FourOfAKind = 6, 
     FullHouse = 5, 
@@ -12,11 +12,31 @@ class Hand(Enum):
 
 class Game: 
     def __init__(self): 
-        pass
+        self.card_values = { "A": 14, "K": 13, "Q": 12, "J": 11, "T": 10}
+        for i in range(9, 0): 
+            self.card_values[str(i)] = i
 
     def play(self, file_name: str) -> int: 
         pass
 
+    
+
+    def compare_hands(c1: str, c2: str) -> int: 
+        h1 = Game.get_hand(c1)
+        h2 = Game.get_hand(c2)
+
+        if h1 < h2: 
+            return -1
+        elif h1 > h2:
+            return 1
+        else: 
+            for i in range(len(c1)): 
+                if Game.card_value(c1[i]) < Game.card_value(c2[i]): 
+                    return -1
+                elif Game.card_value(c1[i]) > Game.card_value(c2[i]):
+                    return 1
+        return 0
+    
     def get_hand(cards: str) -> Hand: 
         counts = {}
         for card in cards: 
@@ -40,6 +60,22 @@ class Game:
             return Hand.OnePair
         return Hand.HighCard
 
+
+
+@pytest.mark.parametrize("c1, c2, expected", [
+    ("QQQQQ", "QQQQ2", 1),
+    ("QQQQ2", "QQQQQ", -1),
+    ("22222", "QQQQQ", 1),
+    ("QQQQQ", "22222", -1),
+    ("Q2222", "QQQKK", 1),
+    ("QQQKK", "Q2222", -1),
+    ("2222K", "K2222", -1),
+    ("A2222", "AAAA2", 1),
+    ("A2345", "22345", -1), 
+])
+def test_CompareHands(c1: str, c2: str, expected: int): 
+    result = Game.compare_hands(c1, c2)
+    assert(expected == result) 
 
 @pytest.mark.parametrize("cards, expected", [
     ("QQQQQ", Hand.FiveOfAKind),
