@@ -14,6 +14,9 @@ class Game:
     def __init__(self): 
         pass
 
+    def play(self, file_name: str) -> int: 
+        pass
+
     def get_hand(cards: str) -> Hand: 
         counts = {}
         for card in cards: 
