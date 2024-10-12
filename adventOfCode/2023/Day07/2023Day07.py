@@ -1,27 +1,61 @@
 import pytest
 from ordered_enum import OrderedEnum
+from functools import cmp_to_key
+from pathlib import Path
 
 class Hand(OrderedEnum): 
-    FiveOfAKind = 7, 
-    FourOfAKind = 6, 
-    FullHouse = 5, 
-    ThreeOfAKind = 4, 
-    TwoPair = 3, 
+    HighCard = 1,
     OnePair = 2, 
-    HighCard = 1
+    TwoPair = 3,
+    ThreeOfAKind = 4,
+    FullHouse = 5,
+    FourOfAKind = 6,
+    FiveOfAKind = 7 
 
-class Game: 
+
+class Bet: 
+    def __init__(self, cards: str, bet: int):
+        self.place = 0
+        self.cards = cards
+        self.bet = bet
+
+
+class Game:
+    card_values = { "A": 14, "K": 13, "Q": 12, "J": 11, "T": 10, "9": 9, "8": 8, "7" : 7, "6" : 6, "5" : 5, "4" : 4 , "3" : 3, "2" : 2 } 
     def __init__(self): 
-        self.card_values = { "A": 14, "K": 13, "Q": 12, "J": 11, "T": 10}
-        for i in range(9, 0): 
-            self.card_values[str(i)] = i
-
-    def play(self, file_name: str) -> int: 
         pass
 
-    
+    def load(self, file_name: str) -> list[Bet]: 
+        path = str(Path(__file__).parent)
+        data_path = path.replace("CodeDojo\\adventOfCode", "adventOfCodePrivateFiles")
+        file_path = Path(data_path, file_name).resolve()
+        bets = []
+        with open(file_path) as file: 
+            text = file.read() 
+            lines = text.split('\n')
+            
+            for line in lines: 
+                fields = line.split(' ')
+                bet = Bet(cards=fields[0], bet=int(fields[1]))
+                bets.append(bet)
+                
+            file.close()
+        return bets
 
-    def compare_hands(c1: str, c2: str) -> int: 
+    def play(self, file_name: str) -> int: 
+        bets = self.load(file_name)
+        bets = sorted(bets, key=cmp_to_key(Game.compare_bets))
+        score = 0
+        place = 1
+        for bet in bets: 
+            score += bet.bet * place
+            place += 1
+        return score
+    
+    def compare_bets(b1: Bet, b2: Bet) -> int:
+        return Game.compare_hands(b1.cards, b2.cards)
+
+    def compare_hands(c1: str, c2: str) -> int:
         h1 = Game.get_hand(c1)
         h2 = Game.get_hand(c2)
 
@@ -31,9 +65,9 @@ class Game:
             return 1
         else: 
             for i in range(len(c1)): 
-                if Game.card_value(c1[i]) < Game.card_value(c2[i]): 
+                if Game.card_values[c1[i]] < Game.card_values[c2[i]]: 
                     return -1
-                elif Game.card_value(c1[i]) > Game.card_value(c2[i]):
+                elif Game.card_values[c1[i]] > Game.card_values[c2[i]]:
                     return 1
         return 0
     
@@ -61,16 +95,21 @@ class Game:
         return Hand.HighCard
 
 
+def part1(): 
+    file_name = "input.txt"
+    game = Game(); 
+    result = game.play(file_name=file_name)
+    print(f"Part1: {result}")
 
 @pytest.mark.parametrize("c1, c2, expected", [
     ("QQQQQ", "QQQQ2", 1),
     ("QQQQ2", "QQQQQ", -1),
-    ("22222", "QQQQQ", 1),
-    ("QQQQQ", "22222", -1),
+    ("22222", "QQQQQ", -1),
+    ("QQQQQ", "22222", 1),
     ("Q2222", "QQQKK", 1),
     ("QQQKK", "Q2222", -1),
     ("2222K", "K2222", -1),
-    ("A2222", "AAAA2", 1),
+    ("A2222", "AAAA2", -1),
     ("A2345", "22345", -1), 
 ])
 def test_CompareHands(c1: str, c2: str, expected: int): 
@@ -97,5 +136,14 @@ def test_GetHand(cards: str, expected: Hand):
     result = Game.get_hand(cards)
     assert(expected == result) 
 
+@pytest.mark.parametrize("file_name, expected", [
+    ("sample.txt", 6440)
+])
+def test_game(file_name: str, expected: int): 
+    game = Game()
+    result = game.play(file_name=file_name)
+    assert(expected == result)
+
 if __name__ == "__main__": 
     pytest.main([__file__])
+    part1()
