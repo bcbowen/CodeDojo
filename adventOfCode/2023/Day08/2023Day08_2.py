@@ -1,10 +1,19 @@
 import pytest
 from pathlib import Path
+import math
 
 class MapData: 
     def __init__(self): 
         self.directions = ''
         self.routes = {}
+
+    def write_trace(records): 
+        path = Path(Path(__file__).parent, "trace.txt").resolve()
+        with open(path, 'w') as f:
+            for line in records: 
+                f.write(" ".join(line) + '\n')
+            f.close(); 
+                
 
     def load(file_name: str) -> 'MapData': 
         path = str(Path(__file__).parent)
@@ -23,21 +32,39 @@ class MapData:
             file.close()
         return map_data
 
-    def find_path_length(target: str, file_name: str) -> int: 
+    # After initial attemps and research, the brute force approach requires more than 10 trillion 
+    # iterations. The accepted approach is get the path lenght for each starting node
+    # and find the LCM
+    def find_path_length(file_name: str) -> int: 
         map_data = MapData.load(file_name)
         length = 0
         pos = 0
-        key = "AAA"
-        while key != target: 
-            dir = map_data.directions[pos]
-            currentRoute = map_data.routes[key]
-            if dir == "L": 
-                key = currentRoute[0]
-            else:
-                key = currentRoute[1]
-            pos = pos + 1 if pos < len(map_data.directions) - 1 else 0
-            length += 1
-
+        keys = []
+        
+        for key in map_data.routes.keys(): 
+            if key.endswith('A'): 
+                keys.append(key)
+                
+        #trace = []
+        #trace.append(next_keys.copy())
+        
+        path_lengths = []
+        for i in range(len(keys)):
+            next_key = keys[i]
+            length = 0
+            while not next_key.endswith('Z'): 
+                dir = map_data.directions[pos]
+                currentRoute = map_data.routes[next_key]
+                if dir == "L": 
+                    next_key = currentRoute[0]
+                else:
+                    next_key = currentRoute[1]
+                #trace.append(next_keys.copy())
+                pos = pos + 1 if pos < len(map_data.directions) - 1 else 0
+                length += 1
+            path_lengths.append(length)
+        #MapData.write_trace(trace)
+        length = math.lcm(*path_lengths)
         return length
 
 
@@ -50,15 +77,14 @@ def test_load_data():
 
 def part2(): 
     file_name = "input.txt"
-    result = MapData.find_path_length("ZZZ", file_name)
-    print(f"Part 1 result: {result}")
+    result = MapData.find_path_length(file_name)
+    print(f"Part 2 result: {result}")
 
 @pytest.mark.parametrize("file_name, expected", [
-    ("sample1.txt", 2),
-    ("sample2.txt", 6)
+    ("sample3.txt", 6)
 ])
 def test_path(file_name: str, expected: int):
-    result = MapData.find_path_length("ZZZ", file_name)
+    result = MapData.find_path_length(file_name)
     assert expected == result
 
 if __name__ == "__main__": 
