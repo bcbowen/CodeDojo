@@ -104,7 +104,7 @@ class Game:
         if hand == Hand.ThreeOfAKind: 
             # wild card count can either be 1 or 3, either way we have 3 + 1 or 1 + 3 = 4 of a kind
             return Hand.FourOfAKind
-        if hand == Hand.FourOfAKind: 
+        if hand == Hand.FullHouse or hand == Hand.FourOfAKind: 
             return Hand.FiveOfAKind
 
 
@@ -118,16 +118,16 @@ class Game:
         values = list(counts.values())
         if key_len == 1: 
             hand = Hand.FiveOfAKind
-        if key_len == 2: 
+        elif key_len == 2: 
             if values[0] in [4, 1]: 
                 hand = Hand.FourOfAKind
             else: 
                 hand = Hand.FullHouse
-        if 3 in values: 
+        elif 3 in values: 
             hand = Hand.ThreeOfAKind
-        if key_len == 3: 
+        elif key_len == 3: 
             hand = Hand.TwoPair
-        if 2 in values: 
+        elif 2 in values: 
             hand = Hand.OnePair
         
         hand = Game.check_wildcards(cards, hand)
