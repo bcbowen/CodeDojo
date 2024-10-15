@@ -1,4 +1,5 @@
 import pytest
+from collections import defaultdict
 from ordered_enum import OrderedEnum
 from functools import cmp_to_key
 from pathlib import Path
@@ -21,7 +22,7 @@ class Bet:
 
 
 class Game:
-    card_values = { "A": 14, "K": 13, "Q": 12, "J": 11, "T": 10, "9": 9, "8": 8, "7" : 7, "6" : 6, "5" : 5, "4" : 4 , "3" : 3, "2" : 2 } 
+    card_values = { "A": 14, "K": 13, "Q": 12, "T": 10, "9": 9, "8": 8, "7" : 7, "6" : 6, "5" : 5, "4" : 4 , "3" : 3, "2" : 2, "J": 1 } 
     def __init__(self): 
         pass
 
@@ -71,35 +72,73 @@ class Game:
                     return 1
         return 0
     
+    def check_wildcards(cards: str, hand: Hand) -> Hand: 
+        if not 'J' in cards or hand == Hand.FiveOfAKind: 
+            return hand
+        wildcard_count = cards.count('J')
+
+        if hand == Hand.HighCard: 
+            match wildcard_count: 
+                case 1: 
+                    return Hand.OnePair
+                case 2: 
+                    return Hand.ThreeOfAKind
+                case 3: 
+                    return Hand.FourOfAKind
+                case 4: 
+                    return Hand.FiveOfAKind
+        if hand == Hand.OnePair: 
+            match wildcard_count: 
+                case 1: 
+                    return Hand.ThreeOfAKind
+                case 2: 
+                    # one pair and wild card count is 2: the pair is wildcards so the best hand is 3 of a kind
+                    return Hand.ThreeOfAKind
+                case 3: 
+                    return Hand.FiveOfAKind
+        if hand == Hand.TwoPair: 
+            if wildcard_count == 2: 
+                return Hand.FourOfAKind
+            else: 
+                return Hand.FullHouse
+        if hand == Hand.ThreeOfAKind: 
+            # wild card count can either be 1 or 3, either way we have 3 + 1 or 1 + 3 = 4 of a kind
+            return Hand.FourOfAKind
+        if hand == Hand.FourOfAKind: 
+            return Hand.FiveOfAKind
+
+
+
     def get_hand(cards: str) -> Hand: 
-        counts = {}
+        counts = defaultdict(int)
+        hand = Hand.HighCard
         for card in cards: 
-            if not card in counts: 
-                counts[card] = 0
             counts[card] += 1
         key_len = len(counts.keys())
         values = list(counts.values())
         if key_len == 1: 
-            return Hand.FiveOfAKind
+            hand = Hand.FiveOfAKind
         if key_len == 2: 
             if values[0] in [4, 1]: 
-                return Hand.FourOfAKind
+                hand = Hand.FourOfAKind
             else: 
-                return Hand.FullHouse
+                hand = Hand.FullHouse
         if 3 in values: 
-            return Hand.ThreeOfAKind
+            hand = Hand.ThreeOfAKind
         if key_len == 3: 
-            return Hand.TwoPair
+            hand = Hand.TwoPair
         if 2 in values: 
-            return Hand.OnePair
-        return Hand.HighCard
+            hand = Hand.OnePair
+        
+        hand = Game.check_wildcards(cards, hand)
+        return hand
 
 
-def part1(): 
+def part2(): 
     file_name = "input.txt"
     game = Game(); 
     result = game.play(file_name=file_name)
-    print(f"Part1: {result}")
+    print(f"Part2: {result}")
 
 @pytest.mark.parametrize("c1, c2, expected", [
     ("QQQQQ", "QQQQ2", 1),
@@ -136,6 +175,24 @@ def test_GetHand(cards: str, expected: Hand):
     result = Game.get_hand(cards)
     assert(expected == result) 
 
+@pytest.mark.parametrize("cards, expected", [
+    ("JQQQQ", Hand.FiveOfAKind),
+    ("JQQQJ", Hand.FiveOfAKind),
+    ("JQJQJ", Hand.FiveOfAKind),
+    ("JJQJJ", Hand.FiveOfAKind),
+    ("QJ111", Hand.FourOfAKind),
+
+    ("JQQQ1", Hand.FourOfAKind),
+    ("QQJ22", Hand.FullHouse),
+    ("JQ2Q2", Hand.FullHouse),
+    ("JQ212", Hand.ThreeOfAKind),
+    ("JQQ23", Hand.ThreeOfAKind),
+    ("123J4", Hand.OnePair)
+])
+def test_GetHandWithWildCard(cards: str, expected: Hand): 
+    result = Game.get_hand(cards)
+    assert(expected == result) 
+
 @pytest.mark.parametrize("file_name, expected", [
     ("sample.txt", 6440)
 ])
@@ -146,4 +203,4 @@ def test_game(file_name: str, expected: int):
 
 if __name__ == "__main__": 
     pytest.main([__file__])
-    part1()
+    part2()
