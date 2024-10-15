@@ -26,6 +26,22 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Virtual environments
+venv/
+env/
+.venv/
+.env
+
+# IDE-specific files
+.idea/
+.vscode/
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
