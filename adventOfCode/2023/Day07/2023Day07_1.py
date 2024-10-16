@@ -26,12 +26,22 @@ class Game:
     def __init__(self): 
         pass
 
+    def get_input_filepath(file_name: str): 
+        current_path = Path(__file__).parent
+        day = current_path.name
+        current_path = current_path.parent
+        year = current_path.name
+
+        # traverse up directories to the private files 
+        private_files_base = current_path.parents[2] / "adventOfCodePrivateFiles"
+        
+        input_path = private_files_base / year / day / file_name
+        return input_path
+
     def load(self, file_name: str) -> list[Bet]: 
-        path = str(Path(__file__).parent)
-        data_path = path.replace("CodeDojo\\adventOfCode", "adventOfCodePrivateFiles")
-        file_path = Path(data_path, file_name).resolve()
+        input_path = Game.get_input_filepath(file_name)
         bets = []
-        with open(file_path) as file: 
+        with open(input_path) as file: 
             text = file.read() 
             lines = text.split('\n')
             
