@@ -5,11 +5,15 @@ def get_next(nums: list[int]) -> int:
     matrix.append([])
     matrix[0] = nums.copy()
     i = 1
-    NonZero = False
-    while not NonZero: 
+    #NonZero = False
+    while len(matrix[i - 1]) > 1: 
+        print(matrix)
         matrix[i - 1].append([])
-
-        NonZero = False 
+        matrix[i] = [matrix[j + 1] - matrix[j] for j in range(len(matrix[i - 1]))]
+        if not any(x != 0 for x in matrix[i]): 
+            break 
+        """
+        matrix[i] = [x for x = matrix[i - 1]
         for j in range(1, len(matrix[i - 1])): 
             val = matrix[i - 1][j] - matrix[i - 1][j - 1]
             matrix[i].append(val)
@@ -17,6 +21,7 @@ def get_next(nums: list[int]) -> int:
                 NonZero = True
         if not NonZero: 
             break
+        """
         i += 1
     for i in range(len(matrix) - 2,-1,-1): 
         matrix[i - 1].append(matrix[i][-1])
