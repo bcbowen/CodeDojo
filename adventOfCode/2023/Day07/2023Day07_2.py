@@ -194,7 +194,7 @@ def test_GetHandWithWildCard(cards: str, expected: Hand):
     assert(expected == result) 
 
 @pytest.mark.parametrize("file_name, expected", [
-    ("sample.txt", 6440)
+    ("sample.txt", 5905)
 ])
 def test_game(file_name: str, expected: int): 
     game = Game()
