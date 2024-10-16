@@ -8,8 +8,8 @@ def get_next(nums: list[int]) -> int:
     #NonZero = False
     while len(matrix[i - 1]) > 1: 
         print(matrix)
-        matrix[i - 1].append([])
-        matrix[i] = [matrix[j + 1] - matrix[j] for j in range(len(matrix[i - 1]))]
+        matrix.append([])
+        matrix[i] = [matrix[i - 1][j + 1] - matrix[i - 1][j] for j in range(len(matrix[i - 1])-1)]
         if not any(x != 0 for x in matrix[i]): 
             break 
         """
