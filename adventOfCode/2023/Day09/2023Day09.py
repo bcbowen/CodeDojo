@@ -12,19 +12,10 @@ def get_next(nums: list[int]) -> int:
         matrix[i] = [matrix[i - 1][j + 1] - matrix[i - 1][j] for j in range(len(matrix[i - 1])-1)]
         if not any(x != 0 for x in matrix[i]): 
             break 
-        """
-        matrix[i] = [x for x = matrix[i - 1]
-        for j in range(1, len(matrix[i - 1])): 
-            val = matrix[i - 1][j] - matrix[i - 1][j - 1]
-            matrix[i].append(val)
-            if val != 0: 
-                NonZero = True
-        if not NonZero: 
-            break
-        """
         i += 1
+        
     for i in range(len(matrix) - 2,-1,-1): 
-        matrix[i - 1].append(matrix[i][-1])
+        matrix[i - 1].append(matrix[i][-1] + matrix[i - 1][-1])
     
     return matrix[0][-1]
 
