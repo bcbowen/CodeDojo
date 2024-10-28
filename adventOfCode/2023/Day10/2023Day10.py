@@ -1,5 +1,5 @@
 import pytest
-
+from pathlib import Path
 
 def get_input_filepath(file_name: str): 
     current_path = Path(__file__).parent
@@ -20,7 +20,7 @@ def load_map(file_name: str) -> list[list[str]]:
     with open(path) as file: 
         text = file.read()
         file.close()
-    lines = file.split('\n')
+    lines = text.split('\n')
     row = 0
     for line in lines: 
         input_map.append([])
@@ -40,6 +40,20 @@ F is a 90-degree bend connecting south and east.
 S is the starting position of the animal;
 """
 
+def map_path(file_name: str) -> int: 
+    raw_map = load_map(file_name)
+    working_map = copy_map(raw_map)
+    
+
+def copy_map(input_map: list[list[str]]) -> list[list[str]]: 
+    copied = []
+    i = 0 
+    for row in input_map: 
+        copied.append[] 
+        copied[i] = row.copy()
+        i += 1
+    return copied
+
 def find_entry_point(input_map: list[list[str]]) -> tuple[int, int]: 
     for row in range(len(input_map)): 
         for col in range(len(input_map[row])): 
@@ -54,11 +68,46 @@ def part1(file_name: str) -> int:
     pass 
 
 def test(): 
-
+    
 
     pass
 
+@pytest.mark.parametrize("file_name, expected", [
+    ("sample.txt", (1, 1)), 
+    ("sample2.txt", (2, 0))
+])
+def test_find_entry_point(file_name: str, expected: tuple[int, int]): 
+    test_map = load_map(file_name)
+    (row, col) = find_entry_point(test_map)
+    assert(expected[0] == row)
+    assert(expected[1] == col)
 
+def test_load_map1(): 
+    file_name = "sample.txt"
+    test_map = load_map(file_name)
+    assert(len(test_map) == 5)
+    assert(len(test_map[0]) == 5)
+    assert(test_map[0][0] == '.')
+    assert(test_map[1][1] == 'S')
+    assert(test_map[1][2] == '-')
+    assert(test_map[1][3] == '7')
+    assert(test_map[2][1] == '|')
+    assert(test_map[2][2] == '.')
+    assert(test_map[2][3] == '|')
+    assert(test_map[3][1] == 'L')
+    assert(test_map[3][2] == '-')
+    assert(test_map[3][3] == 'J')
+
+def test_load_map2(): 
+    file_name = "sample2.txt"
+    test_map = load_map(file_name)
+    assert(len(test_map) == 5)
+    assert(len(test_map[0]) == 5)
+    assert(test_map[0][0] == '.')
+    assert(test_map[0][2] == 'F')
+    assert(test_map[1][2] == 'J')
+    assert(test_map[2][0] == 'S')
+    assert(test_map[4][1] == 'J')
 
 if __name__ == "__main__": 
     pytest.main([__file__])
