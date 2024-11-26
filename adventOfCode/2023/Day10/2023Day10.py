@@ -1,5 +1,14 @@
 import pytest
 from pathlib import Path
+from enum import Enum
+
+class Direction(Enum): 
+    Up = 1, 
+    Down = 2,
+    Left = 3, 
+    Right = 4
+    Invalid = -1
+
 
 def get_input_filepath(file_name: str): 
     current_path = Path(__file__).parent
@@ -40,16 +49,48 @@ F is a 90-degree bend connecting south and east.
 S is the starting position of the animal;
 """
 
+def get_direction(start: tuple[int, int], end: tuple[int, int]): 
+    if start[0] != end[0] and start[1] != end[1]: 
+        return Direction.Invalid
+    # horizontal move: 
+    if start[0] == end[0]:
+        return Direction.Right if start[1] < end[1] else Direction.Left
+
+    # vertical move: 
+    if start[1] == end[1]: 
+        return Direction.Up if start[0] < end[0] else Direction.Down 
+    
+    return Direction.Invalid
+ 
+def is_valid_move(direction: Direction, value: str) -> bool: 
+    if value == '.' or direction == Direction.Invalid: 
+        return False
+    
+    match direction: 
+        case Direction.Up: 
+            return value in ['|', '7', 'F']
+        case Direction.Down: 
+            return value in ['|', 'L', 'J']
+        case Direction.Right: 
+            return value in ['-', 'J', '7']
+        case Direction.Left: 
+            return value in ['-', 'L', 'F']
+        
+
 def map_path(file_name: str) -> int: 
     raw_map = load_map(file_name)
     working_map = copy_map(raw_map)
+    max = 0
+    visited = []
+    moveQ = []
+    (x, y) = find_entry_point(working_map)
     
 
 def copy_map(input_map: list[list[str]]) -> list[list[str]]: 
     copied = []
     i = 0 
     for row in input_map: 
-        copied.append[] 
+        copied.append(list()) 
         copied[i] = row.copy()
         i += 1
     return copied
@@ -71,6 +112,18 @@ def test():
     
 
     pass
+
+@pytest.mark.parametrize("start, end, expected", [
+    ((2, 2), (3, 2), Direction.Up), 
+    ((2, 2), (1, 2), Direction.Down),
+    ((2, 2), (2, 3), Direction.Right),
+    ((2, 2), (2, 1), Direction.Left),
+    ((2, 2), (4, 4), Direction.Invalid),
+])
+def test_get_direction(start: tuple[int, int], end: tuple[int, int], expected: Direction): 
+    result = get_direction(start, end)
+    assert(expected == result)
+
 
 @pytest.mark.parametrize("file_name, expected", [
     ("sample.txt", (1, 1)), 
