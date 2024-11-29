@@ -113,6 +113,56 @@ def test():
 
     pass
 
+"""
+case Direction.Up: 
+            return value in ['|', '7', 'F']
+        case Direction.Down: 
+            return value in ['|', 'L', 'J']
+        case Direction.Right: 
+            return value in ['-', 'J', '7']
+        case Direction.Left: 
+            return value in ['-', 'L', 'F']
+        
+"""
+
+@pytest.mark.parametrize("direction, value, expected", {
+    (Direction.Up, '|', True), 
+    (Direction.Up, '7', True), 
+    (Direction.Up, 'F', True),
+    (Direction.Up, '.', False),
+    (Direction.Up, 'L', False),
+    (Direction.Up, 'J', False),
+    (Direction.Up, '-', False),
+
+    (Direction.Down, '|', True), 
+    (Direction.Down, 'L', True), 
+    (Direction.Down, 'J', True),
+    (Direction.Down, '.', False),
+    (Direction.Down, '7', False),
+    (Direction.Down, 'F', False),
+    (Direction.Down, '-', False),
+
+    (Direction.Left, '-', True), 
+    (Direction.Left, 'L', True), 
+    (Direction.Left, 'F', True),
+    (Direction.Left, '.', False),
+    (Direction.Left, '7', False),
+    (Direction.Left, 'J', False),
+    (Direction.Left, '|', False),
+
+    (Direction.Right, '-', True), 
+    (Direction.Right, '7', True), 
+    (Direction.Right, 'J', True),
+    (Direction.Right, '.', False),
+    (Direction.Right, 'L', False),
+    (Direction.Right, 'F', False),
+    (Direction.Right, '|', False)
+})
+def test_is_valid_move(direction: Direction, value: str, expected: bool):
+    result = is_valid_move(direction, value)
+    assert(expected == result) 
+
+
 @pytest.mark.parametrize("start, end, expected", [
     ((2, 2), (3, 2), Direction.Up), 
     ((2, 2), (1, 2), Direction.Down),
