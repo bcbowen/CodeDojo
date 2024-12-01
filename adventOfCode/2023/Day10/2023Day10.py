@@ -84,6 +84,19 @@ def map_path(file_name: str) -> int:
     visited = []
     moveQ = []
     (x, y) = find_entry_point(working_map)
+    distance = 0
+    moveQ.append((x, y, distance))
+    
+    while len(moveQ) > 0: 
+        (x, y, distance) = moveQ.pop()
+        visited.append((x, y))
+        # try left
+        if x > 0: 
+            x1 = x - 1
+            c = working_map[y][x1]
+        if is_valid_move(Direction.Left, c):
+            moveQ.append(y, x1, distance + 1)
+
     
 
 def copy_map(input_map: list[list[str]]) -> list[list[str]]: 
