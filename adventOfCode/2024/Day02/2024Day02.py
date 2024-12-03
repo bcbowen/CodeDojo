@@ -115,7 +115,7 @@ def main():
     result = day2("input.txt", 1)
     print(f"Part2: {result}")
 
-    part2_troubleshooting()
+    #part2_troubleshooting()
 
 
 @pytest.mark.parametrize("report, tolerance, expected", [
