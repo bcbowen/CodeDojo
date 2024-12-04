@@ -34,6 +34,24 @@ def get_total(file_name : str) -> int:
         total += num1 * num2
     return total
 
+def get_total2(file_name : str) -> int: 
+    #pattern = r"(mul\((\d+),(\d+)\))"
+    pattern = r"(mul\((\d+),(\d+)\)|do\(\)|don't\(\))"
+    input = get_input(file_name)
+    #matches = re.match(pattern, input)
+    total = 0
+    processing = True
+    for match in re.finditer(pattern, input): 
+        full_match = match.group(1) # full matched text
+        if full_match == "do()": 
+            processing = True
+        elif full_match == "don't()": 
+            processing = False
+        elif full_match.startswith("mul(") and processing: 
+            num1, num2 = map(int, match.groups()[1:3])
+            total += num1 * num2
+    return total
+
 def main(): 
     file_name = "sample.txt"
     result = get_total(file_name)
@@ -41,11 +59,22 @@ def main():
     file_name = "input.txt"
     result = get_total(file_name)
     print(f"Part 1 result: {result}")
-
+    file_name = "sample_part2.txt"
+    result = get_total2(file_name)
+    print(f"Part 2 sample: {result}")
+    file_name = "input.txt"
+    result = get_total2(file_name)
+    print(f"Part 2 result: {result}")
 
 def test_part1(): 
     expected = 161
     file_name = "sample.txt"
+    result = get_total(file_name)
+    assert(expected == result)
+
+def test_part2(): 
+    expected = 48
+    file_name = "sample_part2.txt"
     result = get_total(file_name)
     assert(expected == result)
 
