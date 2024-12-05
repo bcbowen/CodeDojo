@@ -32,21 +32,6 @@ def load_input(file_name: str) -> list[list[str]]:
 
     return grid
 
-"""
-from collections import namedtuple
-
-# Define a namedtuple to represent the direction
-Direction = namedtuple('Direction', ['x', 'y'])
-
-# Declare constants using named tuples
-RTL = Direction(0, 1)
-LTR = Direction(0, -1)
-D = Direction(-1, 0)
-U = Direction(1, 0)
-
-# Access the values using named attributes
-print(RTL.x, RTL.y)  # Output: 0 1
-"""
 
 def search(direction, grid : list[list[str]], location: tuple[int, int]) -> bool: 
 
@@ -63,7 +48,6 @@ def search(direction, grid : list[list[str]], location: tuple[int, int]) -> bool
         return False
 
     values = ['M', 'A', 'S']
-    #y, x += location.y, location.x
     y, x = location
 
     for i in range(len(values)): 
@@ -88,8 +72,45 @@ def part1(file_name: str) -> int:
 
     return found
 
+"""
+This should only be called when the current value is 'A'. The fields in the diags have to be 
+either 'M' or 'S' and must be different either vertically or horizontally. 
+
+M S                    M M
+ A          --or--      A
+M S                    S S
+etc...
+"""
+def x_check(grid : list[list[int]], location : tuple[int, int]) -> bool: 
+    
+    ur = grid[location[0] - 1][location[1] + 1]
+    lr = grid[location[0] + 1][location[1] + 1]
+    ul = grid[location[0] - 1][location[1] - 1]
+    ll = grid[location[0] + 1][location[1] - 1]
+
+    for val in (ur, lr, ul, ll): 
+        if not val in ['M', 'S']: 
+            return False
+
+    # check vertical 
+    if ur != lr and ul != ll: 
+        return True
+
+    # check horizontal
+    if ur != ul and lr != ll: 
+        return True
+    
+    return False
+
 def part2(file_name: str) -> int: 
-    return -1
+    grid = load_input(file_name) 
+    found = 0
+    for row in range(1, len(grid)-2): 
+        for col in range(1, len(grid)-2): 
+            if grid[row][col] == 'A' and x_check(grid, (row, col)): 
+                found += 1
+
+    return found
 
 """
 0, 4 SE
@@ -114,7 +135,7 @@ def test1():
 
 def test2(): 
     file_name = "sample.txt"
-    expected = -1
+    expected = 9
     result = part2(file_name)
     assert(result == expected)
 
@@ -125,13 +146,13 @@ def main():
     
     result = part1("input.txt")
     print(f"Part1: {result}")
-    """
+    
     # part 2:
     result = part2("sample.txt")
     print(f"Sample part2: {result}")
     result = part2("input.txt")
     print(f"Part2: {result}")
-    """
+    
 
 if __name__ == "__main__": 
     pytest.main([__file__])
