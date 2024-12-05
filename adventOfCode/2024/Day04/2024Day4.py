@@ -78,12 +78,12 @@ def search(direction, grid : list[list[str]], location: tuple[int, int]) -> bool
 def part1(file_name: str) -> int: 
     grid = load_input(file_name) 
     found = 0
-    for row in range(len(grid)-1): 
+    for row in range(len(grid)): 
         for col in range(len(grid[0])-1): 
-            if grid[col][row] == 'X': 
-                for direction in [North, NorthEast, East, SouthEast, South, SouthWest, West]:
+            if grid[row][col] == 'X': 
+                for direction in [North, NorthEast, East, SouthEast, South, SouthWest, West, NorthWest]:
                     if search(direction, grid, (row, col)): 
-                        print(f"Found one: {row}, {col} {direction}")
+                        #print(f"Found one: {row}, {col} {direction}")
                         found += 1
 
     return found
@@ -122,9 +122,10 @@ def main():
     # part 1:
     result = part1("sample.txt")
     print(f"Sample part1: {result}")
-    """
+    
     result = part1("input.txt")
     print(f"Part1: {result}")
+    """
     # part 2:
     result = part2("sample.txt")
     print(f"Sample part2: {result}")
