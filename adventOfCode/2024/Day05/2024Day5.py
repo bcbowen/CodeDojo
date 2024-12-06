@@ -41,15 +41,40 @@ def part1(file_name: str) -> int:
     total = 0
 
     for job in pages: 
-        is_bad = False
-        for i in range(len(job) - 1): 
-            if job[i + 1] in rules and job[i] in rules[job[i + 1]]: 
-                is_bad = True
-                break
-        if not is_bad: 
+        is_good = job_is_in_order(job, rules)
+        if is_good:  
             mid = len(job)//2
             total += job[mid]
     return total 
+
+"""
+find jobs not in the correct order and rearrange them, then return the middle page for 
+corrected jobs
+"""
+def part2(file_name: str) -> int: 
+    rules, pages = load_data(file_name)
+    total = 0
+
+    for job in pages: 
+        is_good = job_is_in_order(job, rules)
+        if not is_good:
+            reorder_job(job, rules)  
+            mid = len(job)//2
+            total += job[mid]
+    return total
+
+def reorder_job(job : list[int], rules: dict[int, list[int]]):
+    while not job_is_in_order(job, rules): 
+        for i in range(len(job) - 1): 
+            if job[i + 1] in rules and job[i] in rules[job[i + 1]]: 
+                job[i + 1], job[i] = job[i], job[i + 1]
+    return job
+
+def job_is_in_order(job : list[int], rules: dict[int, list[int]]): 
+    for i in range(len(job) - 1): 
+        if job[i + 1] in rules and job[i] in rules[job[i + 1]]: 
+            return False
+    return True
 
 def test_load(): 
     file_name = "sample.txt"
@@ -64,6 +89,11 @@ def test_part1():
     expected = 143
     assert(result == expected)
 
+def test_part2(): 
+    result = part2("sample.txt")
+    expected = 123
+    assert(result == expected)
+
 def main():
     # part 1:
     result = part1("sample.txt")
@@ -72,13 +102,13 @@ def main():
     result = part1("input.txt")
     print(f"Part1: {result}")
     
-    """
     # part 2:
     result = part2("sample.txt")
     print(f"Sample part2: {result}")
+    
     result = part2("input.txt")
     print(f"Part2: {result}")
-    """
+    
     
 
 if __name__ == "__main__": 
