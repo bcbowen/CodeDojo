@@ -23,10 +23,10 @@ def load_input(file_name: str) -> dict[int, list[int]]:
         for line in file.readlines():
             key_part, value_part = line.split(':') 
             key = int(key_part.strip())
-            if key in input: 
-                raise Exception("key already exists man: " + str(key))
             values = list(map(int, value_part.strip().split()))
-            input[key] = values
+            if not key in input: 
+                input[key] = []
+            input[key].append(values)
     return input
 
 
@@ -54,6 +54,7 @@ def check_values(total: int, values: list[int]) -> bool:
             return True
     return False
 
+"""
 def part1_output(file_name, good, bad): 
     with open(f"{file_name}_good.txt", "w") as file: 
         for line in good: 
@@ -61,20 +62,22 @@ def part1_output(file_name, good, bad):
     with open(f"{file_name}_bad.txt", "w") as file: 
         for line in bad: 
             file.write(line + "\n")
+"""
 
 def part1(file_name: str) -> int: 
     input = load_input(file_name)
     total = 0
-    good = [] 
-    bad = []
+    #good = [] 
+    #bad = []
     for key in input: 
-        if check_values(key, input[key]): 
-            total += key
-            good.append(f"{key}: {input[key]}")
-        else: 
-            bad.append(f"{key}: {input[key]}")
+        for values in input[key]: 
+            if check_values(key, values): 
+                total += key
+            #good.append(f"{key}: {input[key]}")
+        #else: 
+            #bad.append(f"{key}: {input[key]}")
 
-    part1_output(file_name, good, bad)
+    #part1_output(file_name, good, bad)
     return total
 
 def test_part1(): 
@@ -112,7 +115,7 @@ def test_part1():
 
 def test_input_load(): 
     input = load_input("sample.txt")
-    assert(input[190] == [10, 19])
+    assert(input[190][0] == [10, 19])
 
 if __name__ == "__main__": 
     pytest.main([__file__])
