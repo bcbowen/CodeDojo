@@ -82,13 +82,13 @@ def part1(file_name: str) -> int:
 
 def part2(file_name: str): 
     grid = load_input(file_name)
-    count = 1
+    count = 0
     current_pos = find_start(grid)
     start_pos = current_pos
     current_direction = North
-    seen = 'o'
     block = '#'
     empty = '.'
+    found = set()
 
     while not exited(grid, current_pos): 
         next_pos = tuple(a + b for a, b in zip(current_pos, current_direction)) #current_pos + current_direction
@@ -99,20 +99,37 @@ def part2(file_name: str):
             current_direction = turn(current_direction)
             continue        
         current_pos = next_pos
-        if grid[current_pos[0]][current_pos[1]] == empty: 
-            grid[current_pos[0]][current_pos[1]] = seen
+        
+        grid[current_pos[0]][current_pos[1]] = block
+        if test_cycle(grid, start_pos) and not current_pos in found:
+            found.add(current_pos) 
             count += 1
-    #for row in grid: 
-    #    print(row)            
+        grid[current_pos[0]][current_pos[1]] = empty
     return count
+
 
 def test_cycle(grid: list[list[str]], start_pos : tuple[int, int]) -> bool: 
     current_direction = North
-    current_position = start_pos
+    current_pos = start_pos
     visited = set()
     checking = True
+    block = '#'
     while checking: 
-        next_pos
+        next_pos = tuple(a + b for a, b in zip(current_pos, current_direction)) #current_pos + current_direction
+        if exited(grid, next_pos): 
+            checking = False
+            continue
+        
+        if grid[next_pos[0]][next_pos[1]] == block: 
+            current_direction = turn(current_direction)
+            continue        
+        current_pos = next_pos
+        if (current_pos, current_direction) in visited:
+            return True 
+        else: 
+            visited.add((current_pos, current_direction))
+    return False
+
 
 def main(): 
     # part 1:
@@ -122,13 +139,11 @@ def main():
     result = part1("input.txt")
     print(f"Part1: {result}")
     
-    """
     # part 2:
     result = part2("sample.txt")
     print(f"Sample part2: {result}")
     result = part2("input.txt")
     print(f"Part2: {result}")
-    """
 
 def test_part1(): 
     file_name = "sample.txt" 
@@ -138,6 +153,9 @@ def test_part1():
 
 def test_part2(): 
     file_name = "sample.txt" 
+    expected = 6
+    result = part2(file_name)
+    assert(result == expected)
 
 def test_load(): 
     grid = load_input("sample.txt")
