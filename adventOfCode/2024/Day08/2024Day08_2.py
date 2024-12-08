@@ -50,36 +50,52 @@ def map_antinodes(station_map : dict[str, list[tuple[int, int]]], grid_size : in
         dy = b[0] - a[0]
         dx = b[1] - a[1]
         nodes = set()
-        node1 = (a[0] - dy, a[1] - dx)
-        if node1[0] >= 0 and node1[0] < grid_size and node1[1] >= 0 and node1[1] < grid_size: 
-            nodes.add(node1)
-            all_nodes.add(node1)
 
-        node2 = (b[0] + dy, b[1] + dx)
-        if node2[0] >= 0 and node2[0] < grid_size and node2[1] >= 0 and node2[1] < grid_size: 
-            nodes.add(node2)
-            all_nodes.add(node2)
+        y = a[0] - dy
+        x = a[1] - dx
+        while y < grid_size and x < grid_size and y >= 0 and x >= 0: 
+            node = (y, x)
+            nodes.add(node)
+            all_nodes.add(node)
+            y -= dy
+            x -= dx
+
+        y = b[0] + dy
+        x = b[1] + dx
+        while y < grid_size and x < grid_size and y >= 0 and x >= 0: 
+            node = (y, x)
+            nodes.add(node)
+            all_nodes.add(node)
+            y += dy
+            x += dx
 
         return nodes
     
     for station_key in station_map:
         node_map[station_key] = []
+
         for i in range(len(station_map[station_key]) -1): 
             for j in range(i + 1, len(station_map[station_key])): 
                 nodes = calc_antinodes(station_map[station_key][i], station_map[station_key][j], grid_size) 
                 node_map[station_key].extend(nodes)
 
+        # each station is also an antinode
+        for station in station_map[station_key]: 
+            node_map[station_key].append(station)
+            all_nodes.add(station)
 
 
     return (node_map, len(all_nodes))
 
-def part1(file_name: str) -> int: 
+def part2(file_name: str) -> int: 
     grid = load_grid(file_name)
-    #print('stations:')
+    
     station_map = map_stations(grid)
     
-    _, node_count = map_antinodes(station_map, len(grid))
+    node_map, node_count = map_antinodes(station_map, len(grid))
     """
+    
+    print('stations:')
     for key in station_map:
         print(f"Station {key}") 
         for node in station_map[key]: 
@@ -89,7 +105,7 @@ def part1(file_name: str) -> int:
         print(f"Station {key} nodes")
         for node in node_map[key]: 
             print(node)
-    """            
+    """           
     return node_count
 
 
@@ -107,9 +123,9 @@ def part1(file_name: str) -> int:
 ..........#.
 ..........#.
 """
-def test_part1(): 
-    expected = 14
-    result = part1("sample.txt")
+def test_part2(): 
+    expected = 34
+    result = part2("sample.txt")
     assert(result == expected)
 
 def test_calc_antinodes(): 
@@ -120,12 +136,13 @@ def test_calc_antinodes():
     assert((3, 2) in result[0])
 
 def main(): 
-    # part 1:
-    result = part1("sample.txt")
-    print(f"Sample part1: {result}")
+    # part 2:
+    result = part2("sample.txt")
+    print(f"Sample part 2: {result}")
     
-    result = part1("input.txt")
-    print(f"Part1: {result}") 
+    result = part2("input.txt")
+    print(f"Part 2: {result}")
+    
     
 
 if __name__ == "__main__": 
