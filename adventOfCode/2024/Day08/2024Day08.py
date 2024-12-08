@@ -76,10 +76,34 @@ def map_antinodes(station_map : dict[str, list[tuple[int, int]]], grid_size : in
 
 def part1(file_name: str) -> int: 
     grid = load_grid(file_name)
+    print('stations:')
     station_map = map_stations(grid)
+    for key in station_map:
+        print(f"Station {key}") 
+        for node in station_map[key]: 
+            print(node)
     node_map, node_count = map_antinodes(station_map, len(grid))
+    for key in node_map: 
+        print(f"Station {key} nodes")
+        for node in node_map[key]: 
+            print(node)
     return node_count
 
+
+"""
+......#....#
+...#....0...
+....#0....#.
+..#....0....
+....0....#..
+.#....A.....
+...#........
+#......#....
+........A...
+.........A..
+..........#.
+..........#.
+"""
 def test_part1(): 
     expected = 14
     result = part1("sample.txt")
