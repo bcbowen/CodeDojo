@@ -36,7 +36,8 @@ def get_ops(len: int) -> list[str]:
     
     add = lambda a, b: a + b
     mul = lambda a, b: a * b
-    op_list = [add, mul]
+    concat = lambda a, b: int(str(a) + str(b))
+    op_list = [add, mul, concat]
     ops = [p for p in product(op_list, repeat=len)]
     op_permutations[len] = ops
     return ops
@@ -54,49 +55,29 @@ def check_values(total: int, values: list[int]) -> bool:
             return True
     return False
 
-"""
-def part1_output(file_name, good, bad): 
-    with open(f"{file_name}_good.txt", "w") as file: 
-        for line in good: 
-            file.write(line + "\n")
-    with open(f"{file_name}_bad.txt", "w") as file: 
-        for line in bad: 
-            file.write(line + "\n")
-"""
-
-def part1(file_name: str) -> int: 
+def part2(file_name: str) -> int: 
     input = load_input(file_name)
     total = 0
-    #good = [] 
-    #bad = []
     for key in input: 
         for values in input[key]: 
             if check_values(key, values): 
                 total += key
-            #good.append(f"{key}: {input[key]}")
-        #else: 
-            #bad.append(f"{key}: {input[key]}")
-
-    #part1_output(file_name, good, bad)
     return total
 
-def test_part1(): 
-    expected = 3749
-    result = part1("sample.txt")
-    assert(result == expected)
-
-
-# too low: 1038838357435
-# todo: key 360 is duplicated, update input to handle dupe keys
 def main(): 
     
     # part 1:
-    result = part1("sample.txt")
-    print(f"Sample part1: {result}")
+    result = part2("sample.txt")
+    print(f"Sample part2: {result}")
     
-    result = part1("input.txt")
-    print(f"Part1: {result}")
+    result = part2("input.txt")
+    print(f"Part2: {result}")
     
+
+def test_part2(): 
+    expected = 11387
+    result = part2("sample.txt")
+    assert (expected == result)
 
 def test_input_load(): 
     input = load_input("sample.txt")
