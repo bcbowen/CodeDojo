@@ -3,53 +3,55 @@ from pathlib import Path
 
 class Solution:
     def canChange(self, start: str, target: str) -> bool:
-        
-        if start == target: 
-            return True
-        if start.replace('_', '') != target.replace('_', ''): 
+        si = 0
+        ti = 0
+
+        start_len = len(start)
+        target_len = len(target)
+        if start_len != target_len: 
             return False
-        
-        s_list = list(start)
-        t_list = list(target)
 
-        for i in range(len(t_list)): 
-            if t_list[i] == s_list[i]: 
-                continue
+        while si < start_len or ti < target_len: 
 
-            if t_list[i] == 'L': 
-                if s_list[i] == 'R': 
+            while si < start_len and start[si] == '_': 
+                si += 1
+
+            while ti < target_len and target[ti] == '_': 
+                ti += 1
+
+            if ti == target_len or si == start_len: 
+                return ti == si 
+
+            if start[si] == 'L': 
+                if target[ti] == 'R': 
                     return False
-                else: 
-                    for j in range(i + 1, len(s_list)): 
-                        if s_list[j] == 'R': 
-                            return False
-                        elif s_list[j] == 'L': 
-                            s_list[i], s_list[j] = s_list[j], s_list[i]
-                            break
-            elif t_list[i] == 'R': 
-                return False
-            else:
-                if s_list[i] == 'L': 
+                # L can only move left in start
+                if si < ti: 
                     return False
-                else: 
-                    for j in range(i + 1, len(s_list)): 
-                        if s_list[j] == 'L': 
-                            return False
-                        elif s_list[j] == '_': 
-                            s_list[i], s_list[j] = s_list[j], s_list[i]
-                            break
+            else: 
+                if target[ti] == 'L': 
+                    return False
+                # R can only move right in start
+                if si > ti: 
+                    return False
+            si += 1
+            ti += 1
+
         return True
 
-
-
-def get_input_filepath(file_name: str):
-    data_path = Path(__file__).parent.parent / "Data"
-    return data_path / file_name
-
-
-
 def test_biginput(): 
+    data_path = Path(__file__).parent.parent / "Data"
     file_name = "2337_BigTest.txt"    
+    path = data_path / file_name
+    with open(path, "r") as file: 
+        start = file.readline()
+        target = file.readline()
+    sol = Solution()
+    expected = False
+    result = sol.canChange(start, target)
+    assert(result == expected)
+
+
 
 @pytest.mark.parametrize("start, target, expected", [
     ("_L__R__R_", "L______RR", True), 
