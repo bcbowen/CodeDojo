@@ -42,13 +42,43 @@ def calc_checksum(drive : list[str]) -> int:
 
 def part1(file_name: str) -> int: 
     drive = load_data(file_name)
+    l = 0
+    r = len(drive) - 1
+    while l <= r: 
+        while drive[l] != '.':
+            l += 1
+        
+        while drive[r] == '.': 
+            r -= 1
+
+        drive[l], drive[r] = drive[r], drive[l]
+    # final swap: 
+    drive[l], drive[r] = drive[r], drive[l]
+    #print(f"l: {l} r: {r}\n {drive}")
+    return calc_checksum(drive)
+        
 
 
 def test_part1(): 
-    pass
+    file_name = "sample.txt"
+    expected = 1928
+    result = part1(file_name)
+    assert(result == expected)
 
 def main(): 
-    pass
+    # part 1:
+    result = part1("sample.txt")
+    print(f"Sample part 1: {result}")
+    
+    result = part1("input.txt")
+    print(f"Part 1: {result}")
+
+    # part 2:
+    #result = part2("sample.txt")
+    #print(f"Sample part 2: {result}")
+    
+    #result = part2("input.txt")
+    #print(f"Part 2: {result}")
 
 def test_calc_checksum(): 
     expected = 1928
@@ -60,7 +90,9 @@ def test_load_data():
     drive = load_data("sample.txt")
     assert(isinstance(drive, list))
     assert(len(drive) == 42)
-    
+    expected = "00...111...2...333.44.5555.6666.777.888899"
+    for i, val in enumerate(expected): 
+        assert(drive[i] == val)
 
 if __name__ == "__main__": 
     pytest.main([__file__])
