@@ -18,7 +18,6 @@ def load_data(file_name: str) -> list[str]:
     drive = []
     with open(path, "r") as file:
         line = file.readline()
-        #grid = [list(line.strip()) for line in file.readline()]
         id = 0 
 
         for i, size in enumerate(line): 
@@ -72,13 +71,6 @@ def main():
     
     result = part1("input.txt")
     print(f"Part 1: {result}")
-
-    # part 2:
-    #result = part2("sample.txt")
-    #print(f"Sample part 2: {result}")
-    
-    #result = part2("input.txt")
-    #print(f"Part 2: {result}")
 
 def test_calc_checksum(): 
     expected = 1928
