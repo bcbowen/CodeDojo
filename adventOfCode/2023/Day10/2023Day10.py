@@ -25,16 +25,9 @@ def get_input_filepath(file_name: str):
 def load_map(file_name: str) -> list[list[str]]: 
     input_map = []
     path = get_input_filepath(file_name)
-    text = ""
-    with open(path) as file: 
-        text = file.read()
-        file.close()
-    lines = text.split('\n')
-    row = 0
-    for line in lines: 
-        input_map.append([])
-        input_map[row] = [val for val in line]
-        row += 1
+    with open(path, "r") as file: 
+        input_map = [list(line.strip()) for line in file.readlines()]
+
     return input_map
 
 
