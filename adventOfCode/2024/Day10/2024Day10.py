@@ -19,5 +19,16 @@ def part1(file_name: str):
 def main(): 
     pass
 
+@pytest.mark.parametrize("file_name, expected", [
+    ("sample.txt", 1), 
+    ("sample2.txt", 2), 
+    ("sample3.txt", 4), 
+    ("sample4.txt", 3), 
+    ("sample5.txt", 36), 
+])
+def test_part1(file_name, expected):
+    pass
+    
+
 if __name__ == "__main__": 
     pytest.main([__file__])
