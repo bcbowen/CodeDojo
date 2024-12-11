@@ -73,6 +73,10 @@ def load_input_values(file_name: str) -> str:
     
     return line
 
+"""
+part1 works fine with 25 iterations. Part 2 asks for 75 iterations, but we CAN'T use the same approach
+Need to completely refactor for part 2. 
+"""
 def part1(): 
     file_name = "input.txt"
     input = load_input_values(file_name)
@@ -80,14 +84,6 @@ def part1():
     for i in range(25): 
         node_list.blink()
     print(f"Part 1: len after 25 iterations: {node_list.len}")
-
-def part2(): 
-    file_name = "input.txt"
-    input = load_input_values(file_name)
-    node_list = NodeList.parse(input)
-    for i in range(75): 
-        node_list.blink()
-    print(f"Part 2: len after 75 iterations: {node_list.len}")    
 
 @pytest.mark.parametrize("line, expected, expected_len", [
     ("125 17", [125, 17], 2), 
@@ -157,4 +153,3 @@ def test_load_node_list():
 if __name__ == "__main__": 
     pytest.main([__file__])
     part1()
-    #part2()
