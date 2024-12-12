@@ -1,5 +1,12 @@
 import pytest
 from pathlib import Path
+from collections import namedtuple
+
+Direction = namedtuple('Direction', ['y', 'x'])
+East = Direction(0, 1)
+West = Direction(0, -1)
+South = Direction(1, 0)
+North = Direction(-1, 0)
 
 def get_input_filepath(file_name: str):
     current_path = Path(__file__).parent
@@ -20,9 +27,60 @@ def load_grid(file_name: str) -> list[list[int]]:
 
     return grid
 
+def find_starts(grid : list[list[int]]) -> set[tuple[int, int]]: 
+    starts = set()
+    for row in range(len(grid)): 
+        for col in range(len(grid[row])):
+            if grid[row][col] == 0: 
+                starts.add((row, col))
+    return starts 
+
+
+def find_path(grid : list[list[int]], point: tuple[int, int]) -> int: 
+    val = grid[point[0]][point[1]]
+    result = 0
+    next = val + 1
+    row = point[0]
+    col = point[1]
+
+    next_point = (row + North[0], col + North[1])
+    if next_point[0] > 0 and grid [next_point[0]][next_point[1]] == next: 
+        if next == 9: 
+            result += 1
+        else: 
+            result += find_path(grid, (next_point[0], next_point[1]))
+    
+    next_point = (row + West[0], col + West[1])
+    if next_point[1] > 0 and grid [next_point[0]][next_point[1]] == next: 
+        if next == 9: 
+            result += 1
+        else: 
+            result += find_path(grid, (next_point[0], next_point[1]))
+    
+    next_point = (row + South[0], col + South[1])
+    if next_point[0] < len(grid) and grid [next_point[0]][next_point[1]] == next: 
+        if next == 9: 
+            result += 1
+        else: 
+            result += find_path(grid, (next_point[0], next_point[1]))
+
+    next_point = (row + East[0], col + East[1])
+    if next_point[1] < len(grid[0]) and grid [next_point[0]][next_point[1]] == next: 
+        if next == 9: 
+            result += 1
+        else: 
+            result += find_path(grid, (next_point[0], next_point[1]))
+
+    return result
+
+
 def part1(file_name: str) -> int: 
     grid = load_grid(file_name)
-    return 4
+    starts = find_starts(grid)
+    result = 0
+    for start in starts: 
+        result += find_path(grid, start)
+    return result
 
 def main(): 
     result = part1("input.txt")
@@ -42,3 +100,4 @@ def test_part1(file_name, expected):
 
 if __name__ == "__main__": 
     pytest.main([__file__])
+    #main()
