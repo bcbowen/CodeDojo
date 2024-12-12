@@ -19,32 +19,34 @@ def load_input_values(file_name: str) -> list[int]:
     with open(path, "r") as file: 
         line = file.readline().strip()
     
-    return map(int, line.split(' '))
+    return list(map(int, line.split(' ')))
 
 """
 part2 works fine with 25 iterations. Part 2 asks for 75 iterations, but we CAN'T use the same approach
 Need to completely refactor for part 2. 
 """
 def day11(input : list[int], iterations: int) -> int: 
-    file_name = "input.txt"
     stones = defaultdict(int)
 
     for val in input: 
         stones[val] += 1
 
     for i in range(iterations):
+        state = f"keys after {i} iterations: "
+
+        newstones = defaultdict(int)
         for stone in stones.keys():
             if stone == 0: 
-                stones[1] += stones[0]
+                newstones[1] += stones[0]
             elif len(str(stone)) % 2 == 0: 
                 s = str(stone)
-                half = len(str(stone)) / 2
-                stones[int(s[0:half])] += stones[stone]
-                stones[int(s[half:])] += stones[stone]                
+                half = len(str(stone)) // 2
+                newstones[int(s[0:half])] += stones[stone]
+                newstones[int(s[half:])] += stones[stone]                
             else: 
-                stones[stone * 1024] += stones[stone]
+                newstones[stone * 2024] += stones[stone]
 
-            del stones[stone]
+        stones = newstones
     return sum(stones.values())
 
 def main(): 
