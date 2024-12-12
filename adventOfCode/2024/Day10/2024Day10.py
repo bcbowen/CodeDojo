@@ -1,12 +1,15 @@
 import pytest
 from pathlib import Path
 from collections import namedtuple
+from collections import defaultdict
 
 Direction = namedtuple('Direction', ['y', 'x'])
 East = Direction(0, 1)
 West = Direction(0, -1)
 South = Direction(1, 0)
 North = Direction(-1, 0)
+
+trails = defaultdict(set[tuple[int, int]])
 
 def get_input_filepath(file_name: str):
     current_path = Path(__file__).parent
@@ -36,51 +39,54 @@ def find_starts(grid : list[list[int]]) -> set[tuple[int, int]]:
     return starts 
 
 
-def find_path(grid : list[list[int]], point: tuple[int, int]) -> int: 
+def find_path(grid : list[list[int]], point: tuple[int, int], origin: tuple[int, int]): 
     val = grid[point[0]][point[1]]
-    result = 0
     next = val + 1
     row = point[0]
     col = point[1]
 
-    next_point = (row + North[0], col + North[1])
-    if next_point[0] > 0 and grid [next_point[0]][next_point[1]] == next: 
+    inbounds = lambda p: p[0] >= 0 and p[0] < len(grid) and p[1] >= 0 and p[1] < len(grid[0])
+
+    next_point = (row + North[0], col + North[1])  
+    if inbounds(next_point) and grid [next_point[0]][next_point[1]] == next: 
         if next == 9: 
-            result += 1
+            trails[origin].add(next_point)
         else: 
-            result += find_path(grid, (next_point[0], next_point[1]))
+            find_path(grid, (next_point[0], next_point[1]), origin)
     
     next_point = (row + West[0], col + West[1])
-    if next_point[1] > 0 and grid [next_point[0]][next_point[1]] == next: 
+    if inbounds(next_point) and grid [next_point[0]][next_point[1]] == next: 
         if next == 9: 
-            result += 1
+            trails[origin].add(next_point)
         else: 
-            result += find_path(grid, (next_point[0], next_point[1]))
+            find_path(grid, (next_point[0], next_point[1]), origin)
     
     next_point = (row + South[0], col + South[1])
-    if next_point[0] < len(grid) and grid [next_point[0]][next_point[1]] == next: 
+    if inbounds(next_point) and grid [next_point[0]][next_point[1]] == next: 
         if next == 9: 
-            result += 1
+            trails[origin].add(next_point)
         else: 
-            result += find_path(grid, (next_point[0], next_point[1]))
+            find_path(grid, (next_point[0], next_point[1]), origin)
 
     next_point = (row + East[0], col + East[1])
-    if next_point[1] < len(grid[0]) and grid [next_point[0]][next_point[1]] == next: 
+    if inbounds(next_point) and grid [next_point[0]][next_point[1]] == next: 
         if next == 9: 
-            result += 1
+            trails[origin].add(next_point)
         else: 
-            result += find_path(grid, (next_point[0], next_point[1]))
-
-    return result
+            find_path(grid, (next_point[0], next_point[1]), origin)
 
 
-def part1(file_name: str) -> int: 
+def part1(file_name: str) -> int:
+    global trails 
+    trails = defaultdict(set[tuple[int, int]])
     grid = load_grid(file_name)
     starts = find_starts(grid)
-    result = 0
     for start in starts: 
-        result += find_path(grid, start)
-    return result
+        find_path(grid, start, start)
+    trail_count = 0
+    for key in trails: 
+        trail_count += len(trails[key])
+    return trail_count
 
 def main(): 
     result = part1("input.txt")
@@ -100,4 +106,4 @@ def test_part1(file_name, expected):
 
 if __name__ == "__main__": 
     pytest.main([__file__])
-    #main()
+    main()
