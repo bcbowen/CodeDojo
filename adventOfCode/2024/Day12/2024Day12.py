@@ -57,29 +57,33 @@ def traverse_connected_cells(grid: list[list[str]], visited: set[tuple[int, int]
     perimiter = 0
     while len(q) > 0: 
         cell = q.pop(0)
+        if cell in visited: 
+            continue
+
         visited.add(cell)
+
         area += 1
         perimiter += calc_perimiter(grid, cell[0], cell[1])
 
         # north
         if cell[0] > 0 and grid[cell[0] - 1][cell[1]] == value: 
-            q.append((grid[cell[0] - 1], [cell[1]]))
+            q.append((cell[0] - 1, cell[1]))
 
         # east
         if cell[1] < len(grid) - 1 and grid[cell[0]][cell[1] + 1] == value: 
-            q.append((grid[cell[0]], [cell[1] + 1]))
+            q.append((cell[0], cell[1] + 1))
         
         #south
         if cell[0] < len(grid) - 1 and grid[cell[0] + 1][cell[1]] == value: 
-            q.append((grid[cell[0] + 1], [cell[1]]))
+            q.append((cell[0] + 1, cell[1]))
 
         #west
         if cell[1] > 0 and grid[cell[0]][cell[1] - 1] == value: 
-            q.append((grid[cell[0]], [cell[1] - 1]))
+            q.append((cell[0], cell[1] - 1))
 
     if not value in plots:
-        plots[value] = set()
-    plots[value].add(perimiter, area)
+        plots[value] = []
+    plots[value].append((perimiter, area))
 
 def part1(file_name: str): 
     grid = load_grid(file_name)
@@ -100,7 +104,9 @@ def part1(file_name: str):
     return result
 
 def main(): 
-    pass
+    file_name = "input.txt"
+    result = part1(file_name)
+    print(f"Part 1 result for {file_name}: {result}")
 
 @pytest.mark.parametrize("file_name, expected", [
     ("sample.txt", 140),
@@ -113,5 +119,5 @@ def test_part1(file_name : str, expected: int):
 
 if __name__ == "__main__": 
     pytest.main([__file__])
-    #main()
+    main()
 
