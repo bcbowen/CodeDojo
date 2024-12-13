@@ -1,7 +1,7 @@
 import pytest
 from pathlib import Path
 from collections import namedtuple
-from collections import defaultdict
+#from collections import defaultdict
 
 Direction = namedtuple('Direction', ['y', 'x'])
 East = Direction(0, 1)
@@ -48,19 +48,54 @@ def calc_perimiter(grid: list[list[str]], row : int, col: int):
 
     return p
 
+def traverse_connected_cells(grid: list[list[str]], visited: set[tuple[int, int]], position: tuple[int, int], plots : dict[str, list[tuple[int, int]]]): 
+    value = grid[position[0]][position[1]]
+    #visited.add(position)
+    q = []
+    q.append(position)
+    area = 0
+    perimiter = 0
+    while len(q) > 0: 
+        cell = q.pop(0)
+        visited.add(cell)
+        area += 1
+        perimiter += calc_perimiter(grid, cell[0], cell[1])
+
+        # north
+        if cell[0] > 0 and grid[cell[0] - 1][cell[1]] == value: 
+            q.append((grid[cell[0] - 1], [cell[1]]))
+
+        # east
+        if cell[1] < len(grid) - 1 and grid[cell[0]][cell[1] + 1] == value: 
+            q.append((grid[cell[0]], [cell[1] + 1]))
+        
+        #south
+        if cell[0] < len(grid) - 1 and grid[cell[0] + 1][cell[1]] == value: 
+            q.append((grid[cell[0] + 1], [cell[1]]))
+
+        #west
+        if cell[1] > 0 and grid[cell[0]][cell[1] - 1] == value: 
+            q.append((grid[cell[0]], [cell[1] - 1]))
+
+    if not value in plots:
+        plots[value] = set()
+    plots[value].add(perimiter, area)
+
 def part1(file_name: str): 
     grid = load_grid(file_name)
     # plots key = garden, val = [p, a]
-    plots = defaultdict(lambda: [0, 0])
+    plots = {}
+    visited = set()
     for row in range(len(grid)): 
         for col in range(len(grid[0])):
-            p = calc_perimiter(grid, row, col) 
-            val = grid[row][col]
-            plots[val][0] += p
-            plots[val][1] += 1
+            if ((row, col)) in visited: 
+                continue
+            traverse_connected_cells(grid, visited, (row, col), plots)
     result = 0
     for key in plots: 
-        result += plots[key][0] * plots[key][1]
+        #result += plots[key][0] * plots[key][1]
+        for group in plots[key]: 
+            result += group[0] * group[1]
 
     return result
 
