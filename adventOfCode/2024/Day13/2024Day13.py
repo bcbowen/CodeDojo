@@ -72,7 +72,15 @@ def load_fixtures(file_name: str) -> list[Fixture]:
     return fixtures
 
 def part1(file_name: str) -> int: 
-    pass
+    fixtures = load_fixtures(file_name)
+    """
+    A = (p_x*b_y - prize_y*b_x) / (a_x*b_y - a_y*b_x)
+B = (a_x*p_y - a_y*p_x) / (a_x*b_y - a_y*b_x)
+
+A = (8400\*67 - 5400\*22) / (94\*67 - 34\*22) = 80
+B = (8400\*34 - 5400\*94) / (94\*67 - 34\*22) = 40
+
+    """
 
 def main(): 
     result = part1("input.txt")
