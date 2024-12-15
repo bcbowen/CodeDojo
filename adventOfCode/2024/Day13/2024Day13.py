@@ -82,10 +82,22 @@ def part1(file_name: str) -> int:
             cost += fixture_cost
     return cost
 
+def part2(file_name: str) -> int: 
+    fixtures = load_fixtures(file_name)
+    cost = 0
+    for fixture in fixtures: 
+        result, fixture_cost = calc_cost2(fixture)
+        if result: 
+            cost += fixture_cost
+    return cost
+
 
 def main(): 
     result = part1("input.txt")
     print(f"Part1: {result}")
+
+    result = part2("input.txt")
+    print(f"Part2: {result}")
 
 """
 it costs 3 tokens to push the A button and 1 token to push the B button
@@ -129,6 +141,34 @@ def calc_cost(fixture : Fixture) -> tuple[bool, int]:
     
     return result, cost
 
+def calc_cost2(fixture : Fixture) -> tuple[bool, int]: 
+    """
+    A = (p_x*b_y - prize_y*b_x) / (a_x*b_y - a_y*b_x)
+    B = (a_x*p_y - a_y*p_x) / (a_x*b_y - a_y*b_x)
+
+    A = (8400*67 - 5400*22) / (94*67 - 34*22) = 80
+    B = (8400*34 - 5400*94) / (94*67 - 34*22) = 40
+
+    80 * 3 + 40 * 1 = 200
+
+    """
+    offset = 10000000000000
+    fixture.Prize.X += offset
+    fixture.Prize.Y += offset
+    cost = 0
+    result = False
+    divisor = (fixture.ButtonA.X * fixture.ButtonB.Y - fixture.ButtonA.Y * fixture.ButtonB.X)
+    a_dividend = fixture.Prize.X * fixture.ButtonB.Y - fixture.Prize.Y * fixture.ButtonB.X
+    b_dividend = fixture.ButtonA.X * fixture.Prize.Y - fixture.ButtonA.Y * fixture.Prize.X
+
+    if a_dividend % divisor == 0 and b_dividend % divisor == 0: 
+        a = int ((a_dividend) / divisor)
+        b = int ((b_dividend) / divisor)
+        cost = a * 3 + b
+        result = True
+    
+    return result, cost
+
 
 @pytest.mark.parametrize("a_x, a_y, b_x, b_y, p_x, p_y, expected_result, expected_cost", [
     (94, 34, 22, 67, 8400, 5400, True, 280), 
@@ -136,7 +176,7 @@ def calc_cost(fixture : Fixture) -> tuple[bool, int]:
     (17, 86, 84, 37, 7870, 6450, True, 200),  
     (69, 23, 27, 71, 18641, 10279, False, 0)
 ])
-def test_calc_cost(a_x: int, a_y: int, b_x : int, b_y: int, p_x: int, p_y: int, expected_result, expected_cost): 
+def test_calc_cost(a_x: int, a_y: int, b_x : int, b_y: int, p_x: int, p_y: int, expected_result : bool, expected_cost : int): 
     fixture = Fixture()
     fixture.ButtonA = Point(a_x, a_y)
     fixture.ButtonB = Point(b_x, b_y)
@@ -145,10 +185,27 @@ def test_calc_cost(a_x: int, a_y: int, b_x : int, b_y: int, p_x: int, p_y: int, 
     actual_result, actual_cost = calc_cost(fixture)
     assert((actual_result, actual_cost) == (expected_result, expected_cost))
 
+@pytest.mark.parametrize("a_x, a_y, b_x, b_y, p_x, p_y, expected_result", [
+    (94, 34, 22, 67, 8400, 5400, False), 
+    (26, 66, 67, 21, 12748, 12176, True),
+    (17, 86, 84, 37, 7870, 6450, False),  
+    (69, 23, 27, 71, 18641, 10279, True)
+])
+def test_calc_cost2(a_x: int, a_y: int, b_x : int, b_y: int, p_x: int, p_y: int, expected_result : bool): 
+    fixture = Fixture()
+    fixture.ButtonA = Point(a_x, a_y)
+    fixture.ButtonB = Point(b_x, b_y)
+    fixture.Prize = Point(p_x, p_y)
+    
+    actual_result, _ = calc_cost2(fixture)
+    assert(actual_result == expected_result)
+
+
 def test_part1(): 
     expected = 480
     result = part1("sample.txt")
     assert(result == expected)
+
 
 def test_load_fixtures(): 
     fixtures = load_fixtures("sample.txt")
