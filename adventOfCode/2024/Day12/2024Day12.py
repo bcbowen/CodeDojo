@@ -108,12 +108,56 @@ def init_grid(lower_corner: tuple[int, int]) -> list[list[str]]:
             row_values.append('.')
         grid.append(row_values)
     return grid
+
+"""
+find a right edge of the grid to start with. 
+Once we find the edge, follow outline to top 
+Then we'll calc the perimiter from that cell going counter clockwise
+"""
+def find_edge(grid: list[list[str]]) -> tuple[int, int]:
+    row = len(grid)
+    col = len(grid[row])
+    while grid[row][col] == '.':
+        col -= 1
+
+    return row, col
+
     
+
 def calc_parimeter2(key: str, cells : list[tuple[int, int]]):
     corners = find_corners(cells)
     grid = init_grid(corners[1])
     for cell in cells: 
         grid[cell[0]][cell[1]] = key
+    cell = find_edge(grid)
+
+    perimeter = 0
+    height = corners[1][0] - corners[0][0]
+    width = corners[1][1] - corners[0][1]
+    start = cell
+    direction = North 
+    perimeter = 1
+    if cell[1] < corners[1][1] and grid[cell[0] - 1][cell[1] + 1] == key: 
+        direction = East
+        perimeter += 1
+        cell = grid[cell[0] - 1][cell[1] + 1]
+    elif grid[cell[0] - 1][cell[1]] == key: 
+        cell = grid[cell[0] - 1][cell[1]]
+    else: 
+        Direction = West
+        cell = grid[cell[0]][cell[1] - 1]
+        perimeter += 1
+    
+    while cell != start: 
+        # todo: based on current direction see if we continue or turn, update perimiter and 
+        # keep going until we get back to start
+        
+
+
+
+
+
+    return perimeter    
 
     
 
