@@ -55,13 +55,14 @@ def traverse_connected_cells(grid: list[list[str]], visited: set[tuple[int, int]
     q.append(position)
     area = 0
     perimiter = 0
+    cells = []
     while len(q) > 0: 
         cell = q.pop(0)
         if cell in visited: 
             continue
 
         visited.add(cell)
-
+        cells.append(cell)
         area += 1
         perimiter += calc_perimiter(grid, cell[0], cell[1])
 
@@ -83,9 +84,40 @@ def traverse_connected_cells(grid: list[list[str]], visited: set[tuple[int, int]
 
     if not value in plots:
         plots[value] = []
-    plots[value].append((perimiter, area))
+    plots[value].append((perimiter, area, cells))
 
-def part1(file_name: str): 
+"""
+Take group of cells and find the 2 corners: 
+- Top Left: min y, min x
+- Bottom Right: max y, max x
+"""
+def find_corners(cells : list[tuple[int, int]]) -> tuple[tuple[int, int], tuple[int, int]]:
+    y_coords, x_coords = zip(*cells)
+    return ((min(y_coords), min(x_coords)),(max(y_coords, max(x_coords))))
+
+"""
+Build a grid with the lower right corner cooresponding to the max_corner. 
+This is for part 2
+"""
+def init_grid(lower_corner: tuple[int, int]) -> list[list[str]]: 
+    grid = []
+    
+    for row in range(lower_corner[0]):
+        row_values = []
+        for col in range(lower_corner[1]): 
+            row_values.append('.')
+        grid.append(row_values)
+    return grid
+    
+def calc_parimeter2(key: str, cells : list[tuple[int, int]]):
+    corners = find_corners(cells)
+    grid = init_grid(corners[1])
+    for cell in cells: 
+        grid[cell[0]][cell[1]] = key
+
+    
+
+def day12(file_name: str) -> tuple[int, int]: 
     grid = load_grid(file_name)
     # plots key = garden, val = [p, a]
     plots = {}
@@ -95,27 +127,46 @@ def part1(file_name: str):
             if ((row, col)) in visited: 
                 continue
             traverse_connected_cells(grid, visited, (row, col), plots)
+    result1 = part1(plots)
+    result2 = part2(plots)
+
+    return result1, result2
+
+def part1(plots: dict[tuple[int, int, list[tuple[int, int]]]]): 
     result = 0
     for key in plots: 
-        #result += plots[key][0] * plots[key][1]
         for group in plots[key]: 
             result += group[0] * group[1]
 
     return result
 
+def part2(plots: dict[tuple[int, int, list[tuple[int, int]]]]) -> int: 
+    return 2
+
 def main(): 
     file_name = "input.txt"
-    result = part1(file_name)
-    print(f"Part 1 result for {file_name}: {result}")
+    result1, result2 = day12(file_name)
+    print(f"Part 1 result for {file_name}: {result1}")
+    print(f"Part 2 result for {file_name}: {result2}")
 
 @pytest.mark.parametrize("file_name, expected", [
     ("sample.txt", 140),
     ("sample2.txt", 772),
     ("sample3.txt", 1930) 
 ])
-def test_part1(file_name : str, expected: int): 
-    result = part1(file_name)
-    assert(result == expected)
+def test_day12_part1(file_name : str, expected: int): 
+    result1, _ = day12(file_name)
+    assert(result1 == expected)
+
+@pytest.mark.parametrize("file_name, expected", [
+    ("sample.txt", 80),
+    ("sample2.txt", 436),
+    ("sample3.txt", 1206), 
+    ("sample4.txt", 236)
+])
+def test_day12_part2(file_name : str, expected: int): 
+    _, result2 = day12(file_name)
+    assert(result2 == expected)    
 
 if __name__ == "__main__": 
     pytest.main([__file__])
