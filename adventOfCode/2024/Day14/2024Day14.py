@@ -129,7 +129,7 @@ def test_future_position(start_x: int, start_y: int, v_x: int, v_y: int, iterati
     robot.set_location(start_x, start_y)
     robot.set_velocity(v_x, v_y)
     result_x, result_y = robot.calc_future_position(iterations, 11, 7)
-    assert(result_x, result_y == expected_x, expected_y)
+    assert((result_x, result_y) == (expected_x, expected_y))
 
 
 
