@@ -57,8 +57,80 @@ def load_robots(file_name: str) -> list[Robot]:
 def generate_grid(rows: int, cols: int) -> list[list[str]]: 
     return [['.' for _ in range(cols)] for _ in range(rows)]
 
+"""
+If something falls directly on a mid line it is quadrant 0, otherwise return the appropriate quadrant
+"""
+def get_quadrant(x : int, y : int, grid_width : int, grid_height : int) -> int: 
+    quadrant = 0
+    mid_col = grid_width // 2
+    mid_row = grid_height // 2
+    if y != mid_row or x != mid_col: 
+        if y < mid_row: 
+            quadrant = 1 if x < mid_col else 2
+        else: 
+            quadrant = 3 if x < mid_col else 4
+        
+    return quadrant
+
+
+def part1(file_name: str, grid_width: int, grid_height: int) -> int: 
+    robots = load_robots(file_name)
+    q1 = 0
+    q2 = 0
+    q3 = 0
+    q4 = 0
+    grid = generate_grid(grid_height, grid_width)
+    iterations = 100
+    for robot in robots: 
+        x, y = robot.calc_future_position(iterations, grid_height, grid_width)
+        val = grid[y][x]
+        if val != '.':
+            val = int(val) + 1
+        else: 
+            val = 1
+        grid[y][x] = val
+        quadrant = get_quadrant(x, y, grid_width, grid_height)
+        match quadrant: 
+            case 1: 
+                q1 += 1
+            case 2: 
+                q2 += 1
+            case 3: 
+                q3 += 1
+            case 4: 
+                q4 += 1
+    return q1 * q2 * q3 * q4
+
+
+
+
 def main():
     pass
+
+
+def test_part1(): 
+    file_name = "sample.txt"
+    expected = 12
+    result = part1(file_name, 11, 7)
+    assert(result == expected)
+
+"""
+p=2,4 v=2,-3
+"""
+@pytest.mark.parametrize("start_x, start_y, v_x, v_y, iterations, expected_x, expected_y", [
+    (2, 4, 2, -3, 1, 4, 1), 
+    (2, 4, 2, -3, 2, 6, 5), 
+    (2, 4, 2, -3, 3, 8, 2), 
+    (2, 4, 2, -3, 4, 10, 6), 
+    (2, 4, 2, -3, 5, 1, 3)
+])
+def test_future_position(start_x: int, start_y: int, v_x: int, v_y: int, iterations: int, expected_x : int, expected_y: int):
+    robot = Robot(1)
+    robot.set_location(start_x, start_y)
+    robot.set_velocity(v_x, v_y)
+    result_x, result_y = robot.calc_future_position(iterations, 11, 7)
+    assert(result_x, result_y == expected_x, expected_y)
+
 
 
 """
