@@ -14,9 +14,26 @@ class Robot:
         self.velocity = (x, y)
 
     def calc_future_position(self, turns: int, grid_height: int, grid_width: int) -> tuple[int, int]: 
-        raw_x, raw_y = self.position[0] * self.velocity[0] * turns, self.position[1] * self.velocity[1] * turns
-        x = raw_x % grid_width
-        y = raw_y % grid_height
+        #raw_x, raw_y = self.position[0] + (self.velocity[0] * turns), self.position[1] + (self.velocity[1] * turns)
+        #x = raw_x % grid_width
+        #y = raw_y % grid_height
+        
+        x = self.position[0]
+        y = self.position[1]
+        for _ in range(turns):
+            x += self.velocity[0]
+            y += self.velocity[1]
+
+            if x < 0: 
+                x += grid_width
+            elif x >= grid_width:
+                x = x - grid_width
+         
+            if y < 0: 
+                y += grid_height
+            elif y >= grid_height: 
+                y = y - grid_height
+        
         return (x, y)
     
     """
@@ -128,7 +145,7 @@ def test_future_position(start_x: int, start_y: int, v_x: int, v_y: int, iterati
     robot = Robot(1)
     robot.set_location(start_x, start_y)
     robot.set_velocity(v_x, v_y)
-    result_x, result_y = robot.calc_future_position(iterations, 11, 7)
+    result_x, result_y = robot.calc_future_position(iterations, 7, 11)
     assert((result_x, result_y) == (expected_x, expected_y))
 
 
