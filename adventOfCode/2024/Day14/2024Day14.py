@@ -81,7 +81,7 @@ def get_quadrant(x : int, y : int, grid_width : int, grid_height : int) -> int:
     quadrant = 0
     mid_col = grid_width // 2
     mid_row = grid_height // 2
-    if y != mid_row or x != mid_col: 
+    if y != mid_row and x != mid_col: 
         if y < mid_row: 
             quadrant = 1 if x < mid_col else 2
         else: 
@@ -118,12 +118,39 @@ def part1(file_name: str, grid_width: int, grid_height: int) -> int:
                 q4 += 1
     return q1 * q2 * q3 * q4
 
+def part2(): 
+    file_name = "input.txt"
+    robots = load_robots(file_name)
+    
+    iterations = 100
+    with open("day14Part2.txt", "w") as file: 
+        for i in range(1, iterations): 
+            grid_height = 101
+            grid_width = 103
+            grid = generate_grid(grid_height, grid_width)
+            for robot in robots: 
+                x, y = robot.calc_future_position(i, grid_height, grid_width)
+                val = grid[y][x]
+                if val != '.':
+                    val = int(val) + 1
+                else: 
+                    val = 1
+                grid[y][x] = val
+            file.write(f"Grid {i}\n")
+            for row in grid: 
+                file.write(f"{str(row)}\n")
+            file.write("\n")
+            file.write("\n")
 
+
+    
 
 
 def main():
-    pass
-
+    file_name = "input.txt"
+    result = part1(file_name, 101, 103)
+    print(f"Part 1 result for {file_name}: {result}")
+    part2()
 
 def test_part1(): 
     file_name = "sample.txt"
