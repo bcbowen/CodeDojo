@@ -13,6 +13,30 @@ class Robot:
     def set_velocity(self, x: int, y: int): 
         self.velocity = (x, y)
 
+
+    def move_one(self, grid_height: int, grid_width: int): 
+        #raw_x, raw_y = self.position[0] + (self.velocity[0] * turns), self.position[1] + (self.velocity[1] * turns)
+        #x = raw_x % grid_width
+        #y = raw_y % grid_height
+        
+        x = self.position[0]
+        y = self.position[1]
+        
+        x += self.velocity[0]
+        y += self.velocity[1]
+
+        if x < 0: 
+            x += grid_width
+        elif x >= grid_width:
+            x = x - grid_width
+        
+        if y < 0: 
+            y += grid_height
+        elif y >= grid_height: 
+            y = y - grid_height
+        
+        self.set_location(x, y)
+
     def calc_future_position(self, turns: int, grid_height: int, grid_width: int) -> tuple[int, int]: 
         #raw_x, raw_y = self.position[0] + (self.velocity[0] * turns), self.position[1] + (self.velocity[1] * turns)
         #x = raw_x % grid_width
@@ -89,24 +113,13 @@ def get_quadrant(x : int, y : int, grid_width : int, grid_height : int) -> int:
         
     return quadrant
 
-
-def part1(file_name: str, grid_width: int, grid_height: int) -> int: 
-    robots = load_robots(file_name)
+def get_score(robots: list[Robot], grid_width: int, grid_height: int) -> int: 
     q1 = 0
     q2 = 0
     q3 = 0
     q4 = 0
-    grid = generate_grid(grid_height, grid_width)
-    iterations = 100
     for robot in robots: 
-        x, y = robot.calc_future_position(iterations, grid_height, grid_width)
-        val = grid[y][x]
-        if val != '.':
-            val = int(val) + 1
-        else: 
-            val = 1
-        grid[y][x] = val
-        quadrant = get_quadrant(x, y, grid_width, grid_height)
+        quadrant = get_quadrant(robot.position[0], robot.position[1], grid_width, grid_height)
         match quadrant: 
             case 1: 
                 q1 += 1
@@ -118,30 +131,65 @@ def part1(file_name: str, grid_width: int, grid_height: int) -> int:
                 q4 += 1
     return q1 * q2 * q3 * q4
 
+def part1(file_name: str, grid_width: int, grid_height: int) -> int: 
+    robots = load_robots(file_name)
+    grid = generate_grid(grid_height, grid_width)
+    iterations = 100
+    for robot in robots: 
+        x, y = robot.calc_future_position(iterations, grid_height, grid_width)
+        robot.set_location(x, y)
+        val = grid[y][x]
+        if val != '.':
+            val = int(val) + 1
+        else: 
+            val = 1
+        grid[y][x] = val
+    score = get_score(robots, grid_width, grid_height)
+    return score
+        
+def write_grid(robots: list[Robot], index: int, grid_height: int, grid_width: int, file_name: str): 
+    
+    with open(f"day14Part2_{index}.txt", "w") as file: 
+        grid = generate_grid(grid_height, grid_width)
+        robots = load_robots(file_name)
+        for robot in robots: 
+            x, y = robot.position[0], robot.position[1]
+            #x, y = robot.calc_future_position(index, grid_height, grid_width)
+            val = grid[y][x]
+            if val != '.':
+                val = int(val) + 1
+            else: 
+                val = 1
+            grid[y][x] = val
+        file.write(f"Grid {index}\n")
+        for row in grid: 
+            file.write(f"{str(row)}\n")
+        file.write("\n")
+        file.write("\n")
+
 def part2(): 
     file_name = "input.txt"
     robots = load_robots(file_name)
-    
-    iterations = 100
-    with open("day14Part2.txt", "w") as file: 
-        for i in range(1, iterations): 
-            grid_height = 101
-            grid_width = 103
-            grid = generate_grid(grid_height, grid_width)
-            for robot in robots: 
-                x, y = robot.calc_future_position(i, grid_height, grid_width)
-                val = grid[y][x]
-                if val != '.':
-                    val = int(val) + 1
-                else: 
-                    val = 1
-                grid[y][x] = val
-            file.write(f"Grid {i}\n")
-            for row in grid: 
-                file.write(f"{str(row)}\n")
-            file.write("\n")
-            file.write("\n")
 
+    grid_height = 103
+    grid_width = 101
+
+    iterations = 10403
+    min_score = float("inf")
+    min_i = 0
+    for i in range(iterations): 
+        for robot in robots: 
+            robot.move_one(grid_height, grid_width)
+        score = get_score(robots, grid_width, grid_height)
+        if score < min_score: 
+            min_score = score
+            print(f"min score found: {min_score}")
+            min_i = i
+            write_grid(robots, min_i, grid_height, grid_width, file_name)
+
+    
+
+    return min_i
 
     
 
