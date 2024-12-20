@@ -53,8 +53,17 @@ def load_input(file_name: str) -> tuple[Node, list[str]]:
         designs = [line.strip() for line in file.readlines()]
         return (trie, designs)
 
+def is_possible(trie: Node, design: str) -> bool: 
+    return False
+
 def part1(file_name: str) -> int: 
-    pass
+    trie, designs = load_input(file_name)
+    result = 0
+    for design in designs: 
+        if is_possible(trie, design): 
+            result += 1
+
+    return result
 
 
 @pytest.mark.parametrize("val, expected", [
