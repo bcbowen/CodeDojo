@@ -54,6 +54,20 @@ def load_input(file_name: str) -> tuple[Node, list[str]]:
         return (trie, designs)
 
 def is_possible(trie: Node, design: str) -> bool: 
+    queue = [] 
+    queue.append(design)
+    seen = set()
+    while len(queue) > 0: 
+        value = queue.pop(0)
+        #for i in range(len(value) - 1): 
+        i = 0
+        for j in range(i + 1, len(value)): 
+            if trie.find(value[i:j]):
+                if j == len(value) - 1: 
+                    return True 
+                elif not value[j:] in seen: 
+                    queue.append(value[j:])
+                    seen.add(value[j:])
     return False
 
 def part1(file_name: str) -> int: 
@@ -65,6 +79,45 @@ def part1(file_name: str) -> int:
 
     return result
 
+def test_part1(): 
+    file_name = "sample.txt"
+    expected = 6
+    result = part1(file_name)
+    assert(result == expected)
+
+@pytest.mark.parametrize("value, expected", [
+    ("brwrr", True), 
+    ("bggr", True),
+    ("gbbr", True),
+    ("rrbgbr", True),
+    ("ubwu", False),
+    ("bwurrg", True),
+    ("brgr", True),
+    ("bbrgwb", False)
+])
+def test_is_possible(value : str, expected: bool): 
+    file_name = "sample.txt"
+    trie, _ = load_input(file_name)
+    result = is_possible(trie, value)
+    assert(result == expected)
+
+def test_is_possible2(): 
+    trie = Node()
+    trie.add("gw")
+    trie.add("bub")
+    trie.add("rur")
+    trie.add("rr")
+    trie.add("rrw")
+    trie.add("g")
+    trie.add("wb")
+    trie.add("ubr")
+    trie.add("urrr")
+    expected = True
+    design = "gwbubrurrrw"
+    result = is_possible(trie, design)
+    assert(result == expected)
+    
+    
 
 @pytest.mark.parametrize("val, expected", [
     ("r", True),
@@ -97,5 +150,12 @@ def test_load_inputs():
     assert(len(designs) == 8)
     assert(designs[1] == "bggr")
 
+# 400 is too high
+def main(): 
+    file_name = "input.txt"
+    result = part1(file_name)
+    print(f"Part 1 result for {file_name}: {result}")
+
 if __name__ == "__main__": 
     pytest.main([__file__])
+    main()
