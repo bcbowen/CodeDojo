@@ -53,10 +53,11 @@ def load_input(file_name: str) -> tuple[Node, list[str]]:
         designs = [line.strip() for line in file.readlines()]
         return (trie, designs)
 
-def is_possible(trie: Node, design: str) -> bool: 
+def possible_combo_count(trie: Node, design: str) -> int: 
     queue = [] 
     queue.append(design)
     seen = set()
+    count = 0
     while len(queue) > 0: 
         value = queue.pop(0)
         #for i in range(len(value) - 1): 
@@ -64,17 +65,17 @@ def is_possible(trie: Node, design: str) -> bool:
         for j in range(i + 1, len(value)): 
             if trie.find(value[i:j]):
                 if j == len(value) - 1: 
-                    return True 
+                    count += 1 
                 elif not value[j:] in seen: 
                     queue.append(value[j:])
                     seen.add(value[j:])
-    return False
+    return count
 
 def part1(file_name: str) -> int: 
     trie, designs = load_input(file_name)
     result = 0
     for design in designs: 
-        if is_possible(trie, design): 
+        if possible_combo_count(trie, design) > 0: 
             result += 1
 
     return result
@@ -82,6 +83,55 @@ def part1(file_name: str) -> int:
 def test_part1(): 
     file_name = "sample.txt"
     expected = 6
+    result = part1(file_name)
+    assert(result == expected)
+
+"""
+brwrr can be made in two different ways: b, r, wr, r or br, wr, r.
+
+bggr can only be made with b, g, g, and r.
+
+gbbr can be made 4 different ways:
+
+g, b, b, r
+g, b, br
+gb, b, r
+gb, br
+rrbgbr can be made 6 different ways:
+
+r, r, b, g, b, r
+r, r, b, g, br
+r, r, b, gb, r
+r, rb, g, b, r
+r, rb, g, br
+r, rb, gb, r
+bwurrg can only be made with bwu, r, r, and g.
+
+brgr can be made in two different ways: b, r, g, r or br, g, r.
+
+ubwu and bbrgwb are still impossible.
+
+"""
+
+@pytest.mark.parametrize("value, expected", [
+    ("brwrr", 2), 
+    ("bggr", 1),
+    ("gbbr", 4),
+    ("rrbgbr", 6),
+    ("ubwu", 0),
+    ("bwurrg", 1),
+    ("brgr", 2),
+    ("bbrgwb", 0)
+])
+def test_possible_combo_count(value : str, expected: int): 
+    file_name = "sample.txt"
+    trie, _ = load_input(file_name)
+    result = possible_combo_count(trie, value)
+    assert(result == expected)
+
+def test_part2(): 
+    file_name = "sample.txt"
+    expected = 16
     result = part1(file_name)
     assert(result == expected)
 
@@ -98,7 +148,7 @@ def test_part1():
 def test_is_possible(value : str, expected: bool): 
     file_name = "sample.txt"
     trie, _ = load_input(file_name)
-    result = is_possible(trie, value)
+    result = possible_combo_count(trie, value) > 0
     assert(result == expected)
 
 def test_is_possible2(): 
@@ -114,7 +164,7 @@ def test_is_possible2():
     trie.add("urrr")
     expected = True
     design = "gwbubrurrrw"
-    result = is_possible(trie, design)
+    result = possible_combo_count(trie, design) > 0
     assert(result == expected)
     
     
