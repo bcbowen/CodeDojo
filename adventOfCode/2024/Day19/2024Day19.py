@@ -1,6 +1,12 @@
 import pytest
 from pathlib import Path
 
+"""
+First attempt: Use quick implementation of a trie to store the patterns. 
+Worked good for part 1 but when I adjusted for part 2 it runs forever. 
+
+
+"""
 class Node: 
     def __init__(self):
         self.is_final = False
@@ -54,22 +60,17 @@ def load_input(file_name: str) -> tuple[Node, list[str]]:
         return (trie, designs)
 
 def possible_combo_count(trie: Node, design: str) -> int: 
-    queue = [] 
-    queue.append(design)
-    seen = set()
-    count = 0
-    while len(queue) > 0: 
-        value = queue.pop(0)
-        #for i in range(len(value) - 1): 
-        i = 0
-        for j in range(i + 1, len(value)): 
-            if trie.find(value[i:j]):
-                if j == len(value) - 1: 
-                    count += 1 
-                elif not value[j:] in seen: 
-                    queue.append(value[j:])
-                    seen.add(value[j:])
-    return count
+    def find_combos(trie: Node, s: str) -> int: 
+        if not s: 
+            return 1
+
+        total = 0
+        for i in range(1, len(s) + 1):
+            prefix = s[:i]
+            if trie.find(prefix): 
+                total += find_combos(trie, s[i:]) 
+
+        return total
 
 def part1(file_name: str) -> int: 
     trie, designs = load_input(file_name)
@@ -80,38 +81,26 @@ def part1(file_name: str) -> int:
 
     return result
 
+def part2(file_name: str) -> int: 
+    trie, designs = load_input(file_name)
+    result = 0
+    for design in designs: 
+        result += possible_combo_count(trie, design)
+        
+    return result
+
 def test_part1(): 
     file_name = "sample.txt"
     expected = 6
     result = part1(file_name)
     assert(result == expected)
 
-"""
-brwrr can be made in two different ways: b, r, wr, r or br, wr, r.
+def test_part2(): 
+    file_name = "sample.txt"
+    expected = 16
+    result = part2(file_name)
+    assert(result == expected)
 
-bggr can only be made with b, g, g, and r.
-
-gbbr can be made 4 different ways:
-
-g, b, b, r
-g, b, br
-gb, b, r
-gb, br
-rrbgbr can be made 6 different ways:
-
-r, r, b, g, b, r
-r, r, b, g, br
-r, r, b, gb, r
-r, rb, g, b, r
-r, rb, g, br
-r, rb, gb, r
-bwurrg can only be made with bwu, r, r, and g.
-
-brgr can be made in two different ways: b, r, g, r or br, g, r.
-
-ubwu and bbrgwb are still impossible.
-
-"""
 
 @pytest.mark.parametrize("value, expected", [
     ("brwrr", 2), 
@@ -132,7 +121,7 @@ def test_possible_combo_count(value : str, expected: int):
 def test_part2(): 
     file_name = "sample.txt"
     expected = 16
-    result = part1(file_name)
+    result = part2(file_name)
     assert(result == expected)
 
 @pytest.mark.parametrize("value, expected", [
@@ -208,4 +197,5 @@ def main():
 
 if __name__ == "__main__": 
     pytest.main([__file__])
-    main()
+    # Don't uncomment the call to main, it will run forever... need to refactor for part 2
+    #main()
