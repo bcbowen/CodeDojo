@@ -1,17 +1,22 @@
 import pytest
 from pathlib import Path
+from collections import namedtuple
+
+Cell = namedtuple("Cell", ['y', 'x'])
+Position = namedtuple("Position", ['x', 'y'])
+Velocity = namedtuple("Velocity", ['x', 'y'])
 
 class Robot: 
     def __init__(self, id: int):
-        self.position = (0, 0) 
-        self.velocity = (0, 0)
+        self.position = Position(0, 0) 
+        self.velocity = Position(0, 0)
         self.id = id
 
-    def set_location(self, x: int, y: int): 
-        self.position = (x, y)
+    def set_location(self, position : Position): 
+        self.position = position
 
-    def set_velocity(self, x: int, y: int): 
-        self.velocity = (x, y)
+    def set_velocity(self, velocity : Velocity): 
+        self.velocity = velocity
 
 
     def move_one(self, grid_height: int, grid_width: int): 
@@ -19,34 +24,34 @@ class Robot:
         #x = raw_x % grid_width
         #y = raw_y % grid_height
         
-        x = self.position[0]
-        y = self.position[1]
-        
-        x += self.velocity[0]
-        y += self.velocity[1]
+        #x = self.position[0]
+        #y = self.position[1]
+        self.position.x += self.velocity.x
+        self.position.y += self.velocity.y
 
-        if x < 0: 
-            x += grid_width
-        elif x >= grid_width:
-            x = x - grid_width
-        
-        if y < 0: 
-            y += grid_height
-        elif y >= grid_height: 
-            y = y - grid_height
-        
-        self.set_location(x, y)
+        #x += self.velocity[0]
+        #y += self.velocity[1]
 
-    def calc_future_position(self, turns: int, grid_height: int, grid_width: int) -> tuple[int, int]: 
+        if self.position.x < 0: 
+            self.position.x += grid_width
+        elif self.position.x >= grid_width:
+            self.position.x = self.position.x - grid_width
+        
+        if self.position.y < 0: 
+            self.position.y += grid_height
+        elif self.position.y >= grid_height: 
+            self.position.y = self.position.y - grid_height
+
+    def calc_future_position(self, turns: int, grid_height: int, grid_width: int) -> Position: 
         #raw_x, raw_y = self.position[0] + (self.velocity[0] * turns), self.position[1] + (self.velocity[1] * turns)
         #x = raw_x % grid_width
         #y = raw_y % grid_height
         
-        x = self.position[0]
-        y = self.position[1]
+        x = self.position.x
+        y = self.position.y
         for _ in range(turns):
-            x += self.velocity[0]
-            y += self.velocity[1]
+            x += self.velocity.x
+            y += self.velocity.y
 
             if x < 0: 
                 x += grid_width
@@ -58,7 +63,7 @@ class Robot:
             elif y >= grid_height: 
                 y = y - grid_height
         
-        return (x, y)
+        return Position(x, y)
     
     """
     ex: p=9,5 v=-3,-3
@@ -72,7 +77,7 @@ class Robot:
         robot.set_velocity(int(velocity_values[0]), int(velocity_values[1]))
         return robot
 
-def get_input_filepath(file_name: str):
+def get_input_filepath(file_name: str) -> Path:
     current_path = Path(__file__).parent
     day = current_path.name
     current_path = current_path.parent
@@ -100,6 +105,7 @@ def generate_grid(rows: int, cols: int) -> list[list[str]]:
 
 """
 If something falls directly on a mid line it is quadrant 0, otherwise return the appropriate quadrant
+"""
 """
 def get_quadrant(x : int, y : int, grid_width : int, grid_height : int) -> int: 
     quadrant = 0
@@ -130,20 +136,69 @@ def get_score(robots: list[Robot], grid_width: int, grid_height: int) -> int:
             case 4: 
                 q4 += 1
     return q1 * q2 * q3 * q4
+"""
+
+def reset_grid(grid: list[list[str]]): 
+    for row in grid: 
+        for col in range(len(row)): 
+            row[col] = '.'
+
+def populate_grid(robots: list[Robot], grid: list[list[str]]): 
+    reset_grid()
+    for robot in robots: 
+        val = grid[robot.position.y][robot.position.x]
+        if val != '.':
+            val = int(val) + 1
+        else: 
+            val = 1
+        grid[robot.position.y][robot.position.x] = val
 
 def part1(file_name: str, grid_width: int, grid_height: int) -> int: 
     robots = load_robots(file_name)
     grid = generate_grid(grid_height, grid_width)
     iterations = 100
+
+    def get_quadrant(): 
+        quadrant = 0
+        mid_col = grid_width // 2
+        mid_row = grid_height // 2
+        if y != mid_row and x != mid_col: 
+            if y < mid_row: 
+                quadrant = 1 if x < mid_col else 2
+            else: 
+                quadrant = 3 if x < mid_col else 4
+            
+        return quadrant
+
+    def get_score(robots: list[Robot]) -> int: 
+        q1 = 0
+        q2 = 0
+        q3 = 0
+        q4 = 0
+        for robot in robots: 
+            quadrant = get_quadrant(robot.position[0], robot.position[1], grid_width, grid_height)
+            match quadrant: 
+                case 1: 
+                    q1 += 1
+                case 2: 
+                    q2 += 1
+                case 3: 
+                    q3 += 1
+                case 4: 
+                    q4 += 1
+        return q1 * q2 * q3 * q4
+
     for robot in robots: 
-        x, y = robot.calc_future_position(iterations, grid_height, grid_width)
-        robot.set_location(x, y)
-        val = grid[y][x]
-        if val != '.':
-            val = int(val) + 1
-        else: 
-            val = 1
-        grid[y][x] = val
+        position = robot.calc_future_position(iterations, grid_height, grid_width)
+        robot.set_location(position)
+    
+    #    val = grid[y][x]
+    #    if val != '.':
+    #        val = int(val) + 1
+    #    else: 
+    #        val = 1
+    #    grid[y][x] = val
+    #populate_grid(robots, grid)
     score = get_score(robots, grid_width, grid_height)
     return score
         
@@ -174,13 +229,26 @@ def part2():
     grid_height = 103
     grid_width = 101
 
+    grid = generate_grid(grid_height, grid_width)
+
+    def get_connectedness_score(grid : list[list[str]]) -> int: 
+        hcount = 0
+        vcount = 0
+
+        for row in range(1, len(grid)): 
+            for col in range(1, len(grid[0])): 
+
+
+        return hcount * vcount
+
     iterations = 10403
     min_score = float("inf")
     min_i = 0
     for i in range(iterations): 
         for robot in robots: 
             robot.move_one(grid_height, grid_width)
-        score = get_score(robots, grid_width, grid_height)
+        grid = populate_grid(robots, grid)
+        score = get_connectedness_score(grid)
         if score < min_score: 
             min_score = score
             print(f"min score found: {min_score}")
