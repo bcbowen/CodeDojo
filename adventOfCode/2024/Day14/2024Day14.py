@@ -2,6 +2,10 @@ import pytest
 from pathlib import Path
 from collections import namedtuple
 
+import sys
+sys.path.append('adventOfCode/Modules')
+from FileUtility import get_input_filepath
+
 Cell = namedtuple("Cell", ['y', 'x'])
 Position = namedtuple("Position", ['x', 'y'])
 Velocity = namedtuple("Velocity", ['x', 'y'])
@@ -77,6 +81,7 @@ class Robot:
         robot.set_velocity(int(velocity_values[0]), int(velocity_values[1]))
         return robot
 
+"""
 def get_input_filepath(file_name: str) -> Path:
     current_path = Path(__file__).parent
     day = current_path.name
@@ -88,6 +93,7 @@ def get_input_filepath(file_name: str) -> Path:
 
     input_path = private_files_base / year / day / file_name
     return input_path
+"""
 
 def load_robots(file_name: str) -> list[Robot]: 
     path = get_input_filepath(file_name)
@@ -155,7 +161,7 @@ def populate_grid(robots: list[Robot], grid: list[list[str]]):
 
 def part1(file_name: str, grid_width: int, grid_height: int) -> int: 
     robots = load_robots(file_name)
-    grid = generate_grid(grid_height, grid_width)
+    #grid = generate_grid(grid_height, grid_width)
     iterations = 100
 
     def get_quadrant(): 
@@ -202,25 +208,23 @@ def part1(file_name: str, grid_width: int, grid_height: int) -> int:
     score = get_score(robots, grid_width, grid_height)
     return score
         
-def write_grid(robots: list[Robot], index: int, grid_height: int, grid_width: int, file_name: str): 
+def write_grid(robots: list[Robot], index: int, grid_height: int, grid_width: int): 
     
-    with open(f"day14Part2_{index}.txt", "w") as file: 
-        grid = generate_grid(grid_height, grid_width)
-        robots = load_robots(file_name)
-        for robot in robots: 
-            x, y = robot.position[0], robot.position[1]
-            #x, y = robot.calc_future_position(index, grid_height, grid_width)
-            val = grid[y][x]
-            if val != '.':
-                val = int(val) + 1
-            else: 
-                val = 1
-            grid[y][x] = val
-        file.write(f"Grid {index}\n")
-        for row in grid: 
-            file.write(f"{str(row)}\n")
-        file.write("\n")
-        file.write("\n")
+    #with open(f"day14Part2_{index}.txt", "w") as file: 
+    grid = generate_grid(grid_height, grid_width)
+    for robot in robots: 
+        cell = Cell(robot.position.y, robot.position.x)
+        val = grid[cell.y][cell.x]
+        if val != '.':
+            val = int(val) + 1
+        else: 
+            val = 1
+        grid[cell.y][cell.x] = val
+    print(f"Grid {index}\n")
+    for row in grid: 
+        print(f"{str(row)}\n")
+    print("\n")
+    print("\n")
 
 def part2(): 
     file_name = "input.txt"
@@ -237,29 +241,28 @@ def part2():
 
         for row in range(1, len(grid)): 
             for col in range(1, len(grid[0])): 
-
+                if grid[row][col] != '.' and grid[row - 1][col] != '.': 
+                    vcount += 1
+                if grid[row][col] != '.' and grid[row][col - 1] != '.': 
+                    hcount += 1
 
         return hcount * vcount
 
     iterations = 10403
-    min_score = float("inf")
-    min_i = 0
+    max_score = 0
+    max_i = 0
     for i in range(iterations): 
         for robot in robots: 
             robot.move_one(grid_height, grid_width)
         grid = populate_grid(robots, grid)
         score = get_connectedness_score(grid)
-        if score < min_score: 
-            min_score = score
-            print(f"min score found: {min_score}")
-            min_i = i
-            write_grid(robots, min_i, grid_height, grid_width, file_name)
-
+        if score > max_score: 
+            max_score = score
+            print(f"max score found: {max_score}")
+            max_i = i
     
-
-    return min_i
-
-    
+    write_grid(robots, max_i, grid_height, grid_width)
+    return max_i
 
 
 def main():
@@ -286,10 +289,13 @@ p=2,4 v=2,-3
 ])
 def test_future_position(start_x: int, start_y: int, v_x: int, v_y: int, iterations: int, expected_x : int, expected_y: int):
     robot = Robot(1)
-    robot.set_location(start_x, start_y)
-    robot.set_velocity(v_x, v_y)
-    result_x, result_y = robot.calc_future_position(iterations, 7, 11)
-    assert((result_x, result_y) == (expected_x, expected_y))
+    position = Position(start_x, start_y)
+    velocity = Velocity(v_x, v_y)
+    robot.set_location(position)
+    robot.set_velocity(velocity)
+    position = robot.calc_future_position(iterations, 7, 11)
+    expected_position = Position(expected_x, expected_y)
+    assert(position == expected_position)
 
 
 
