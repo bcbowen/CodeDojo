@@ -176,20 +176,33 @@ def part2():
     grid = generate_grid(grid_height, grid_width)
 
     def get_connectedness_score(grid : list[list[str]]) -> int: 
-        current_streak = 0
-        max_streak = 0
+        current_streak = 0 if grid[0][0] == '.' else 1
+        max_hstreak = 0
 
         for row in range(1, len(grid)): 
             for col in range(1, len(grid[0])): 
                 if grid[row][col] == '.': 
-                    max_streak = max(current_streak, max_streak)
+                    max_hstreak = max(current_streak, max_hstreak)
                     current_streak = 0
                 else: 
                     current_streak += 1
+            max_hstreak = max(current_streak, max_hstreak)
 
-        return max_streak
+        current_streak = 0 if grid[0][0] == '.' else 1
+        max_vstreak = 0
+        for col in range(1, len(grid[0])): 
+            for row in range(1, len(grid)): 
+            
+                if grid[row][col] == '.': 
+                    max_vstreak = max(current_streak, max_vstreak)
+                    current_streak = 0
+                else: 
+                    current_streak += 1
+            max_vstreak = max(current_streak, max_vstreak)
 
-    iterations = 20806
+        return (max_hstreak + max_vstreak) // 2
+
+    iterations = 10403
     max_score = 0
     max_i = 0
     max_grid = 0
