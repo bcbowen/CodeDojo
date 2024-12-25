@@ -89,8 +89,21 @@ def part1(file_name : str) -> int:
 def main():
     pass
 
-def test_move(): 
-    pass
+@pytest.mark.parametrize("moves, ", [
+    (), 
+    (), 
+    (), 
+    ()
+])
+def test_move(moves : str, expected: Point): 
+    file_name = "sample.txt"
+    grid, _ = load_input(file_name)
+    current_location = find_robot(grid)
+    for move in moves: 
+        direction = get_direction(move)
+        current_location = move(grid, current_location, direction)
+
+    assert(current_location == expected)
 
 def test_load_input(): 
     file_name = "sample2.txt"
