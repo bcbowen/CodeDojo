@@ -2,9 +2,6 @@ import pytest
 from pathlib import Path
 from collections import namedtuple
 
-import sys
-sys.path.append('adventOfCode/Modules')
-from FileUtility import get_input_filepath
 
 Cell = namedtuple("Cell", ['y', 'x'])
 Position = namedtuple("Position", ['x', 'y'])
@@ -24,33 +21,22 @@ class Robot:
 
 
     def move_one(self, grid_height: int, grid_width: int): 
-        #raw_x, raw_y = self.position[0] + (self.velocity[0] * turns), self.position[1] + (self.velocity[1] * turns)
-        #x = raw_x % grid_width
-        #y = raw_y % grid_height
+        x, y = self.position.x + self.velocity.x, self.position.y + self.velocity.y
         
-        #x = self.position[0]
-        #y = self.position[1]
-        self.position.x += self.velocity.x
-        self.position.y += self.velocity.y
-
-        #x += self.velocity[0]
-        #y += self.velocity[1]
-
-        if self.position.x < 0: 
-            self.position.x += grid_width
-        elif self.position.x >= grid_width:
-            self.position.x = self.position.x - grid_width
+        if x < 0: 
+            x += grid_width
+        elif x >= grid_width:
+            x -= grid_width
         
-        if self.position.y < 0: 
-            self.position.y += grid_height
-        elif self.position.y >= grid_height: 
-            self.position.y = self.position.y - grid_height
+        if y < 0: 
+            y += grid_height
+        elif y >= grid_height: 
+            y -= grid_height
+
+        self.position = Position(x, y)
 
     def calc_future_position(self, turns: int, grid_height: int, grid_width: int) -> Position: 
-        #raw_x, raw_y = self.position[0] + (self.velocity[0] * turns), self.position[1] + (self.velocity[1] * turns)
-        #x = raw_x % grid_width
-        #y = raw_y % grid_height
-        
+       
         x = self.position.x
         y = self.position.y
         for _ in range(turns):
@@ -77,11 +63,10 @@ class Robot:
         pos_values = parts[0].replace("p=", "").split(',')
         velocity_values = parts[1].replace("v=", "").split(',')
         robot = Robot(id)
-        robot.set_location(int(pos_values[0]), int(pos_values[1]))
-        robot.set_velocity(int(velocity_values[0]), int(velocity_values[1]))
+        robot.set_location(Position(int(pos_values[0]), int(pos_values[1])))
+        robot.set_velocity(Velocity(int(velocity_values[0]), int(velocity_values[1])))
         return robot
 
-"""
 def get_input_filepath(file_name: str) -> Path:
     current_path = Path(__file__).parent
     day = current_path.name
@@ -93,7 +78,7 @@ def get_input_filepath(file_name: str) -> Path:
 
     input_path = private_files_base / year / day / file_name
     return input_path
-"""
+
 
 def load_robots(file_name: str) -> list[Robot]: 
     path = get_input_filepath(file_name)
@@ -109,40 +94,6 @@ def load_robots(file_name: str) -> list[Robot]:
 def generate_grid(rows: int, cols: int) -> list[list[str]]: 
     return [['.' for _ in range(cols)] for _ in range(rows)]
 
-"""
-If something falls directly on a mid line it is quadrant 0, otherwise return the appropriate quadrant
-"""
-"""
-def get_quadrant(x : int, y : int, grid_width : int, grid_height : int) -> int: 
-    quadrant = 0
-    mid_col = grid_width // 2
-    mid_row = grid_height // 2
-    if y != mid_row and x != mid_col: 
-        if y < mid_row: 
-            quadrant = 1 if x < mid_col else 2
-        else: 
-            quadrant = 3 if x < mid_col else 4
-        
-    return quadrant
-
-def get_score(robots: list[Robot], grid_width: int, grid_height: int) -> int: 
-    q1 = 0
-    q2 = 0
-    q3 = 0
-    q4 = 0
-    for robot in robots: 
-        quadrant = get_quadrant(robot.position[0], robot.position[1], grid_width, grid_height)
-        match quadrant: 
-            case 1: 
-                q1 += 1
-            case 2: 
-                q2 += 1
-            case 3: 
-                q3 += 1
-            case 4: 
-                q4 += 1
-    return q1 * q2 * q3 * q4
-"""
 
 def reset_grid(grid: list[list[str]]): 
     for row in grid: 
@@ -150,7 +101,7 @@ def reset_grid(grid: list[list[str]]):
             row[col] = '.'
 
 def populate_grid(robots: list[Robot], grid: list[list[str]]): 
-    reset_grid()
+    reset_grid(grid)
     for robot in robots: 
         val = grid[robot.position.y][robot.position.x]
         if val != '.':
@@ -164,15 +115,15 @@ def part1(file_name: str, grid_width: int, grid_height: int) -> int:
     #grid = generate_grid(grid_height, grid_width)
     iterations = 100
 
-    def get_quadrant(): 
+    def get_quadrant(position: Position) -> int: 
         quadrant = 0
         mid_col = grid_width // 2
         mid_row = grid_height // 2
-        if y != mid_row and x != mid_col: 
-            if y < mid_row: 
-                quadrant = 1 if x < mid_col else 2
+        if position.y != mid_row and position.x != mid_col: 
+            if position.y < mid_row: 
+                quadrant = 1 if position.x < mid_col else 2
             else: 
-                quadrant = 3 if x < mid_col else 4
+                quadrant = 3 if position.x < mid_col else 4
             
         return quadrant
 
@@ -182,7 +133,7 @@ def part1(file_name: str, grid_width: int, grid_height: int) -> int:
         q3 = 0
         q4 = 0
         for robot in robots: 
-            quadrant = get_quadrant(robot.position[0], robot.position[1], grid_width, grid_height)
+            quadrant = get_quadrant(robot.position)
             match quadrant: 
                 case 1: 
                     q1 += 1
@@ -205,24 +156,13 @@ def part1(file_name: str, grid_width: int, grid_height: int) -> int:
     #        val = 1
     #    grid[y][x] = val
     #populate_grid(robots, grid)
-    score = get_score(robots, grid_width, grid_height)
+    score = get_score(robots)
     return score
         
-def write_grid(robots: list[Robot], index: int, grid_height: int, grid_width: int): 
-    
-    #with open(f"day14Part2_{index}.txt", "w") as file: 
-    grid = generate_grid(grid_height, grid_width)
-    for robot in robots: 
-        cell = Cell(robot.position.y, robot.position.x)
-        val = grid[cell.y][cell.x]
-        if val != '.':
-            val = int(val) + 1
-        else: 
-            val = 1
-        grid[cell.y][cell.x] = val
+def write_grid(grid: list[list[str]], index): 
     print(f"Grid {index}\n")
     for row in grid: 
-        print(f"{str(row)}\n")
+        print(f"{str(row)}")
     print("\n")
     print("\n")
 
@@ -236,32 +176,35 @@ def part2():
     grid = generate_grid(grid_height, grid_width)
 
     def get_connectedness_score(grid : list[list[str]]) -> int: 
-        hcount = 0
-        vcount = 0
+        current_streak = 0
+        max_streak = 0
 
         for row in range(1, len(grid)): 
             for col in range(1, len(grid[0])): 
-                if grid[row][col] != '.' and grid[row - 1][col] != '.': 
-                    vcount += 1
-                if grid[row][col] != '.' and grid[row][col - 1] != '.': 
-                    hcount += 1
+                if grid[row][col] == '.': 
+                    max_streak = max(current_streak, max_streak)
+                    current_streak = 0
+                else: 
+                    current_streak += 1
 
-        return hcount * vcount
+        return max_streak
 
-    iterations = 10403
+    iterations = 20806
     max_score = 0
     max_i = 0
+    max_grid = 0
     for i in range(iterations): 
         for robot in robots: 
             robot.move_one(grid_height, grid_width)
-        grid = populate_grid(robots, grid)
+        populate_grid(robots, grid)
         score = get_connectedness_score(grid)
         if score > max_score: 
             max_score = score
             print(f"max score found: {max_score}")
             max_i = i
-    
-    write_grid(robots, max_i, grid_height, grid_width)
+            max_grid = grid.copy()
+    # 6474 too low
+    write_grid(max_grid, max_i)
     return max_i
 
 
