@@ -148,14 +148,6 @@ def part1(file_name: str, grid_width: int, grid_height: int) -> int:
     for robot in robots: 
         position = robot.calc_future_position(iterations, grid_height, grid_width)
         robot.set_location(position)
-    
-    #    val = grid[y][x]
-    #    if val != '.':
-    #        val = int(val) + 1
-    #    else: 
-    #        val = 1
-    #    grid[y][x] = val
-    #populate_grid(robots, grid)
     score = get_score(robots)
     return score
         
@@ -217,15 +209,17 @@ def part2():
             max_i = i
             max_grid = grid.copy()
     # 6474 too low
-    write_grid(max_grid, max_i)
-    return max_i
+    # write_grid(max_grid, max_i)
+    # adjust for 0-based index:
+    return max_i + 1
 
 
 def main():
     file_name = "input.txt"
     result = part1(file_name, 101, 103)
     print(f"Part 1 result for {file_name}: {result}")
-    part2()
+    result = part2()
+    print(f"Part 2 result for {file_name}: Iteration (1-based) where the robots are arranged in a tree: {result}")
 
 def test_part1(): 
     file_name = "sample.txt"
