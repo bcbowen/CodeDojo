@@ -55,7 +55,7 @@ def get_direction(value : str) -> Direction:
             return South
     raise Exception(f"Invalid direction: {value}")  
 
-def move(grid : list[list[str]], current_location: Point, direction: Direction) -> Point:
+def move_robot(grid : list[list[str]], current_location: Point, direction: Direction) -> Point:
     test_location = Point(current_location.y + direction.y, current_location.x + direction.x)
     # If the immediate next cell is a barrier we don't move
     if grid[test_location.y][test_location.x] == "#": 
@@ -89,19 +89,34 @@ def part1(file_name : str) -> int:
 def main():
     pass
 
-@pytest.mark.parametrize("moves, ", [
-    (), 
-    (), 
-    (), 
-    ()
+def test_find_robot(): 
+    file_name = "sample1.txt"
+    grid, _ = load_input(file_name)
+    expected = Point(4, 4)
+    result = find_robot(grid)
+    assert(result == expected)
+
+@pytest.mark.parametrize("moves, expected", [
+    ("<<", Point(4, 2)), 
+    ("<<<", Point(4, 2)), 
+    ("<", Point(4, 3)), 
+    ("^^^^", Point(1, 4)),
+    ("^^^^^", Point(1, 4)),
+    ("^^^", Point(2, 4)),
+    (">>>", Point(4, 7)),
+    (">>>>", Point(4, 7)),
+    (">>>", Point(4, 6)),
+    ("VVV", Point(7, 4)),
+    ("VVVV", Point(7, 4)),
+    ("VV", Point(-3, 4))
 ])
-def test_move(moves : str, expected: Point): 
-    file_name = "sample.txt"
+def test_move_robot(moves : str, expected: Point): 
+    file_name = "sample1.txt"
     grid, _ = load_input(file_name)
     current_location = find_robot(grid)
     for move in moves: 
         direction = get_direction(move)
-        current_location = move(grid, current_location, direction)
+        current_location = move_robot(grid, current_location, direction)
 
     assert(current_location == expected)
 
