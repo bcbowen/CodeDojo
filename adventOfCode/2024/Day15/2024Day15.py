@@ -55,16 +55,19 @@ def get_direction(value : str) -> Direction:
             return South
     raise Exception(f"Invalid direction: {value}")  
 
-def move_robot(grid : list[list[str]], current_location: Point, direction: Direction) -> Point:
+def move_robot(grid : list[list[str]], current_location: Point, direction: Direction) -> tuple[Point, list[list[str]]]:
     test_location = Point(current_location.y + direction.y, current_location.x + direction.x)
     # If the immediate next cell is a barrier we don't move
     if grid[test_location.y][test_location.x] == "#": 
-        return current_location
+        return current_location, grid
     # If it's an empty space, we can move without disturbing anything else. 
     elif grid[test_location.y][test_location.x] == ".":
-        return test_location
+        grid[test_location.y][test_location.x] = grid[current_location.y][current_location.x]
+        grid[current_location.y][current_location.x] = "."
+        return test_location, grid
 
     # Boxes to move
+    new_grid = grid.copy()
     moves = []
     moves.append(current_location)
     while grid[test_location.y][test_location.x] == "0": 
@@ -73,15 +76,16 @@ def move_robot(grid : list[list[str]], current_location: Point, direction: Direc
 
     # If the boxes are up against an obstacle, we're stuck
     if grid[test_location.y][test_location.x] == "#": 
-        return current_location
+        return current_location, grid
     
     # looks like we can shift over, unwind the stack and get busy
     while len(moves) > 0: 
         location = moves.pop()
-        grid[test_location.y][test_location.x] = grid[location.y][location.x]
+        new_grid[test_location.y][test_location.x] = new_grid[location.y][location.x]
         test_location = location
+        new_grid[current_location.y][current_location.x] = '.'
 
-    return test_location
+    return test_location, new_grid
 
 def part1(file_name : str) -> int: 
     pass
@@ -120,7 +124,7 @@ def test_move_robot(moves : str, expected: Point):
     current_location = find_robot(grid)
     for move in moves: 
         direction = get_direction(move)
-        current_location = move_robot(grid, current_location, direction)
+        current_location, grid = move_robot(grid, current_location, direction)
 
     print_grid(grid)
     assert(current_location == expected)
