@@ -1,6 +1,7 @@
 import pytest
 from pathlib import Path
 from collections import namedtuple
+import copy 
 
 Direction = namedtuple('Direction', ['y', 'x'])
 Point = namedtuple('Point', ['y', 'x'])
@@ -56,21 +57,22 @@ def get_direction(value : str) -> Direction:
     raise Exception(f"Invalid direction: {value}")  
 
 def move_robot(grid : list[list[str]], current_location: Point, direction: Direction) -> tuple[Point, list[list[str]]]:
-    test_location = Point(current_location.y + direction.y, current_location.x + direction.x)
+    next_location = Point(y=current_location.y + direction.y, x=current_location.x + direction.x)
     # If the immediate next cell is a barrier we don't move
-    if grid[test_location.y][test_location.x] == "#": 
+    if grid[next_location.y][next_location.x] == "#": 
         return current_location, grid
     # If it's an empty space, we can move without disturbing anything else. 
-    elif grid[test_location.y][test_location.x] == ".":
-        grid[test_location.y][test_location.x] = grid[current_location.y][current_location.x]
+    elif grid[next_location.y][next_location.x] == ".":
+        grid[next_location.y][next_location.x] = "@"
         grid[current_location.y][current_location.x] = "."
-        return test_location, grid
+        return next_location, grid
 
     # Boxes to move
-    new_grid = grid.copy()
+    new_grid = copy.deepcopy(grid)
     moves = []
     moves.append(current_location)
-    while grid[test_location.y][test_location.x] == "0": 
+    test_location = next_location
+    while grid[test_location.y][test_location.x] == "O": 
         moves.append(test_location)
         test_location = Point(test_location.y + direction.y, test_location.x + direction.x)
 
@@ -83,9 +85,9 @@ def move_robot(grid : list[list[str]], current_location: Point, direction: Direc
         location = moves.pop()
         new_grid[test_location.y][test_location.x] = new_grid[location.y][location.x]
         test_location = location
-        new_grid[current_location.y][current_location.x] = '.'
+    new_grid[current_location.y][current_location.x] = '.'
 
-    return test_location, new_grid
+    return next_location, new_grid
 
 def part1(file_name : str) -> int: 
     pass
@@ -103,6 +105,24 @@ def test_find_robot():
 def print_grid(grid: list[list[str]]): 
     for row in grid: 
         print(row)
+
+@pytest.mark.parametrize("row_in, start_position, end_position, row_out", [
+    ("..@..", Point(0, 2), Point(0, 3), "...@."),
+    ("..@O.", Point(0, 2), Point(0, 3), "...@O"), 
+    ("..@O#", Point(0, 2), Point(0, 2), "..@O#"), 
+    ("..@#.", Point(0, 2), Point(0, 2), "..@#."), 
+    ("..@OO.", Point(0, 2), Point(0, 3), "...@OO"),
+    ("..@O.O", Point(0, 2), Point(0, 3), "...@OO")
+])
+def test_move_robot2(row_in : str, start_position : Point, end_position : Point, row_out: str): 
+    grid_in = []
+    grid_in.append(list(row_in))
+    grid_out = []
+    grid_out.append(list(row_out))
+
+    result_position, result_grid = move_robot(grid_in, start_position, East)
+    assert(result_position == end_position)
+    assert(result_grid == grid_out)
 
 @pytest.mark.parametrize("moves, expected", [
     ("<<", Point(4, 2)), 
