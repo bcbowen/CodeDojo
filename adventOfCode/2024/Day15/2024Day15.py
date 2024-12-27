@@ -96,6 +96,10 @@ def test_find_robot():
     result = find_robot(grid)
     assert(result == expected)
 
+def print_grid(grid: list[list[str]]): 
+    for row in grid: 
+        print(row)
+
 @pytest.mark.parametrize("moves, expected", [
     ("<<", Point(4, 2)), 
     ("<<<", Point(4, 2)), 
@@ -108,7 +112,7 @@ def test_find_robot():
     (">>>", Point(4, 6)),
     ("VVV", Point(7, 4)),
     ("VVVV", Point(7, 4)),
-    ("VV", Point(-3, 4))
+    ("VV", Point(6, 4))
 ])
 def test_move_robot(moves : str, expected: Point): 
     file_name = "sample1.txt"
@@ -118,6 +122,7 @@ def test_move_robot(moves : str, expected: Point):
         direction = get_direction(move)
         current_location = move_robot(grid, current_location, direction)
 
+    print_grid(grid)
     assert(current_location == expected)
 
 def test_load_input(): 
