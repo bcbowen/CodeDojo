@@ -52,7 +52,7 @@ def get_direction(value : str) -> Direction:
             return West
         case '^':  
             return North
-        case 'V':
+        case 'v':
             return South
     raise Exception(f"Invalid direction: {value}")  
 
@@ -90,10 +90,40 @@ def move_robot(grid : list[list[str]], current_location: Point, direction: Direc
     return next_location, new_grid
 
 def part1(file_name : str) -> int: 
-    pass
+    grid, moves = load_input(file_name)
+    current_location = find_robot(grid)
+    for line in moves: 
+        for move in line.strip(): 
+            direction = get_direction(move)
+            current_location, grid = move_robot(grid, current_location, direction)
+
+    return get_gps_total(grid)
 
 def main():
-    pass
+    file_name = "input.txt"
+    result = part1(file_name)
+    print(f"Part 1 result: {result}")
+
+def get_gps_total(grid: list[list[str]]) -> int: 
+    gps_score = lambda y, x : y * 100 + x
+
+    total = 0
+    for y in range(len(grid)): 
+        for x in range(len(grid[0])): 
+            if grid[y][x] == "O": 
+                total += gps_score(y, x)
+    return total
+
+@pytest.mark.parametrize("file_name, expected", [
+    ("sample4.txt", 10092), 
+    ("sample3.txt", 2028)
+])
+def test_get_gps_total(file_name: str, expected: int): 
+    grid, _ = load_input(file_name)
+    result = get_gps_total(grid)
+    assert(result == expected)
+
+# larger example, the sum of all boxes' GPS coordinates is 10092. In the smaller example, the sum is 2028.
 
 def test_find_robot(): 
     file_name = "sample1.txt"
@@ -130,13 +160,13 @@ def test_move_robot2(row_in : str, start_position : Point, end_position : Point,
     ("<", Point(4, 3)), 
     ("^^^^", Point(1, 4)),
     ("^^^^^", Point(1, 4)),
-    ("^^^", Point(2, 4)),
+    ("^^^", Point(1, 4)),
     (">>>", Point(4, 7)),
     (">>>>", Point(4, 7)),
-    (">>>", Point(4, 6)),
-    ("VVV", Point(7, 4)),
-    ("VVVV", Point(7, 4)),
-    ("VV", Point(6, 4))
+    (">>", Point(4, 6)),
+    ("vvv", Point(7, 4)),
+    ("vvvv", Point(7, 4)),
+    ("vv", Point(6, 4))
 ])
 def test_move_robot(moves : str, expected: Point): 
     file_name = "sample1.txt"
