@@ -82,6 +82,23 @@ def get_direction(value : str) -> Direction:
             return South
     raise Exception(f"Invalid direction: {value}")  
 
+"""
+
+      b2 b3     b1    b2   b1
+        b1     b2 b3  b1   b2
+"""
+def move_box_vertically(grid : list[list[str]], current_location: Point, direction: Direction) -> tuple[Point, list[list[str]]]:
+    test_location = Point(current_location.y + direction.y, current_location.x)
+    if grid[test_location.y][test_location.x] == ']': 
+        b1_right = Point(test_location.y, test_location.x)
+        b1_left = Point(test_location.y, test_location.x - 1)
+    else: 
+        b1_left = Point(test_location.y, test_location.x)
+        b1_right = Point(test_location.y, test_location.x + 1)
+
+    test_location = Point(b1_left.y + direction.y, b1_left.x)
+    
+
 def move_robot(grid : list[list[str]], current_location: Point, direction: Direction) -> tuple[Point, list[list[str]]]:
     next_location = Point(y=current_location.y + direction.y, x=current_location.x + direction.x)
     # If the immediate next cell is a barrier we don't move
@@ -95,24 +112,52 @@ def move_robot(grid : list[list[str]], current_location: Point, direction: Direc
 
     # Boxes to move
     new_grid = copy.deepcopy(grid)
-    moves = []
-    moves.append(current_location)
-    test_location = next_location
-    while grid[test_location.y][test_location.x] == "O": 
-        moves.append(test_location)
-        test_location = Point(test_location.y + direction.y, test_location.x + direction.x)
-
-    # If the boxes are up against an obstacle, we're stuck
-    if grid[test_location.y][test_location.x] == "#": 
-        return current_location, grid
+    # if we're moving horizontally we can push up to 2 boxes
+    if direction == East or direction == West: 
+        # check at end of box (2 spaces) to see if it is a space, obstacle, or another box
+        test_location = Point(current_location.y, current_location.x + 3 * direction.x)
+        if grid[test_location.y][test_location.x] == '#': 
+            # we're blocked, return current grid and location unchanged
+            return current_location, grid    
+        elif grid[test_location.y][test_location.x] == '.':
+            new_grid[test_location.y][test_location.x] = ']'
+            test_location = Point(current_location.y, current_location.x + 2 * direction.x)
+            new_grid[test_location.y][test_location.x] = '['
+            test_location = Point(current_location.y, current_location.x + direction.x)
+            new_grid[test_location.y][test_location.x] = '@'
+            new_grid[current_location.y][current_location.x] = '.'
+        else: 
+            # 2 boxes next to each other, we can only move if the next value is empty
+            test_location = Point(current_location.y, current_location.x + 5 * direction.x)
+            if grid[test_location.y][test_location.x] != '.': 
+                return current_location, grid
+            # move both boxes
+            new_grid[test_location.y][test_location.x] = ']'
+            test_location = Point(current_location.y, current_location.x + 4 * direction.x)
+            new_grid[test_location.y][test_location.x] = '['
+            test_location = Point(current_location.y, current_location.x + 3 * direction.x)
+            new_grid[test_location.y][test_location.x] = ']'
+            test_location = Point(current_location.y, current_location.x + 2 * direction.x)
+            new_grid[test_location.y][test_location.x] = '['
+            test_location = Point(current_location.y, current_location.x + direction.x)
+            new_grid[test_location.y][test_location.x] = '@'
+            new_grid[current_location.y][current_location.x] = '.'
+    else: 
+        # moving up or down
+        test_location = Point(current_location.y, current_location.x + direction.x)
+        if grid[test_location.y][test_location.x] == '#': 
+            # we're blocked, return current grid and location unchanged
+            return current_location, grid    
+        elif grid[test_location.y][test_location.x] == '.':
+            new_grid[test_location.y][test_location.x] = ']'
+            test_location = Point(current_location.y, current_location.x + 2 * direction.x)
+            new_grid[test_location.y][test_location.x] = '['
+            test_location = Point(current_location.y, current_location.x + direction.x)
+            new_grid[test_location.y][test_location.x] = '@'
+            new_grid[current_location.y][current_location.x] = '.'
+        else: 
+            next_location, new_grid = move_box_vertically(grid, current_location, direction)
     
-    # looks like we can shift over, unwind the stack and get busy
-    while len(moves) > 0: 
-        location = moves.pop()
-        new_grid[test_location.y][test_location.x] = new_grid[location.y][location.x]
-        test_location = location
-    new_grid[current_location.y][current_location.x] = '.'
-
     return next_location, new_grid
 
 def part2(file_name : str) -> int: 
