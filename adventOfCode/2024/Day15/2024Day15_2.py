@@ -108,7 +108,9 @@ def move_box_vertically(grid : list[list[str]], current_location: Point, directi
         grid[test_location.y][test_location.x + 1] = ']'
         grid[b1_left.y][b1_left.x] = '.'
         grid[b1_right.y][b1_right.x] = '.'
+        grid[current_location.y][current_location.x] = '.'
         current_location = Point(current_location.y + direction.y, current_location.x)
+        grid[current_location.y][current_location.x] = '@'
         return current_location, grid
     
     # if there is one box directly above or below the current box
@@ -122,7 +124,9 @@ def move_box_vertically(grid : list[list[str]], current_location: Point, directi
             grid[test_location.y][test_location.x + 1] = ']'
             grid[b1_left.y][b1_left.x] = '.'
             grid[b1_right.y][b1_right.x] = '.'
+            grid[current_location.y][current_location.x] = '.'
             current_location = Point(current_location.y + direction.y, current_location.x)
+            grid[current_location.y][current_location.x] = '@'
             
         return current_location, grid
 
@@ -149,18 +153,22 @@ def move_box_vertically(grid : list[list[str]], current_location: Point, directi
             grid[b3_right.y][b3_right.x] = '.'
             grid[b1_left.y][b1_left.x] = '.'
             grid[b1_right.y][b1_right.x] = '.'
+            grid[current_location.y][current_location.x] = '.'
             current_location = Point(current_location.y + direction.y, current_location.x)
+            grid[current_location.y][current_location.x] = '@'
             
         return current_location, grid
     
     # if there is one box halfway above or below the current box
+    test_location = Point(b1_left.y + direction.y, b1_left.x)
     if grid[test_location.y][test_location.x] == ']':
         b2_left = Point(test_location.y, test_location.x - 1)
         b2_right = Point(test_location.y, test_location.x)
     elif grid[test_location.y][test_location.x + 1] == '[':
         b2_left = Point(test_location.y, test_location.x)
         b2_right = Point(test_location.y, test_location.x + 1)
-
+    else: 
+        print("How did we get here?")
     test_location = Point(b2_left.y + direction.y, b2_left.x)
     # we can only move if both spaces above b2 are empty, otherwise return unchanged
     if grid[test_location.y][test_location.x] == '.' and grid[test_location.y][test_location.x + 1] == '.':         
@@ -168,7 +176,9 @@ def move_box_vertically(grid : list[list[str]], current_location: Point, directi
         grid[test_location.y][test_location.x + 1] = ']'
         grid[b1_left.y][b1_left.x] = '.'
         grid[b1_right.y][b1_right.x] = '.'
+        grid[current_location.y][current_location.x] = '.'
         current_location = Point(current_location.y + direction.y, current_location.x)
+        grid[current_location.y][current_location.x] = '@'
         
     return current_location, grid
 
@@ -193,9 +203,9 @@ def move_robot(grid : list[list[str]], current_location: Point, direction: Direc
             # we're blocked, return current grid and location unchanged
             return current_location, grid    
         elif grid[test_location.y][test_location.x] == '.':
-            new_grid[test_location.y][test_location.x] = ']'
-            test_location = Point(current_location.y, current_location.x + 2 * direction.x)
             new_grid[test_location.y][test_location.x] = '['
+            test_location = Point(current_location.y, current_location.x + 2 * direction.x)
+            new_grid[test_location.y][test_location.x] = ']'
             test_location = Point(current_location.y, current_location.x + direction.x)
             new_grid[test_location.y][test_location.x] = '@'
             new_grid[current_location.y][current_location.x] = '.'
@@ -205,13 +215,13 @@ def move_robot(grid : list[list[str]], current_location: Point, direction: Direc
             if grid[test_location.y][test_location.x] != '.': 
                 return current_location, grid
             # move both boxes
-            new_grid[test_location.y][test_location.x] = ']'
+            new_grid[test_location.y][test_location.x] = '['
             test_location = Point(current_location.y, current_location.x + 4 * direction.x)
-            new_grid[test_location.y][test_location.x] = '['
-            test_location = Point(current_location.y, current_location.x + 3 * direction.x)
             new_grid[test_location.y][test_location.x] = ']'
-            test_location = Point(current_location.y, current_location.x + 2 * direction.x)
+            test_location = Point(current_location.y, current_location.x + 3 * direction.x)
             new_grid[test_location.y][test_location.x] = '['
+            test_location = Point(current_location.y, current_location.x + 2 * direction.x)
+            new_grid[test_location.y][test_location.x] = ']'
             test_location = Point(current_location.y, current_location.x + direction.x)
             new_grid[test_location.y][test_location.x] = '@'
             new_grid[current_location.y][current_location.x] = '.'
@@ -254,16 +264,15 @@ def get_gps_total(grid: list[list[str]]) -> int:
     total = 0
     for y in range(len(grid)): 
         for x in range(len(grid[0])): 
-            if grid[y][x] == "O": 
+            if grid[y][x] == "[": 
                 total += gps_score(y, x)
     return total
 
 @pytest.mark.parametrize("file_name, expected", [
-    ("sample4.txt", 10092), 
-    ("sample3.txt", 2028)
+    ("part2_gps_sample.txt", 9021)
 ])
 def test_get_gps_total(file_name: str, expected: int): 
-    grid, _ = load_input(file_name)
+    grid = load_grid(file_name)
     result = get_gps_total(grid)
     assert(result == expected)
 
@@ -281,6 +290,15 @@ def print_grid(grid: list[list[str]]):
         print(row)
 
 def test_move_robot(): 
+    def do_move(move_index : int, grid: list[list[str]], current_location : Point, test_file : str) -> tuple[Point, list[list[str]]]: 
+        move = moves[0][move_index] 
+        direction = get_direction(move)
+        current_location, grid = move_robot(grid, current_location, direction)
+        file_name = test_file
+        expected_grid = load_grid(file_name)
+        assert(grid == expected_grid)
+        return current_location, grid
+
     file_name = "part2_move_sample_1.txt"
     grid, moves = load_input(file_name)
 
@@ -290,15 +308,37 @@ def test_move_robot():
 
     current_location = find_robot(grid)
     move_index = 0
-    move = moves[0][move_index] 
-    direction = get_direction(move)
-    current_location, grid = move_robot(grid, current_location, direction)
-    file_name = "part2_move_sample_3.txt"
-    expected_grid = load_grid(file_name)
-    assert(grid == expected_grid)
+    current_location, grid = do_move(move_index, grid, current_location, "part2_move_sample_3.txt")
 
-    #print_grid(grid)
-    #assert(current_location == expected)
+    move_index += 1
+    current_location, grid = do_move(move_index, grid, current_location, "part2_move_sample_4.txt")
+
+    move_index += 1
+    current_location, grid = do_move(move_index, grid, current_location, "part2_move_sample_5.txt")
+
+    move_index += 1
+    current_location, grid = do_move(move_index, grid, current_location, "part2_move_sample_6.txt")
+
+    move_index += 1
+    current_location, grid = do_move(move_index, grid, current_location, "part2_move_sample_7.txt")
+
+    move_index += 1
+    current_location, grid = do_move(move_index, grid, current_location, "part2_move_sample_8.txt")
+
+    move_index += 1
+    current_location, grid = do_move(move_index, grid, current_location, "part2_move_sample_8.txt")
+
+    move_index += 1
+    current_location, grid = do_move(move_index, grid, current_location, "part2_move_sample_9.txt")
+
+    move_index += 1
+    current_location, grid = do_move(move_index, grid, current_location, "part2_move_sample_10.txt")
+
+    move_index += 1
+    current_location, grid = do_move(move_index, grid, current_location, "part2_move_sample_11.txt")
+
+    move_index += 1
+    current_location, grid = do_move(move_index, grid, current_location, "part2_move_sample_12.txt")
 
 
 def test_load_input(): 
@@ -315,5 +355,5 @@ def test_load_input():
 
 if __name__ == "__main__": 
     pytest.main([__file__])
-    #main()
+    main()
 
