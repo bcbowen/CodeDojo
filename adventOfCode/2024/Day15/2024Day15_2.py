@@ -52,8 +52,16 @@ def load_input(file_name : str) -> tuple[list[list[str]], list[str]]:
         return grid, moves
 
 
-def load_grid(ile_name : str) -> tuple[list[list[str]], list[str]]:
-    pass # load grid only from samples
+def load_grid(file_name : str) -> list[list[str]]:
+    path = get_input_filepath(file_name)
+    with open(path, "r") as file: 
+        lines = file.readlines()
+        grid = []
+        for index, line in enumerate(lines): 
+            if line.strip() == "": 
+                break
+            grid.append(list(line.strip()))
+    return grid
 
 def find_robot(grid : list[list[str]]) -> Point: 
     for row in range(len(grid)): 
@@ -146,7 +154,7 @@ def test_get_gps_total(file_name: str, expected: int):
 def test_find_robot(): 
     file_name = "sample1.txt"
     grid, _ = load_input(file_name)
-    expected = Point(4, 4)
+    expected = Point(4, 8)
     result = find_robot(grid)
     assert(result == expected)
 
@@ -154,48 +162,26 @@ def print_grid(grid: list[list[str]]):
     for row in grid: 
         print(row)
 
-@pytest.mark.parametrize("row_in, start_position, end_position, row_out", [
-    ("..@..", Point(0, 2), Point(0, 3), "...@."),
-    ("..@O.", Point(0, 2), Point(0, 3), "...@O"), 
-    ("..@O#", Point(0, 2), Point(0, 2), "..@O#"), 
-    ("..@#.", Point(0, 2), Point(0, 2), "..@#."), 
-    ("..@OO.", Point(0, 2), Point(0, 3), "...@OO"),
-    ("..@O.O", Point(0, 2), Point(0, 3), "...@OO")
-])
-def test_move_robot2(row_in : str, start_position : Point, end_position : Point, row_out: str): 
-    grid_in = []
-    grid_in.append(list(row_in))
-    grid_out = []
-    grid_out.append(list(row_out))
+def test_move_robot(): 
+    file_name = "part2_move_sample_1.txt"
+    grid, moves = load_input(file_name)
 
-    result_position, result_grid = move_robot(grid_in, start_position, East)
-    assert(result_position == end_position)
-    assert(result_grid == grid_out)
+    file_name = "part2_move_sample_2.txt"
+    expected_grid = load_grid(file_name)
+    assert(grid == expected_grid)
 
-@pytest.mark.parametrize("moves, expected", [
-    ("<<", Point(4, 2)), 
-    ("<<<", Point(4, 2)), 
-    ("<", Point(4, 3)), 
-    ("^^^^", Point(1, 4)),
-    ("^^^^^", Point(1, 4)),
-    ("^^^", Point(1, 4)),
-    (">>>", Point(4, 7)),
-    (">>>>", Point(4, 7)),
-    (">>", Point(4, 6)),
-    ("vvv", Point(7, 4)),
-    ("vvvv", Point(7, 4)),
-    ("vv", Point(6, 4))
-])
-def test_move_robot(moves : str, expected: Point): 
-    file_name = "sample1.txt"
-    grid, _ = load_input(file_name)
     current_location = find_robot(grid)
-    for move in moves: 
-        direction = get_direction(move)
-        current_location, grid = move_robot(grid, current_location, direction)
+    move_index = 0
+    move = moves[0][move_index] 
+    direction = get_direction(move)
+    current_location, grid = move_robot(grid, current_location, direction)
+    file_name = "part2_move_sample_3.txt"
+    expected_grid = load_grid(file_name)
+    assert(grid == expected_grid)
 
-    print_grid(grid)
-    assert(current_location == expected)
+    #print_grid(grid)
+    #assert(current_location == expected)
+
 
 def test_load_input(): 
     file_name = "sample1.txt"
@@ -204,11 +190,10 @@ def test_load_input():
 
     # load transformed grid sample: 
     file_name = "sample_2_before.txt"
-    expanded_grid, _ = load_input(file_name)
+    expanded_grid = load_grid(file_name)
 
     assert(grid == expanded_grid)
-    assert(len(moves) == 1)
-    assert(len(moves[0]) == 15)
+    assert(len(moves) == 10)
 
 if __name__ == "__main__": 
     pytest.main([__file__])
