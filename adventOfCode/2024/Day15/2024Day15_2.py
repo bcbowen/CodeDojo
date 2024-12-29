@@ -84,8 +84,8 @@ def get_direction(value : str) -> Direction:
 
 """
 
-      b2 b3     b1    b2   b1
-        b1     b2 b3  b1   b2
+      b2 b3     b1    b2   b1   b2     b2    b1  b1
+        b1     b2 b3  b1   b2    b1   b1    b2    b2
 """
 def move_box_vertically(grid : list[list[str]], current_location: Point, direction: Direction) -> tuple[Point, list[list[str]]]:
     test_location = Point(current_location.y + direction.y, current_location.x)
@@ -97,7 +97,80 @@ def move_box_vertically(grid : list[list[str]], current_location: Point, directi
         b1_right = Point(test_location.y, test_location.x + 1)
 
     test_location = Point(b1_left.y + direction.y, b1_left.x)
+
+    #check for obstacle above or below b1
+    if grid[test_location.y][test_location.x] == '#' or grid[test_location.y][test_location.x + 1] == '#':
+        return current_location, grid
+
+    # if there is empty space above or below both sides we can move now
+    if grid[test_location.y][test_location.x] == '.' and grid[test_location.y][test_location.x + 1] == '.':         
+        grid[test_location.y][test_location.x] = '['
+        grid[test_location.y][test_location.x + 1] = ']'
+        grid[b1_left.y][b1_left.x] = '.'
+        grid[b1_right.y][b1_right.x] = '.'
+        current_location = Point(current_location.y + direction.y, current_location.x)
+        return current_location, grid
     
+    # if there is one box directly above or below the current box
+    if grid[test_location.y][test_location.x] == '[':
+        b2_left = Point(test_location.y, test_location.x)
+        b2_right = Point(test_location.y, test_location.x + 1)
+        test_location = Point(b2_left.y + direction.y, b2_left.x)
+        # we can only move if both spaces above or below b2 are empty, otherwise return unchanged
+        if grid[test_location.y][test_location.x] == '.' and grid[test_location.y][test_location.x + 1] == '.':         
+            grid[test_location.y][test_location.x] = '['
+            grid[test_location.y][test_location.x + 1] = ']'
+            grid[b1_left.y][b1_left.x] = '.'
+            grid[b1_right.y][b1_right.x] = '.'
+            current_location = Point(current_location.y + direction.y, current_location.x)
+            
+        return current_location, grid
+
+    # if there are two boxes directly above or below the middle of the current box
+    if grid[test_location.y][test_location.x] == ']' and grid[test_location.y][test_location.x + 1] == '[':
+        b2_left = Point(test_location.y, test_location.x - 1)
+        b2_right = Point(test_location.y, test_location.x)
+        b3_left = Point(test_location.y, test_location.x + 1)
+        b3_right = Point(test_location.y, test_location.x + 2)
+
+        test_location = Point(b2_left.y + direction.y, b2_left.x)
+        # we can only move if all spaces above or below b2 and b3 are empty, otherwise return unchanged
+        if grid[test_location.y][test_location.x] == '.' \
+         and grid[test_location.y][test_location.x + 1] == '.' \
+         and grid[test_location.y][test_location.x + 2] == '.' \
+         and grid[test_location.y][test_location.x + 3] == '.':       
+            grid[test_location.y][test_location.x] = '['
+            grid[test_location.y][test_location.x + 1] = ']'
+            grid[test_location.y][test_location.x + 2] = '['
+            grid[test_location.y][test_location.x + 3] = ']'
+            grid[b2_left.y][b2_left.x] = '.'
+            grid[b2_right.y][b2_right.x] = '['
+            grid[b3_left.y][b3_left.x] = ']'
+            grid[b3_right.y][b3_right.x] = '.'
+            grid[b1_left.y][b1_left.x] = '.'
+            grid[b1_right.y][b1_right.x] = '.'
+            current_location = Point(current_location.y + direction.y, current_location.x)
+            
+        return current_location, grid
+    
+    # if there is one box halfway above or below the current box
+    if grid[test_location.y][test_location.x] == ']':
+        b2_left = Point(test_location.y, test_location.x - 1)
+        b2_right = Point(test_location.y, test_location.x)
+    elif grid[test_location.y][test_location.x + 1] == '[':
+        b2_left = Point(test_location.y, test_location.x)
+        b2_right = Point(test_location.y, test_location.x + 1)
+
+    test_location = Point(b2_left.y + direction.y, b2_left.x)
+    # we can only move if both spaces above b2 are empty, otherwise return unchanged
+    if grid[test_location.y][test_location.x] == '.' and grid[test_location.y][test_location.x + 1] == '.':         
+        grid[test_location.y][test_location.x] = '['
+        grid[test_location.y][test_location.x + 1] = ']'
+        grid[b1_left.y][b1_left.x] = '.'
+        grid[b1_right.y][b1_right.x] = '.'
+        current_location = Point(current_location.y + direction.y, current_location.x)
+        
+    return current_location, grid
 
 def move_robot(grid : list[list[str]], current_location: Point, direction: Direction) -> tuple[Point, list[list[str]]]:
     next_location = Point(y=current_location.y + direction.y, x=current_location.x + direction.x)
