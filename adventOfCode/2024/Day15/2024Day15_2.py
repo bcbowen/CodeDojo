@@ -203,9 +203,9 @@ def move_robot(grid : list[list[str]], current_location: Point, direction: Direc
             # we're blocked, return current grid and location unchanged
             return current_location, grid    
         elif grid[test_location.y][test_location.x] == '.':
-            new_grid[test_location.y][test_location.x] = '['
-            test_location = Point(current_location.y, current_location.x + 2 * direction.x)
             new_grid[test_location.y][test_location.x] = ']'
+            test_location = Point(current_location.y, current_location.x + 2 * direction.x)
+            new_grid[test_location.y][test_location.x] = '['
             test_location = Point(current_location.y, current_location.x + direction.x)
             new_grid[test_location.y][test_location.x] = '@'
             new_grid[current_location.y][current_location.x] = '.'
@@ -227,14 +227,14 @@ def move_robot(grid : list[list[str]], current_location: Point, direction: Direc
             new_grid[current_location.y][current_location.x] = '.'
     else: 
         # moving up or down
-        test_location = Point(current_location.y, current_location.x + direction.x)
+        test_location = Point(current_location.y + direction.y, current_location.x)
         if grid[test_location.y][test_location.x] == '#': 
             # we're blocked, return current grid and location unchanged
             return current_location, grid    
         elif grid[test_location.y][test_location.x] == '.':
-            new_grid[test_location.y][test_location.x] = ']'
-            test_location = Point(current_location.y, current_location.x + 2 * direction.x)
             new_grid[test_location.y][test_location.x] = '['
+            test_location = Point(current_location.y, current_location.x + 2 * direction.x)
+            new_grid[test_location.y][test_location.x] = ']'
             test_location = Point(current_location.y, current_location.x + direction.x)
             new_grid[test_location.y][test_location.x] = '@'
             new_grid[current_location.y][current_location.x] = '.'
@@ -247,7 +247,9 @@ def part2(file_name : str) -> int:
     grid, moves = load_input(file_name)
     current_location = find_robot(grid)
     for line in moves: 
-        for move in line.strip(): 
+        for i, move in enumerate(line.strip()): 
+            if i == 400: 
+                print("time to break")
             direction = get_direction(move)
             current_location, grid = move_robot(grid, current_location, direction)
 
