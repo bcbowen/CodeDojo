@@ -91,13 +91,13 @@ def move_box(grid: list[list[str]], box_left: Point, direction: Direction, is_di
         
         if direction in [East, West]: 
             row = box_left.y
-            col = box_left.x + 2 * direction.x
+            col = box_left.x + direction.x
             next_char = grid[row][col]
-            if next_char in ['#', ']']: 
+            if next_char in ['#', '[']: 
                 raise Exception(f"Illegal move {box_left} {direction}")
-            if next_char == '[':
-                if can_move(grid, Point[row][col], direction, False):  
-                    move_box(grid, Point[row][col], direction)
+            if next_char == ']':
+                if can_move(grid, Point(row, col), direction, False):  
+                    move_box(grid, Point(row, col), direction, False)
                 else: 
                     return False
 
@@ -132,16 +132,16 @@ def move_box(grid: list[list[str]], box_left: Point, direction: Direction, is_di
                 if grid[row][col_l] == '[': 
                     if grid[row][col_r] != ']': 
                         raise Exception(missing_box_msg)
-                    boxes.append(Point(grid[row][col_l]))
+                    boxes.append(Point(Point(row, col_l)))
                 else: 
                     if grid[row][col_l] == ']': 
                         if grid[row][col_l - 1] != '[': 
                             raise Exception(missing_box_msg)
-                        boxes.append(grid[row][col_l - 1])
+                        boxes.append(Point(row, col_l - 1))
                     if grid[row][col_r] == '[':
                         if grid[row][col_r + 1] != ']': 
                             raise Exception(missing_box_msg)
-                        boxes.append(grid[row][col_r])
+                        boxes.append(Point(row, col_r))
 
                 for box in boxes: 
                     move_box(grid, box, direction, False)
@@ -159,14 +159,15 @@ def move_box(grid: list[list[str]], box_left: Point, direction: Direction, is_di
 def can_move(grid: list[list[str]], box_left: Point, direction: Direction, is_direct: bool) -> bool: 
     if direction  in [East, West]: 
         row = box_left.y
-        col = box_left + 2 * direction.x
+        col = box_left.x + direction.x
         if grid[row][col] == '#': 
             return False
-        elif grid[row][col] == '[': 
+        elif grid[row][col] == ']': 
             # next position is another box, see if this is already the second box
             if not is_direct: 
                 return False
             else: 
+                col += direction.x
                 return can_move(grid, Point(row, col), direction, False)
         else: 
             return True      
@@ -195,16 +196,16 @@ def can_move(grid: list[list[str]], box_left: Point, direction: Direction, is_di
             if grid[row][col_l] == '[': 
                 if grid[row][col_r] != ']': 
                     raise Exception(missing_box_msg)
-                boxes.append(Point(grid[row][col_l]))
+                boxes.append(Point(row, col_l))
             else: 
                 if grid[row][col_l] == ']': 
                     if grid[row][col_l - 1] != '[': 
                         raise Exception(missing_box_msg)
-                    boxes.append(grid[row][col_l - 1])
+                    boxes.append(Point(row, col_l - 1))
                 if grid[row][col_r] == '[':
                     if grid[row][col_r + 1] != ']': 
                         raise Exception(missing_box_msg)
-                    boxes.append(grid[row][col_r])
+                    boxes.append(Point(row, col_r))
             result = True
             for box in boxes: 
                 result = result and can_move(grid, box, direction, False)
