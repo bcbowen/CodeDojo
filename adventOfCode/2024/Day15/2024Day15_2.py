@@ -1,7 +1,6 @@
 import pytest
 from pathlib import Path
 from collections import namedtuple
-import copy 
 
 Direction = namedtuple('Direction', ['y', 'x'])
 Point = namedtuple('Point', ['y', 'x'])
@@ -9,6 +8,8 @@ East = Direction(0, 1)
 West = Direction(0, -1)
 South = Direction(1, 0)
 North = Direction(-1, 0)
+
+debug_mode = False
 
 def get_input_filepath(file_name: str):
     current_path = Path(__file__).parent
@@ -84,10 +85,9 @@ def get_direction(value : str) -> Direction:
 
 """
 Will move a box if it can.
-is_direct means this is the first box being pushed directly by a robot. False means another box is being pushed into this one. 
 """
-def move_box(grid: list[list[str]], box_left: Point, direction: Direction, is_direct) -> bool: 
-    if can_move(grid, box_left, direction, is_direct): 
+def move_box(grid: list[list[str]], box_left: Point, direction: Direction) -> bool: 
+    if can_move(grid, box_left, direction): 
         
         if direction == East:
             row = box_left.y
@@ -96,8 +96,8 @@ def move_box(grid: list[list[str]], box_left: Point, direction: Direction, is_di
             if next_char in ['#', ']']: 
                 raise Exception(f"Illegal move {box_left} {direction}")
             if next_char == '[':
-                if can_move(grid, Point(row, col), direction, False):  
-                    move_box(grid, Point(row, col), direction, False)
+                if can_move(grid, Point(row, col), direction):  
+                    move_box(grid, Point(row, col), direction)
                 else: 
                     return False
             grid[row][col] = grid[row][col - direction.x]
@@ -114,8 +114,8 @@ def move_box(grid: list[list[str]], box_left: Point, direction: Direction, is_di
             if next_char == '#': 
                 raise Exception(f"Illegal move {box_left} {direction}")
             if next_char == ']':
-                if can_move(grid, Point(row, col - 1), direction, False):  
-                    move_box(grid, Point(row, col - 1), direction, False)
+                if can_move(grid, Point(row, col - 1), direction):  
+                    move_box(grid, Point(row, col - 1), direction)
                 else: 
                     return False
 
@@ -141,9 +141,6 @@ def move_box(grid: list[list[str]], box_left: Point, direction: Direction, is_di
                     b2 b3     b1    b2   b1   b2     b2    b1  b1
                         b1     b2 b3  b1   b2    b1   b1    b2    b2
                 """
-                # we're pushing boxes... first make sure this box isn't already being pushed
-                if not is_direct: 
-                    raise Exception("We should not have gotten here")
                 # boxes holds the left point for each connected box
                 boxes = []
                 # check for direct vertical box
@@ -163,7 +160,7 @@ def move_box(grid: list[list[str]], box_left: Point, direction: Direction, is_di
                         boxes.append(Point(row, col_r))
 
                 for box in boxes: 
-                    move_box(grid, box, direction, False)
+                    move_box(grid, box, direction)
 
             # at this point the spaces above the box have to be empty         
             grid[row][col_l] = grid[box_left.y][col_l]
@@ -175,18 +172,14 @@ def move_box(grid: list[list[str]], box_left: Point, direction: Direction, is_di
         return False
  
 
-def can_move(grid: list[list[str]], box_left: Point, direction: Direction, is_direct: bool) -> bool: 
+def can_move(grid: list[list[str]], box_left: Point, direction: Direction) -> bool: 
     if direction == East: 
         row = box_left.y
         col = box_left.x + 2
         if grid[row][col] == '#': 
             return False
         elif grid[row][col] == '[': 
-            # next position is another box, see if this is already the second box
-            if not is_direct: 
-                return False
-            else: 
-                return can_move(grid, Point(row, col), direction, False)
+            return can_move(grid, Point(row, col), direction)
         else: 
             return True      
     elif direction == West: 
@@ -196,11 +189,8 @@ def can_move(grid: list[list[str]], box_left: Point, direction: Direction, is_di
             return False
         elif grid[row][col] == ']': 
             # next position is another box, see if this is already the second box
-            if not is_direct: 
-                return False
-            else: 
-                col += direction.x
-                return can_move(grid, Point(row, col), direction, False)
+            col += direction.x
+            return can_move(grid, Point(row, col), direction)
         else: 
             return True      
     else: 
@@ -218,9 +208,6 @@ def can_move(grid: list[list[str]], box_left: Point, direction: Direction, is_di
                   b2 b3     b1    b2   b1   b2     b2    b1  b1
                     b1     b2 b3  b1   b2    b1   b1    b2    b2
             """
-            # we're pushing boxes... first make sure this box isn't already being pushed
-            if not is_direct: 
-                return False
             # boxes holds the left point for each connected box
             boxes = []
             # check for direct vertical box
@@ -240,7 +227,7 @@ def can_move(grid: list[list[str]], box_left: Point, direction: Direction, is_di
                     boxes.append(Point(row, col_r))
             result = True
             for box in boxes: 
-                result = result and can_move(grid, box, direction, False)
+                result = result and can_move(grid, box, direction)
 
             return result
 
@@ -256,10 +243,10 @@ def move_robot(grid : list[list[str]], current_location: Point, direction: Direc
         if direction == East: 
             raise Exception("This should never happen")
         else: 
-            can_move = move_box(grid, Point(next_location.y, next_location.x - 1), direction, True)
+            can_move = move_box(grid, Point(next_location.y, next_location.x - 1), direction)
     else: 
         # this is the left side of a box
-        can_move = move_box(grid, Point(next_location.y, next_location.x), direction, True)
+        can_move = move_box(grid, Point(next_location.y, next_location.x), direction)
 
     if can_move: 
         grid[next_location.y][next_location.x] = "@"
@@ -272,10 +259,16 @@ def move_robot(grid : list[list[str]], current_location: Point, direction: Direc
 def part2(file_name : str) -> int: 
     grid, moves = load_input(file_name)
     current_location = find_robot(grid)
+    counter = 0
+    print_grid(grid, '0', counter)
     for line in moves: 
         for move in line.strip(): 
+            counter += 1
+            #if counter == 158: 
+            #    print("Time to break")
             direction = get_direction(move)
             current_location, grid = move_robot(grid, current_location, direction)
+            print_grid(grid, move, counter)
 
     return get_gps_total(grid)
 
@@ -312,9 +305,13 @@ def test_find_robot():
     result = find_robot(grid)
     assert(result == expected)
 
-def print_grid(grid: list[list[str]]): 
-    for row in grid: 
-        print(row)
+def print_grid(grid: list[list[str]], command : str, counter: int): 
+    global debug_mode
+    if debug_mode: 
+        print(command, counter)
+        for row in grid: 
+            print("".join(row))
+        print(" ")
 
 def test_move_robot(): 
     def do_move(move_index : int, grid: list[list[str]], current_location : Point, test_file : str) -> tuple[Point, list[list[str]]]: 
