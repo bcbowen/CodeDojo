@@ -71,7 +71,7 @@ def part1(file_name: str) -> int:
             next_location = Point(current_position.location.y + current_position.orientation.y, current_position.location.x + current_position.orientation.x)
             edge = ((current_position.location.y, current_position.location.x), (next_location.y, next_location.x))
             
-            if not edge in seen and grid[next_location.y][next_location.x] == '.': 
+            if not edge in seen and grid[next_location.y][next_location.x] != '#': 
                 seen.add(edge)
                 position = Position(current_position.cost + 1, next_location, current_position.orientation)
                 heapq.heappush(position_q, position)
@@ -80,7 +80,7 @@ def part1(file_name: str) -> int:
             for orientation in turns: 
                 next_location = Point(current_position.location.y + orientation.y, current_position.location.x + orientation.x)
                 edge = ((current_position.location.y, current_position.location.x), (next_location.y, next_location.x))
-                if not next_location in seen and grid[next_location.y][next_location.x] == '.': 
+                if not next_location in seen and grid[next_location.y][next_location.x] != '#': 
                     seen.add(edge)
                     position = Position(current_position.cost + 1000, next_location, orientation)
                     heapq.heappush(position_q, position)
