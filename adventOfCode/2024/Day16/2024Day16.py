@@ -2,6 +2,7 @@ import pytest
 from pathlib import Path
 from collections import namedtuple
 from dataclasses import dataclass
+import heapq
 
 Direction = namedtuple('Direction', ['y', 'x'])
 Point = namedtuple('Point', ['y', 'x'])
@@ -10,11 +11,12 @@ West = Direction(0, -1)
 South = Direction(1, 0)
 North = Direction(-1, 0)
 
-@dataclass
+@dataclass(order=True)
 class Position: 
+    cost: int
     location: Point
     orientation: Direction
-    cost: int
+    
 
 def get_input_filepath(file_name: str) -> str:
     current_path = Path(__file__).parent
@@ -56,29 +58,32 @@ def part1(file_name: str) -> int:
     seen = set()
     location = find_start_position(grid)
     position_q = []
-    position = Position(location, East, 0)
-    position_q.append(position)
-    seen.add(location)
+    heapq.heapify(position_q)
+    position = Position(0, location, East)
+    heapq.heappush(position_q, position)
+    #seen.add(location)
     while len(position_q) > 0: 
-        current_position = position_q.pop(0)
+        current_position = heapq.heappop(position_q)
         if grid[current_position.location.y][current_position.location.x] == 'E': 
             min_cost = min(min_cost, current_position.cost)
         else: 
             # check current direction
             next_location = Point(current_position.location.y + current_position.orientation.y, current_position.location.x + current_position.orientation.x)
-
-            if not next_location in seen and grid[next_location.y][next_location.x] == '.': 
-                seen.add(next_location)
-                position = Position(next_location, current_position.orientation, current_position.cost + 1)
-                position_q.append(position)
+            edge = ((current_position.location.y, current_position.location.x), (next_location.y, next_location.x))
+            
+            if not edge in seen and grid[next_location.y][next_location.x] == '.': 
+                seen.add(edge)
+                position = Position(current_position.cost + 1, next_location, current_position.orientation)
+                heapq.heappush(position_q, position)
             
             turns = get_turning_directions(current_position.orientation)
             for orientation in turns: 
                 next_location = Point(current_position.location.y + orientation.y, current_position.location.x + orientation.x)
+                edge = ((current_position.location.y, current_position.location.x), (next_location.y, next_location.x))
                 if not next_location in seen and grid[next_location.y][next_location.x] == '.': 
-                    seen.add(next_location)
-                    position = Position(next_location, orientation, current_position.cost + 1000)
-                    position_q.append(position)
+                    seen.add(edge)
+                    position = Position(current_position.cost + 1000, next_location, orientation)
+                    heapq.heappush(position_q, position)
 
     return min_cost
 
