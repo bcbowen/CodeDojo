@@ -16,7 +16,7 @@ class Position:
     cost: int
     location: Point
     orientation: Direction
-    
+    path: list[Point]
 
 def get_input_filepath(file_name: str) -> str:
     current_path = Path(__file__).parent
@@ -59,13 +59,16 @@ def part1(file_name: str) -> int:
     location = find_start_position(grid)
     position_q = []
     heapq.heapify(position_q)
-    position = Position(0, location, East)
+    position = Position(0, location, East, [location])
     heapq.heappush(position_q, position)
     #seen.add(location)
     while len(position_q) > 0: 
         current_position = heapq.heappop(position_q)
         if grid[current_position.location.y][current_position.location.x] == 'E': 
             min_cost = min(min_cost, current_position.cost)
+            print("solution found with cost of ", min_cost)
+            for location in current_position.path: 
+                print(location)
         else: 
             # check current direction
             next_location = Point(current_position.location.y + current_position.orientation.y, current_position.location.x + current_position.orientation.x)
@@ -73,7 +76,8 @@ def part1(file_name: str) -> int:
             
             if not edge in seen and grid[next_location.y][next_location.x] != '#': 
                 seen.add(edge)
-                position = Position(current_position.cost + 1, next_location, current_position.orientation)
+                position = Position(current_position.cost + 1, next_location, current_position.orientation, current_position.path.copy())
+                position.path.append(next_location)
                 heapq.heappush(position_q, position)
             
             turns = get_turning_directions(current_position.orientation)
@@ -82,7 +86,8 @@ def part1(file_name: str) -> int:
                 edge = ((current_position.location.y, current_position.location.x), (next_location.y, next_location.x))
                 if not next_location in seen and grid[next_location.y][next_location.x] != '#': 
                     seen.add(edge)
-                    position = Position(current_position.cost + 1000, next_location, orientation)
+                    position = Position(current_position.cost + 1001, next_location, orientation, current_position.path.copy())
+                    position.path.append(next_location)
                     heapq.heappush(position_q, position)
 
     return min_cost
@@ -115,4 +120,4 @@ def test_load_inputs():
 
 if __name__ == "__main__": 
     pytest.main([__file__])
-    #main()
+    main()
