@@ -52,8 +52,9 @@ def get_turning_directions(direction : Direction) -> list[Direction]:
         return [East, West]
         
 
-def part1(file_name: str) -> int: 
+def day16(file_name: str) -> tuple[int, int]: 
     min_cost = float("inf")
+    paths = []
     grid = load_inputs(file_name)
     seen = set()
     location = find_start_position(grid)
@@ -61,14 +62,16 @@ def part1(file_name: str) -> int:
     heapq.heapify(position_q)
     position = Position(0, location, East, [location])
     heapq.heappush(position_q, position)
-    #seen.add(location)
+
     while len(position_q) > 0: 
         current_position = heapq.heappop(position_q)
         if grid[current_position.location.y][current_position.location.x] == 'E': 
-            min_cost = min(min_cost, current_position.cost)
-            print("solution found with cost of ", min_cost)
-            for location in current_position.path: 
-                print(location)
+            if current_position.cost < min_cost: 
+                paths.clear()
+                min_cost = current_position.cost
+                paths.append(current_position.path.copy())
+            elif current_position.cost == min_cost: 
+                paths.append(current_position.path.copy())
         else: 
             # check current direction
             next_location = Point(current_position.location.y + current_position.orientation.y, current_position.location.x + current_position.orientation.x)
@@ -89,23 +92,27 @@ def part1(file_name: str) -> int:
                     position = Position(current_position.cost + 1001, next_location, orientation, current_position.path.copy())
                     position.path.append(next_location)
                     heapq.heappush(position_q, position)
+    tiles_used_in_min_paths = set()
+    for path in paths: 
+        for tile in path: 
+            tiles_used_in_min_paths.add(tile)
+    return min_cost, len(tiles_used_in_min_paths)
 
-    return min_cost
-
-
+# part 2: 521 too low
 def main(): 
     file_name = "input.txt"
-    result = part1(file_name) 
-    print(f"Part 1 for {file_name}: {result}")
+    min_path, tiles_used = day16(file_name) 
+    print(f"{file_name} min path length (part 1): {min_path}; tiles used for min paths: {tiles_used} (part 2)")
 
 
-@pytest.mark.parametrize("file_name, expected", [
-    ("sample1.txt", 7036), 
-    ("sample2.txt", 11048)
+@pytest.mark.parametrize("file_name, expected_cost, expected_tiles_used", [
+    ("sample1.txt", 7036, 45), 
+    ("sample2.txt", 11048, 64)
 ])
-def test_part1(file_name: str, expected: int): 
-    result = part1(file_name)
-    assert(result == expected)
+def test_day16(file_name: str, expected_cost: int, expected_tiles_used: int): 
+    min_cost, tiles_used = day16(file_name)
+    assert(min_cost == expected_cost)
+    assert(tiles_used == expected_tiles_used)
 
 def test_find_start_position(): 
     file_name = "sample1.txt"
