@@ -18,6 +18,15 @@ class Position:
     orientation: Direction
     path: list[Point]
 
+@dataclass(frozen=True)
+class Edge: 
+    from_point: Point
+    to_point: Point
+
+    def get_reversed(self) -> 'Edge': 
+        return Edge(from_point=self.to_point, to_point=self.from_point)
+
+
 def get_input_filepath(file_name: str) -> str:
     current_path = Path(__file__).parent
     day = current_path.name
@@ -75,9 +84,9 @@ def day16(file_name: str) -> tuple[int, int]:
         else: 
             # check current direction
             next_location = Point(current_position.location.y + current_position.orientation.y, current_position.location.x + current_position.orientation.x)
-            edge = ((current_position.location.y, current_position.location.x), (next_location.y, next_location.x))
-            
-            if not edge in seen and grid[next_location.y][next_location.x] != '#': 
+            edge = Edge((current_position.location.y, current_position.location.x), (next_location.y, next_location.x))
+            reversed_edge = edge.get_reversed
+            if not reversed_edge in seen and grid[next_location.y][next_location.x] != '#': 
                 seen.add(edge)
                 position = Position(current_position.cost + 1, next_location, current_position.orientation, current_position.path.copy())
                 position.path.append(next_location)
@@ -86,8 +95,9 @@ def day16(file_name: str) -> tuple[int, int]:
             turns = get_turning_directions(current_position.orientation)
             for orientation in turns: 
                 next_location = Point(current_position.location.y + orientation.y, current_position.location.x + orientation.x)
-                edge = ((current_position.location.y, current_position.location.x), (next_location.y, next_location.x))
-                if not next_location in seen and grid[next_location.y][next_location.x] != '#': 
+                edge = Edge((current_position.location.y, current_position.location.x), (next_location.y, next_location.x))
+                reversed_edge = edge.get_reversed()
+                if not reversed_edge in seen and grid[next_location.y][next_location.x] != '#': 
                     seen.add(edge)
                     position = Position(current_position.cost + 1001, next_location, orientation, current_position.path.copy())
                     position.path.append(next_location)
@@ -127,4 +137,4 @@ def test_load_inputs():
 
 if __name__ == "__main__": 
     pytest.main([__file__])
-    #main()
+    main()
