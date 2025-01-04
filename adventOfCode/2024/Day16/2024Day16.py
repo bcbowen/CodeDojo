@@ -89,7 +89,10 @@ def day16(file_name: str) -> tuple[int, int]:
             if not reversed_edge in seen and grid[next_location.y][next_location.x] != '#': 
                 seen.add(edge)
                 position = Position(current_position.cost + 1, next_location, current_position.orientation, current_position.path.copy())
+                if current_position.cost > min_cost: 
+                    continue
                 position.path.append(next_location)
+
                 heapq.heappush(position_q, position)
             
             turns = get_turning_directions(current_position.orientation)
@@ -100,6 +103,8 @@ def day16(file_name: str) -> tuple[int, int]:
                 if not reversed_edge in seen and grid[next_location.y][next_location.x] != '#': 
                     seen.add(edge)
                     position = Position(current_position.cost + 1001, next_location, orientation, current_position.path.copy())
+                    if current_position.cost > min_cost: 
+                        continue
                     position.path.append(next_location)
                     heapq.heappush(position_q, position)
     tiles_used_in_min_paths = set()
