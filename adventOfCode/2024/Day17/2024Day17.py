@@ -21,7 +21,14 @@ class ElfWare:
         input_path = private_files_base / year / day / file_name
         return input_path
     
-    
+    def copy(self) -> 'ElfWare': 
+        p = ElfWare()
+        p.reg_a = self.reg_a
+        p.reg_b = self.reg_b
+        p.reg_c = self.reg_c
+        p.program = self.program.copy()
+
+        return p
 
     def load(self, file_name: str): 
         def parse_input_val(line: str) -> str: 
@@ -200,13 +207,40 @@ class ElfWare:
         return ','.join(str(val) for val in output)
     
 def main(): 
-    pass
+    file_name = "input.txt"
+    p = ElfWare()
+    p.load(file_name)
+    result = p.run()
+    print(f"Part 1 result for {file_name}: {result}")
 
-def part1(file_name: str): 
+def part1(file_name: str) -> str: 
     p = ElfWare()
     p.load(file_name)
     result = p.run()
     return result
+
+def part2(file_name : str) -> int: 
+    return -1
+    """
+    p = ElfWare()
+    p.load(file_name)
+    limit = 1_000_000_000
+    expected = ",".join(str(val) for val in p.program)
+    done = False
+    result = -1
+    current_a = 0
+    while not done: 
+        working_p = p.copy()
+        working_p.reg_a = current_a
+        result = working_p.run()
+        if result == expected: 
+            break
+        current_a += 1
+        if current_a > limit: 
+            done = True
+    return result
+    """
+
 
 """
 * If register C contains 9, the program 2,6 would set register B to 1.
@@ -270,6 +304,22 @@ def test_part1():
     expected = "4,6,3,5,6,3,5,2,1,0"
     result = part1(file_name)
     assert(result == expected)
+
+"""
+Register A: 2024
+Register B: 0
+Register C: 0
+
+Program: 0,3,5,4,3,0
+
+117440
+"""
+def test_part2(): 
+    expected = 117440
+    file_name = "sample.txt"
+    result = part2(file_name)
+    assert(result == expected)
+
 
 if __name__ == "__main__":
     pytest.main([__file__])
