@@ -74,42 +74,40 @@ def part1(file_name: str, grid_size: int, bytes: int) -> int:
     for i in range(bytes):
         grid[points[i].y][points[i].x] = '#'
     
+    count = find_path(grid)
+
+    return count
+
+def find_path(grid : list[list[str]]) -> int: 
+    def try_step(position: Point, direction: Direction, current_count: int): 
+        next_position = Point(position.x + direction.x, position.y + direction.y)
+        
+        if inbounds(next_position, grid_size) and not next_position in seen and grid[next_position.y][next_position.x] == '.':
+            seen.append(next_position)
+            q.append((next_position, current_count + 1))
+
+    grid_size = len(grid)
     position = Point(0, 0)
     goal = Point(grid_size - 1, grid_size - 1)
     q = []
     seen = []
     count = -1
+    found = False
     q.append((position, 0))
     while len(q) > 0: 
         position, count = q.pop(0)
         if position == goal: 
+            found = True
             break
-    
-        # north
-        next_position = Point(position.x + North.x, position.y + North.y)
-        if inbounds(next_position, grid_size) and not next_position in seen and grid[next_position.y][next_position.x] == '.':
-            seen.append(next_position)
-            q.append((next_position, count + 1))
-        
-        # east
-        next_position = Point(position.x + East.x, position.y + East.y)
-        if inbounds(next_position, grid_size) and not next_position in seen and grid[next_position.y][next_position.x] == '.':
-            seen.append(next_position)
-            q.append((next_position, count + 1))
-        
-        # south
-        next_position = Point(position.x + South.x, position.y + South.y)
-        if inbounds(next_position, grid_size) and not next_position in seen and grid[next_position.y][next_position.x] == '.':
-            seen.append(next_position)
-            q.append((next_position, count + 1))
-        
-        # west
-        next_position = Point(position.x + West.x, position.y + West.y)
-        if inbounds(next_position, grid_size) and not next_position in seen and grid[next_position.y][next_position.x] == '.':
-            seen.append(next_position)
-            q.append((next_position, count + 1))
 
-    return count
+        try_step(position, North, count)
+        try_step(position, East, count)
+        try_step(position, South, count)
+        try_step(position, West, count)
+        
+
+    return count if found else -1
+
 
 """ 
 Find all possible paths first, then add additional points until 
@@ -117,21 +115,12 @@ they are all blocked. Returns the first point where there is no path
 """
 def part2(file_name: str, grid_size: int, start_bytes: int) -> Point: 
     
-    def try_step(position: Point, direction: Direction, path: list[Point]): 
-        next_position = Point(position.x + direction.x, position.y + direction.y)
-        next_step = Step(position, next_position)
-        if inbounds(next_position, grid_size) and not next_step.reverse_step() in seen and grid[next_position.y][next_position.x] == '.':
-            seen.append(next_step)
-            new_path = path.copy()
-            new_path.append(next_position)
-            q.append((next_position, new_path))
-
     grid = init_grid(grid_size)
     points = load_input(file_name)
-    paths = []
     for i in range(start_bytes):
         grid[points[i].y][points[i].x] = '#'
-    
+
+    """
     position = Point(0, 0)
     goal = Point(grid_size - 1, grid_size - 1)
     q = []
@@ -147,18 +136,29 @@ def part2(file_name: str, grid_size: int, start_bytes: int) -> Point:
         try_step(position, East, path)
         try_step(position, South, path)
         try_step(position, West, path)
-
+    """
     # find point where all paths are gone
     for i in range(start_bytes, len(points)):
         point = points[i]
         grid[point.y][point.x] = '#'
+        count = find_path(grid)
+        if count == -1: 
+            return point
 
+    raise Exception("Out of points without closing all paths")
+
+"""
 def prune_paths(paths: list[list[Point]], position: Point):
-    new_list = []
-    for path in paths: 
-        if not position in path: 
-            new_list.append(position)
-    return new_list
+    new_paths = []
+    for path in paths:
+        new_path = []
+        for point in path: 
+            if point != position: 
+                new_path.append(point)
+        new_paths.append(new_path)
+
+    return new_paths
+"""
 
 def main(): 
     file_name = "input.txt"
@@ -170,12 +170,26 @@ def main():
     difference = end_time - start_time
     print(f"Part 1 result for {file_name}: {result} in {difference.seconds} seconds")
 
+    start_time = datetime.now()
+    result = part2(file_name, grid_size, bytes)
+    end_time = datetime.now()
+    difference = end_time - start_time
+    print(f"Part 2 result for {file_name}(x, y): {result.x}, {result.y} in {difference.seconds} seconds")
+
 def test_part1(): 
     file_name = "sample.txt"
     expected = 22
     grid_size = 7
     bytes = 12
     result = part1(file_name, grid_size, bytes)
+    assert(result == expected)
+
+def test_part2(): 
+    file_name = "sample.txt"
+    expected = Point(6, 1)
+    grid_size = 7
+    start_bytes = 12
+    result = part2(file_name, grid_size, start_bytes)
     assert(result == expected)
 
 if __name__ == "__main__":
