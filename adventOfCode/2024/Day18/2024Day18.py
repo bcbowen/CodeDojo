@@ -155,7 +155,10 @@ def part2(file_name: str, grid_size: int, start_bytes: int) -> Point:
 
 def prune_paths(paths: list[list[Point]], position: Point):
     new_list = []
-    for path in 
+    for path in paths: 
+        if not position in path: 
+            new_list.append(position)
+    return new_list
 
 def main(): 
     file_name = "input.txt"
