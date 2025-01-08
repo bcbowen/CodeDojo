@@ -63,6 +63,10 @@ def inbounds(position: Point, grid_size: int) -> bool:
             return False
         return True
 
+def populate_grid(grid : list[list[str]], points: list[Point]): 
+    for point in points:
+        grid[point.y][point.x] = '#'
+
 """
 Use BFS to find path through maze
 """
@@ -70,9 +74,7 @@ def part1(file_name: str, grid_size: int, bytes: int) -> int:
     
     grid = init_grid(grid_size)
     points = load_input(file_name)
-
-    for i in range(bytes):
-        grid[points[i].y][points[i].x] = '#'
+    populate_grid(grid, points[0:bytes])
     
     count = find_path(grid)
 
@@ -108,57 +110,33 @@ def find_path(grid : list[list[str]]) -> int:
 
     return count if found else -1
 
-
 """ 
 Find all possible paths first, then add additional points until 
 they are all blocked. Returns the first point where there is no path
 """
 def part2(file_name: str, grid_size: int, start_bytes: int) -> Point: 
     
-    grid = init_grid(grid_size)
+    
     points = load_input(file_name)
-    for i in range(start_bytes):
-        grid[points[i].y][points[i].x] = '#'
 
-    """
-    position = Point(0, 0)
-    goal = Point(grid_size - 1, grid_size - 1)
-    q = []
-    seen = []
-    
-    q.append((position, [position]))
-    while len(q) > 0: 
-        position, path = q.pop(0)
-        if position == goal: 
-            paths.append(path)
-    
-        try_step(position, North, path)
-        try_step(position, East, path)
-        try_step(position, South, path)
-        try_step(position, West, path)
-    """
-    # find point where all paths are gone
-    for i in range(start_bytes, len(points)):
-        point = points[i]
-        grid[point.y][point.x] = '#'
+    start = 0
+    end = len(points) - 1
+
+    while start < end - 1: 
+        mid = start + (end - start) // 2
+        grid = init_grid(grid_size)
+        populate_grid(grid, points[0:mid + 1])
         count = find_path(grid)
-        if count == -1: 
-            return point
+        if count > 0: 
+            start = mid
+        else: 
+            end = mid
 
-    raise Exception("Out of points without closing all paths")
+    if count > 0: 
+        mid += 1
 
-"""
-def prune_paths(paths: list[list[Point]], position: Point):
-    new_paths = []
-    for path in paths:
-        new_path = []
-        for point in path: 
-            if point != position: 
-                new_path.append(point)
-        new_paths.append(new_path)
+    return points[mid]
 
-    return new_paths
-"""
 
 def main(): 
     file_name = "input.txt"
