@@ -17,41 +17,70 @@ def parse_grid(locks : list[list[int]], keys : list[list[int]], graph : list[lis
     # keys have top row empty
     if graph[0][0] == '.': 
         key_row = [0] * len(graph)
-        for col in range(len(graph)): 
-             for row in range(len(graph[0])): 
-                  if graph[col][row] != '.': 
-                       key_row[col] = len(graph) - row
-                       break
+        for row in range(len(graph)): 
+          for col in range(len(graph[0])): 
+               if graph[row][col] != '.': 
+                    key_row[col] = len(graph) - row - 1
+                    break
         keys.append(key_row)
     else: 
-        lock_row = [0] * len(graph)
-        for col in range(len(graph)): 
-             for row in range(len(graph[0])): 
-                  if graph[col][row] == '.': 
-                       lock_row[col] = row
-                       break
+        lock_row = [0] * len(graph[0])
+        for row in range(len(graph)): 
+          for col in range(len(graph[0])): 
+               if graph[row][col] == '.': 
+                    lock_row[col] = row - 1
+                    break
         locks.append(lock_row)
 
 
 
 def load_inputs(file_name: str) -> tuple[list[list[int]], list[list[int]]]: 
-    locks : list[list[int]] = []
-    keys : list[list[int]] = []
+     locks : list[list[int]] = []
+     keys : list[list[int]] = []
 
-    path = get_input_filepath(file_name)
-    with open(path, "r") as file:
+     path = get_input_filepath(file_name)
+     with open(path, "r") as file:
          lines = file.readlines()
          i = 0
          while i < len(lines):  
             grid = []
             j = i + 7
             while i < j: 
-                 grid.append(list(lines[i]))
+                 grid.append(list(lines[i].strip()))
+                 i += 1
             parse_grid(locks, keys, grid)
             i += 1
+     return locks, keys
+
+def check_fit(lock : list[int], key : list[int]) -> bool: 
+     for i in range(len(lock)): 
+          if lock[i] + key[i] > 5: 
+               return False
+     return True
+
+def part1(file_name: str) -> int: 
+     locks, keys = load_inputs(file_name)
+     count = 0
+     for lock in locks: 
+          for key in keys: 
+               if check_fit(lock, key): 
+                    count += 1
+     return count
 
 def main(): 
     pass
+
+def test_load_inputs(): 
+     file_name = "sample.txt"
+     locks, keys = load_inputs(file_name)
+     assert(len(locks) == 2)
+     assert(len(keys) == 3)
+
+def test_part1(): 
+     file_name = "sample.txt"
+     expected = 3
+     result = part1(file_name)
+     assert(result == expected)
 
 if __name__ == "__main__":
     pytest.main([__file__])
