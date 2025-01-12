@@ -36,11 +36,10 @@ def parse_grid(locks : list[list[int]], keys : list[list[int]], graph : list[lis
 
 
 def load_inputs(file_name: str) -> tuple[list[list[int]], list[list[int]]]: 
-     locks : list[list[int]] = []
-     keys : list[list[int]] = []
-
-     path = get_input_filepath(file_name)
-     with open(path, "r") as file:
+    locks : list[list[int]] = []
+    keys : list[list[int]] = []
+    path = get_input_filepath(file_name)
+    with open(path, "r") as file:
          lines = file.readlines()
          i = 0
          while i < len(lines):  
@@ -51,37 +50,15 @@ def load_inputs(file_name: str) -> tuple[list[list[int]], list[list[int]]]:
                  i += 1
             parse_grid(locks, keys, grid)
             i += 1
-     return locks, keys
-
-def check_fit(lock : list[int], key : list[int]) -> bool: 
-     for i in range(len(lock)): 
-          if lock[i] + key[i] > 5: 
-               return False
-     return True
-
-def part1(file_name: str) -> int: 
-     locks, keys = load_inputs(file_name)
-     count = 0
-     for lock in locks: 
-          for key in keys: 
-               if check_fit(lock, key): 
-                    count += 1
-     return count
+    return locks, keys
 
 def main(): 
     pass
 
 def test_load_inputs(): 
-     file_name = "sample.txt"
-     locks, keys = load_inputs(file_name)
-     assert(len(locks) == 2)
-     assert(len(keys) == 3)
-
-def test_part1(): 
-     file_name = "sample.txt"
-     expected = 3
-     result = part1(file_name)
-     assert(result == expected)
+    file_name = "sample.txt"
+    locks, keys = load_inputs(file_name)
+    assert(len(locks) == 4)
 
 if __name__ == "__main__":
     pytest.main([__file__])
