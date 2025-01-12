@@ -18,18 +18,19 @@ def parse_grid(locks : list[list[int]], keys : list[list[int]], graph : list[lis
     if graph[0][0] == '.': 
         key_row = [0] * len(graph)
         for row in range(len(graph)): 
-          for col in range(len(graph[0])): 
-               if graph[row][col] != '.': 
-                    key_row[col] = len(graph) - row - 1
-                    break
+             for col in range(len(graph[0])): 
+                  if graph[col][row] != '.': 
+                       key_row[col] = len(graph) - row
+                       break
         keys.append(key_row)
     else: 
-        lock_row = [0] * len(graph[0])
+        lock_row = [0] * len(graph)
+
         for row in range(len(graph)): 
-          for col in range(len(graph[0])): 
-               if graph[row][col] == '.': 
-                    lock_row[col] = row - 1
-                    break
+             for col in range(len(graph[0])): 
+                  if graph[col][row] == '.': 
+                       lock_row[col] = row
+                       break
         locks.append(lock_row)
 
 
