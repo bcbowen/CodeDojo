@@ -17,16 +17,17 @@ def parse_grid(locks : list[list[int]], keys : list[list[int]], graph : list[lis
     # keys have top row empty
     if graph[0][0] == '.': 
         key_row = [0] * len(graph[0])
-        for row in range(len(graph)): 
-             for col in range(len(graph[0])): 
+        for col in range(len(graph[0])): 
+             for row in range(len(graph)): 
+             
                   if graph[row][col] != '.': 
                        key_row[col] = len(graph) - row
                        break
         keys.append(key_row)
     else: 
         lock_row = [0] * len(graph[0])
-        for row in range(len(graph)): 
-             for col in range(len(graph[0])): 
+        for col in range(len(graph[0])): 
+             for row in range(len(graph)): 
                   if graph[row][col] == '.': 
                        lock_row[col] = row
                        break
@@ -57,7 +58,8 @@ def main():
 def test_load_inputs(): 
     file_name = "sample.txt"
     locks, keys = load_inputs(file_name)
-    assert(len(locks) == 4)
+    assert(len(locks) == 2)
+    assert(len(keys) == 3)
 
 if __name__ == "__main__":
     pytest.main([__file__])
