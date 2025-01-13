@@ -53,15 +53,41 @@ def part1(file_name):
             count_tees += 1
     return count_tees 
 
+def part2(file_name) -> str: 
+    inputs = get_inputs(file_name)
+    cliques = []
+    def bron_kerbosh(r : set[str], p : set[str], x : set[str]):
+        if not x and not p: 
+            cliques.append(r)
+            return
+        for node in list(p): 
+            bron_kerbosh(r | {node}, p & inputs[node], x & inputs[node])
+            p.remove(node)
+            x.add(node)
+        
+          
+    bron_kerbosh(set(), set(inputs.keys()), set())
+    return ",".join(sorted(max(cliques, key=len)))
+
 def main(): 
     file_name = "input.txt"
     result = part1(file_name)
     print(f"Part 1 result: {result}")
 
+    result = part2(file_name)
+    print(f"Part 2 result: {result}")
+
+
 def test_part1(): 
     file_name = "sample.txt"
     expected = 7
     result = part1(file_name)
+    assert(result == expected)
+
+def test_part2(): 
+    file_name = "sample.txt"
+    expected = "co,de,ka,ta"
+    result = part2(file_name)
     assert(result == expected)
 
 def test_get_inputs(): 
