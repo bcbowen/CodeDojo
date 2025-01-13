@@ -16,19 +16,18 @@ def get_input_filepath(file_name: str) -> str:
 def parse_grid(locks : list[list[int]], keys : list[list[int]], graph : list[list[str]]):
     # keys have top row empty
     if graph[0][0] == '.': 
-        key_row = [0] * len(graph)
+        key_row = [0] * len(graph[0])
         for row in range(len(graph)): 
              for col in range(len(graph[0])): 
-                  if graph[col][row] != '.': 
+                  if graph[row][col] != '.': 
                        key_row[col] = len(graph) - row
                        break
         keys.append(key_row)
     else: 
-        lock_row = [0] * len(graph)
-
+        lock_row = [0] * len(graph[0])
         for row in range(len(graph)): 
              for col in range(len(graph[0])): 
-                  if graph[col][row] == '.': 
+                  if graph[row][col] == '.': 
                        lock_row[col] = row
                        break
         locks.append(lock_row)
