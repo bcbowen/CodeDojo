@@ -58,11 +58,16 @@ def is_inbounds(p: Point, grid: list[list[str]]) -> bool:
             return False
         return True
 
-def get_next(current: Point, grid: list[list[str]]) -> tuple[Point, Direction]: 
+def get_next(current: Point, grid: list[list[str]], path : tuple) -> Point: 
     
+    def is_seen(next: Point):
+        exists = any((tup[0].x == next.x and tup[0].y == next.y) for tup in path)
+        return exists
+
     def try_direction(d: Direction) -> tuple[bool, Point]: 
         next = Point(current.x + d.x, current.y + d.y)
-        if is_inbounds(next, grid) and grid[next.y][next.x] == '.': 
+        exists = is_seen(next)
+        if not exists and is_inbounds(next, grid) and grid[next.y][next.x] != '#': 
             return (True, next)
         
         return (False, None)
@@ -70,26 +75,26 @@ def get_next(current: Point, grid: list[list[str]]) -> tuple[Point, Direction]:
     d = East
     is_valid, next = try_direction(d)
     if is_valid: 
-        return next, d
+        return next
     
     d = South
     is_valid, next = try_direction(d)
     if is_valid: 
-        return next, d
+        return next
     
     d = West
     is_valid, next = try_direction(d)
     if is_valid: 
-        return next, d
+        return next
     
     d = North
     is_valid, next = try_direction(d)
     if is_valid: 
-        return next, d
-    
+        return next
+        
     raise Exception("Next point not found!")
     
-def find_shortcuts(path : tuple[Point, Direction, int], grid: list[list[str]]) -> dict[int, int]: 
+def find_shortcuts(path : tuple[Point, int], grid: list[list[str]]) -> dict[int, int]: 
     def check_shortcut(d: Direction) -> Point: 
         point1 = Point(current.x + d.x, current.y + d.y)
         if is_inbounds(point1, grid) and grid[point1.y][point1.x] == "#": 
@@ -107,7 +112,7 @@ def find_shortcuts(path : tuple[Point, Direction, int], grid: list[list[str]]) -
         raise Exception(f"Point not found in path x: {shortcut.x} y: {shortcut.y}")
 
     shortcut_counts = defaultdict(int)
-    for i, current, d, step in enumerate(path): 
+    for i, current, step in enumerate(path): 
         # check east
         shortcut = check_shortcut(East)
         if shortcut: 
@@ -137,13 +142,13 @@ def part1(file_name : str) -> dict[int, int]:
     start, end = find_points(grid)
     step = 0
     current = start
-    direction = East
+    #direction = East
     
     while current != end:
-        path.append((current, direction, step))    
+        path.append((current, step))    
         step += 1
-        current, direction = get_next(current, grid)
-    shortcuts = find_shortcuts()
+        current = get_next(current, grid, path)
+    shortcuts = find_shortcuts(path, grid)
     return shortcuts
     
 
