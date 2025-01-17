@@ -99,20 +99,20 @@ def find_shortcuts(path : tuple[Point, int], grid: list[list[str]]) -> dict[int,
         point1 = Point(current.x + d.x, current.y + d.y)
         if is_inbounds(point1, grid) and grid[point1.y][point1.x] == "#": 
             point2 = Point(point1.x + d.x, point1.y + d.y)
-            if is_inbounds(point1, grid) and grid[point1.y][point1.x] == ".": 
+            if is_inbounds(point2, grid) and grid[point2.y][point2.x] == ".": 
                 return point2
         return None
     
     def calc_savings(shortcut : Point, start_index : int, start_step: int):
         for i in range(start_index, len(path)): 
-            point, _, step = path[i]
+            point, step = path[i]
             if point.x == shortcut.x and point.y == shortcut.y: 
-                diff =  step - start_step - 1
+                diff = step - start_step - 2
                 return diff
-        raise Exception(f"Point not found in path x: {shortcut.x} y: {shortcut.y}")
+        return -1
 
     shortcut_counts = defaultdict(int)
-    for i, current, step in enumerate(path): 
+    for i, (current, step) in enumerate(path): 
         # check east
         shortcut = check_shortcut(East)
         if shortcut: 
@@ -153,13 +153,24 @@ def part1(file_name : str) -> dict[int, int]:
     
 
 def main(): 
-    pass
+    file_name = "input.txt"
+    shortcuts = part1(file_name)
+    total = 0
+    
+    for key in shortcuts.keys(): 
+        print(f"There are {shortcuts[key]} cheats that save {key}")
+        if key >= 100: 
+            total += 1
+    print("Part1 result: ", total)
+    
 
 def test_part1(): 
     file_name = "sample.txt"
     shortcuts = part1(file_name)
+    
     for key in shortcuts.keys(): 
-        print(f"There are {key} cheats that save {shortcuts[key]}")
+        print(f"There are {shortcuts[key]} cheats that save {key}")
+    
 
 if __name__ == "__main__":
     pytest.main([__file__])
