@@ -17,6 +17,9 @@ class Point:
      x: int
      y: int
 
+     def __eq__(self, other: 'Point'): 
+         return self.x == other.x and self.y == other.y
+
 def get_input_filepath(file_name: str) -> str:
     current_path = Path(__file__).parent
     day = current_path.name
@@ -58,16 +61,16 @@ def is_inbounds(p: Point, grid: list[list[str]]) -> bool:
             return False
         return True
 
-def get_next(current: Point, grid: list[list[str]], path : tuple) -> Point: 
+def get_next(current: Point, previous: Point, grid: list[list[str]]) -> Point: 
     
-    def is_seen(next: Point):
-        exists = any((tup[0].x == next.x and tup[0].y == next.y) for tup in path)
-        return exists
+    #def is_seen(next: Point):
+    #    exists = any((tup[0].x == next.x and tup[0].y == next.y) for tup in path)
+    #    return exists
 
     def try_direction(d: Direction) -> tuple[bool, Point]: 
         next = Point(current.x + d.x, current.y + d.y)
-        exists = is_seen(next)
-        if not exists and is_inbounds(next, grid) and grid[next.y][next.x] != '#': 
+        #exists = is_seen(next)
+        if next != previous and is_inbounds(next, grid) and grid[next.y][next.x] != '#': 
             return (True, next)
         
         return (False, None)
@@ -99,7 +102,7 @@ def find_shortcuts(path : tuple[Point, int], grid: list[list[str]]) -> dict[int,
         point1 = Point(current.x + d.x, current.y + d.y)
         if is_inbounds(point1, grid) and grid[point1.y][point1.x] == "#": 
             point2 = Point(point1.x + d.x, point1.y + d.y)
-            if is_inbounds(point2, grid) and grid[point2.y][point2.x] == ".": 
+            if is_inbounds(point2, grid) and grid[point2.y][point2.x] != "#": 
                 return point2
         return None
     
@@ -142,12 +145,13 @@ def part1(file_name : str) -> dict[int, int]:
     start, end = find_points(grid)
     step = 0
     current = start
-    #direction = East
+    path.append((current, step))
     
     while current != end:
-        path.append((current, step))    
+        previous = path[step][0]
         step += 1
-        current = get_next(current, grid, path)
+        current = get_next(current, previous, grid)
+        path.append((current, step))    
     shortcuts = find_shortcuts(path, grid)
     return shortcuts
     
@@ -174,4 +178,4 @@ def test_part1():
 
 if __name__ == "__main__":
     pytest.main([__file__])
-    main()
+    #main()
