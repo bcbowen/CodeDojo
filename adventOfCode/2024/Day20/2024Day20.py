@@ -61,8 +61,14 @@ def is_inbounds(p: Point, grid: list[list[str]]) -> bool:
             return False
         return True
 
-def get_next(current: Point, previous: Point, grid: list[list[str]]) -> Point: 
-    
+
+
+def get_next(current: Point, direction: Direction, grid: list[list[str]]) -> tuple[Point, Direction]: 
+    def get_turns(d : Direction) -> tuple[Direction, Direction]: 
+        if d in [East, West]: 
+            return North, South
+        else: 
+            return East, West    
     #def is_seen(next: Point):
     #    exists = any((tup[0].x == next.x and tup[0].y == next.y) for tup in path)
     #    return exists
@@ -70,30 +76,22 @@ def get_next(current: Point, previous: Point, grid: list[list[str]]) -> Point:
     def try_direction(d: Direction) -> tuple[bool, Point]: 
         next = Point(current.x + d.x, current.y + d.y)
         #exists = is_seen(next)
-        if next != previous and is_inbounds(next, grid) and grid[next.y][next.x] != '#': 
+        if is_inbounds(next, grid) and grid[next.y][next.x] != '#': 
             return (True, next)
         
         return (False, None)
 
-    d = East
-    is_valid, next = try_direction(d)
+    # try going current direction
+    is_valid, next = try_direction(direction)
     if is_valid: 
-        return next
+        return next, direction
     
-    d = South
-    is_valid, next = try_direction(d)
-    if is_valid: 
-        return next
-    
-    d = West
-    is_valid, next = try_direction(d)
-    if is_valid: 
-        return next
-    
-    d = North
-    is_valid, next = try_direction(d)
-    if is_valid: 
-        return next
+    #turn l or r: 
+    d1, d2 = get_turns(direction)
+    for d in [d1, d2]: 
+        is_valid, next = try_direction(d)
+        if is_valid: 
+            return next, d
         
     raise Exception("Next point not found!")
     
@@ -145,17 +143,17 @@ def part1(file_name : str) -> dict[int, int]:
     start, end = find_points(grid)
     step = 0
     current = start
+    direction = East
     path.append((current, step))
     
     while current != end:
-        previous = path[step][0]
         step += 1
-        current = get_next(current, previous, grid)
+        current, direction = get_next(current, direction, grid)
         path.append((current, step))    
     shortcuts = find_shortcuts(path, grid)
     return shortcuts
     
-
+# 398 is too low
 def main(): 
     file_name = "input.txt"
     shortcuts = part1(file_name)
@@ -178,4 +176,4 @@ def test_part1():
 
 if __name__ == "__main__":
     pytest.main([__file__])
-    #main()
+    main()
