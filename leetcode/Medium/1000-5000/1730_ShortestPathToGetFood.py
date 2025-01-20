@@ -90,4 +90,5 @@ def test_getFood(grid: list[list[str]], expected: int):
     result = solution.getFood(grid)
     assert(result == expected)
 
-pytest.main([__file__])
+if __name__ == "__main__": 
+    pytest.main([__file__])
