@@ -26,8 +26,6 @@ class Solution:
                 col = row_lookup[key][0]
                 if len(col_lookup[col]) == 1:
                     isolated_servers.add((key, col)) 
-            #if len(row_lookup[key]) == 1 and len(col_lookup[row_lookup[0]]) == 1:
-                #isolated_servers.add((key, row_lookup[key][0])) 
         return server_count - len(isolated_servers)
 
 """
