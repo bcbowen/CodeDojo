@@ -5,7 +5,8 @@ class Solution:
         rows = len(isWater)
         columns = len(isWater[0])
 
-        result = [[-1] * columns for i in range(rows)]
+        #result = [[-1] * columns for i in range(rows)]
+        result = [[-1 for _ in range(columns)] for _ in range(rows)]
         # q holds row, col, previous height
         q = []
         # N E S W
@@ -15,7 +16,7 @@ class Solution:
 
         def is_inbounds(point: tuple[int, int]) -> bool: 
             row, col = point
-            return 0 <= row and row < rows and 0 <= columns and col < columns
+            return 0 <= row and row < rows and 0 <= col and col < columns
 
         for row in range(rows): 
             for col in range(columns): 
@@ -33,16 +34,68 @@ class Solution:
                 for d in range(4): 
                     next = (row + d_row[d], col + d_col[d])
                     if is_inbounds(next) and result[next[0]][next[1]] == -1:
-                        q.append((next[0], next[1]))
+                        q.append(next)
                         result[next[0]][next[1]] = next_layer_height
 
             next_layer_height += 1                        
         return result
-                
+
+def test_troubleshooting(): 
+    isWater = [
+        [0,1,1,1,0,1,1],
+        [0,1,0,1,0,0,0],
+        [0,1,0,1,0,1,1],
+        [1,1,1,1,0,1,0],
+        [1,0,1,1,1,1,1],
+        [1,1,0,0,0,1,1],
+        [1,1,1,1,0,1,0],
+        [1,0,0,1,1,0,0],
+        [1,1,1,0,1,1,0],
+        [1,0,0,0,1,0,1]
+     ]
+    expected = [
+         [1,0,0,0,1,0,0],
+         [1,0,1,0,1,1,1],
+         [1,0,1,0,1,0,0],
+         [0,0,0,0,1,0,1],
+         [0,1,0,0,0,0,0],
+         [0,0,1,1,1,0,0],
+         [0,0,0,0,1,0,1],
+         [0,1,1,0,0,1,2],
+         [0,0,0,1,0,0,1],
+         [0,1,1,1,0,1,0]
+    ]
+
+    solution = Solution()
+    result = solution.highestPeak(isWater)
+    assert(result == expected)                
 
 @pytest.mark.parametrize("isWater, expected", [
     ([[0,1],[0,0]], [[1,0],[2,1]]), 
-    ([[0,0,1],[1,0,0],[0,0,0]], [[1,1,0],[0,1,1],[1,2,2]])
+    ([[0,0,1],[1,0,0],[0,0,0]], [[1,1,0],[0,1,1],[1,2,2]]), 
+    ([
+        [0,1,1,1,0,1,1],
+        [0,1,0,1,0,0,0],
+        [0,1,0,1,0,1,1],
+        [1,1,1,1,0,1,0],
+        [1,0,1,1,1,1,1],
+        [1,1,0,0,0,1,1],
+        [1,1,1,1,0,1,0],
+        [1,0,0,1,1,0,0],
+        [1,1,1,0,1,1,0],
+        [1,0,0,0,1,0,1]
+     ], [
+         [1,0,0,0,1,0,0],
+         [1,0,1,0,1,1,1],
+         [1,0,1,0,1,0,0],
+         [0,0,0,0,1,0,1],
+         [0,1,0,0,0,0,0],
+         [0,0,1,1,1,0,0],
+         [0,0,0,0,1,0,1],
+         [0,1,1,0,0,1,2],
+         [0,0,0,1,0,0,1],
+         [0,1,1,1,0,1,0]
+    ])
 ])
 def test_highestPeak(isWater: list[list[int]], expected: list[list[int]]): 
     solution = Solution()
