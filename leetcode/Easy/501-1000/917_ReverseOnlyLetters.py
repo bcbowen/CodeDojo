@@ -8,9 +8,7 @@ class Solution:
         
         val_len = len(letters)
         right = val_len - 1
-        #mid = val_len // 2 if val_len % 2 == 0 else val_len // 2 + 1
-        #mid = val_len // 2
-        
+
         while left < right:
             while left < val_len and not letters[left].isalpha(): 
                 left += 1
