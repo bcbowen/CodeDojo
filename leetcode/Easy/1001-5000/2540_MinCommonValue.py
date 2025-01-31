@@ -31,12 +31,14 @@ Explanation: There are two common elements in the array 2 and 3 out of which 2 i
     ([1,3,5], [2, 4, 6], -1),
     ([2, 4, 6], [1,3,5], -1),
     ([1,2,3,6], [2,3,4,5], 2),
-    ([1,3,5,6], [2,3,4,6], 6),
+    ([1,3,5,6], [2,4,6], 6),
     ([1,3,5,6], [6], 6),
     ([6], [1,3,5,6], 6)
 ])
 def test_getCommon(nums1: list[int], nums2: list[int], expected: int):
-    pass
+    sol = Solution()
+    result = sol.getCommon(nums1, nums2)
+    assert(result == expected)
 
 if __name__ == "__main__":
     pytest.main([__file__])
