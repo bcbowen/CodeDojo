@@ -5,13 +5,14 @@ class Solution:
         letters = list(word)
         left = 0
         right = 0
-        while right < len(word): 
-             if word[right] == ch: 
+        while right < len(letters): 
+             if letters[right] == ch: 
                   while left < right: 
-                       word[left], word[right] = word[right], word[left]
+                       letters[left], letters[right] = letters[right], letters[left]
                        left += 1
                        right -= 1
                   break
+             right += 1
         return "".join(letters)
 
 """
