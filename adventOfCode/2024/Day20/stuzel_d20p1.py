@@ -57,7 +57,8 @@ for k,v in reversed(dist.items()):
         if p in dist:
             nv = dist[p]
             if v-nv-2>=100:
-                #print(k,p, nv, v)
-                #print(v-nv-2)
+                print(k,p, nv, v)
+                print(v-nv-2)
                 count+=1
 print(count)
+print(dist)
