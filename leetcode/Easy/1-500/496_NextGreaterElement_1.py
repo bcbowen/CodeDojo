@@ -7,7 +7,6 @@ class Solution:
         for i in nums2: 
             while stack and i > stack[-1]: 
                 next_element_map[stack.pop()] = i
-
             stack.append(i)
         result = [0] * len(nums1)
         for i, v in enumerate(nums1): 
