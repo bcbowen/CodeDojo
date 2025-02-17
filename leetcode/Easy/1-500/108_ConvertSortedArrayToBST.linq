@@ -94,7 +94,14 @@ public static class TreeNodeExtensions
 
 #region Tests
 
-[Fact] void Test_Xunit() => Assert.True(1 + 1 == 2);
+[Fact]
+void Test_Xunit() 
+{
+	var nums = new[] { -10, -3, 0, 5, 9};
+	TreeNode result = new Solution().SortedArrayToBST(nums); 
+	result.Dump(); 
+	
+}
 
 
 
