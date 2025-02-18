@@ -1,0 +1,28 @@
+# Add to .bashrc
+env=~/.ssh/agent.env
+
+# Function to load the SSH agent environment variables
+agent_load_env () { test -f "$env" && . "$env" >| /dev/null ; }
+
+# Function to start the SSH agent and save the environment variables
+agent_start () {
+    (umask 077; ssh-agent >| "$env")
+    . "$env" >| /dev/null ;
+}
+
+# Load the SSH agent environment variables if the file exists
+agent_load_env
+
+# Determine the state of the SSH agent
+agent_run_state=$(ssh-add -l >| /dev/null 2>&1; echo $?)
+
+# Start the SSH agent if it's not running
+if [ ! "$SSH_AUTH_SOCK" ] || [ $agent_run_state = 2 ]; then
+    agent_start
+    ssh-add
+elif [ "$SSH_AUTH_SOCK" ] && [ $agent_run_state = 1 ]; then
+    ssh-add
+fi
+
+# Unset the environment variable to avoid conflicts
+unset env
