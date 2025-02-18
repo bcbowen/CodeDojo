@@ -1,5 +1,5 @@
 import pytest
-
+import json
 #  [1,4,4,null,2,2,null,1,null,6,8,null,null,null,null,1,3]
 
 class TreeNode:
@@ -8,26 +8,61 @@ class TreeNode:
          self.left = left
          self.right = right
 
+
+
+"""
+example definition: [1,4,4,null,2,2,null,1,null,6,8,null,null,null,null,1,3]
+"""
+def parse_values(definition: str) -> list[int]: 
+    definition = definition.strip().replace("null", "None")
+    return eval(definition)
+
+
+
 """
 example definition: [1,4,4,null,2,2,null,1,null,6,8,null,null,null,null,1,3]
 """
 def populate_tree(definition: str) -> TreeNode: 
-    pass
+    tree_vals = parse_values(definition)
+    #root = TreeNode(tree_vals[0])
+    if not tree_vals: 
+        return None
+    
+    it = iter(tree_vals)
+    root = TreeNode(next(it))
+    current = [root]
+    for node in current: 
+        val = next(it, None)
+        if val is not None: 
+            node.left = TreeNode(val)
+            current.append(node.left)
+        val = next(it, None)
+        if val is not None: 
+            node.right = TreeNode(val)
+            current.append(node.right)
+    return root
 
 
+@pytest.mark.parametrize("definition, expected", [
+    ("[1,2,3]", [1,2,3]), 
+    ("[1,2,null]", [1, 2, None])
+])
+def test_parse_values(definition: str, expected: list[int | None]): 
+    result = parse_values(definition)
+    assert(result == expected)
 """
 Test tree for the following definition: 
 [1,4,4,null,2,2,null,1,null,6,8,null,null,null,null,1,3]
 
 Expected tree: 
                  1
-               /    \
+               /    \\
               4      4
-               \    /
+              \\    /
                 2  2
-               /  / \
+               /  / \\
               1  6   8
-                    / \
+                    / \\
                    1   3
 
 """
