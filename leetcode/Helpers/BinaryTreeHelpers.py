@@ -8,15 +8,15 @@ class TreeNode:
          self.left = left
          self.right = right
 
-
-
 """
 example definition: [1,4,4,null,2,2,null,1,null,6,8,null,null,null,null,1,3]
 """
-def parse_values(definition: str) -> list[int]: 
+def parse_values(definition: str) -> list[int | None]: 
+    definition = definition.strip()
+    if definition == "[]": 
+        return []
     definition = definition.strip().replace("null", "None")
     return eval(definition)
-
 
 
 """
@@ -44,12 +44,21 @@ def populate_tree(definition: str) -> TreeNode:
 
 
 @pytest.mark.parametrize("definition, expected", [
+    ("[]", []), 
     ("[1,2,3]", [1,2,3]), 
     ("[1,2,null]", [1, 2, None])
 ])
 def test_parse_values(definition: str, expected: list[int | None]): 
     result = parse_values(definition)
     assert(result == expected)
+
+
+def test_get_empty_tree(): 
+    definition = "[]"
+    root = populate_tree(definition)
+    expected = None
+    assert(root == expected) 
+
 """
 Test tree for the following definition: 
 [1,4,4,null,2,2,null,1,null,6,8,null,null,null,null,1,3]
