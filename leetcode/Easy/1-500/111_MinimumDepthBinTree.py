@@ -16,7 +16,9 @@ from Helpers.BinaryTreeHelpers import TreeNode, populate_tree
 class Solution:
     def minDepth(self, root: Optional[TreeNode]) -> int:
         def dfs(root: Optional[TreeNode], depth: int) -> int: 
-            if not root.left and not root.right: 
+            if not root: 
+                return depth - 1
+            elif not root.left and not root.right: 
                 return depth
             
             l = 1
@@ -37,7 +39,8 @@ class Solution:
 
 @pytest.mark.parametrize("definition, expected", [
     ("[2,null,3,null,4,null,5,null,6]", 5), 
-    ("[3,9,20,null,null,15,7]", 2)
+    ("[3,9,20,null,null,15,7]", 2), 
+    ("[]", 0)
 ])
 def test_minDepth(definition: str, expected: int): 
     root = populate_tree(definition)
