@@ -1,6 +1,6 @@
 import pytest
 import json
-#  [1,4,4,null,2,2,null,1,null,6,8,null,null,null,null,1,3]
+from collections import deque
 
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):
@@ -18,6 +18,34 @@ def parse_values(definition: str) -> list[int | None]:
     definition = definition.strip().replace("null", "None")
     return eval(definition)
 
+
+"""
+example definition: [1,4,4,null,2,2,null,1,null,6,8,null,null,null,null,1,3]
+"""
+def get_definition(root: TreeNode) -> str:
+    if not root: 
+        return "[]"
+     
+    queue = deque([root])
+    values = []
+    while queue: 
+        for _ in range(len(queue)): 
+            node = queue.popleft()
+            if node == None: 
+                values.append(node)
+            else: 
+                values.append(node.val)
+                queue.append(node.left)
+                queue.append(node.right)
+    # leetcode trims trailing nulls from the definition so remove them before converting to a string
+    for i in range(len(values) - 3, 1, -2): 
+        if values[i + 1] == None and values[i + 2] == None: 
+            del values[i + 2]
+            del values[i + 1]
+
+        if values[i] != None: 
+            break
+    return json.dumps(values).replace(' ', '')    
 
 """
 example definition: [1,4,4,null,2,2,null,1,null,6,8,null,null,null,null,1,3]
@@ -75,6 +103,43 @@ Expected tree:
                    1   3
 
 """
+def test_get_definition(): 
+   definition = "[1,4,4,null,2,2,null,1,null,6,8,null,null,null,null,1,3]"
+
+   root = TreeNode(1)
+   current = root
+   current.left = TreeNode(4)
+   current.right = TreeNode(4)
+   current = current.left
+   current.right = TreeNode(2)
+   current.right.left = TreeNode(1)
+   current = root.right
+   current.left = TreeNode(2)
+   current.left.left = TreeNode(6)
+   current = current.left
+   current.right = TreeNode(8)
+   current.right.left = TreeNode(1)
+   current.right.right = TreeNode(3)
+
+   result = get_definition(root)
+   assert(result == definition) 
+
+"""
+Test tree for the following definition: 
+[1,4,4,null,2,2,null,1,null,6,8,null,null,null,null,1,3]
+
+Expected tree: 
+                 1
+               /    \\
+              4      4
+              \\    /
+                2  2
+               /  / \\
+              1  6   8
+                    / \\
+                   1   3
+
+"""
 def test_get_tree(): 
    definition = "[1,4,4,null,2,2,null,1,null,6,8,null,null,null,null,1,3]"
 
@@ -94,6 +159,18 @@ def test_get_tree():
    assert current.right.val == 8
    assert current.right.left.val == 1
    assert current.right.right.val == 3
+
+"""
+Start with a definition string, parse to a tree and back to a definition. The final value should match
+the starting value
+"""
+@pytest.mark.parametrize("definition", [
+    ("[1,4,4,null,2,2,null,1,null,6,8,null,null,null,null,1,3]"), 
+])
+def test_codec(definition: str): 
+    tree = populate_tree(definition)
+    serialized = get_definition(tree)
+    assert(definition == serialized)
 
 if __name__ == "__main__":
     pytest.main([__file__])
