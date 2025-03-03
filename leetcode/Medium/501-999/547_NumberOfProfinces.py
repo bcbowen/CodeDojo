@@ -7,24 +7,23 @@ class Solution:
         seen = set()
         num_groups = 0
         def dfs(node: int):
-            if node in seen: 
-                return
-             
-            seen.add(node)
             for val in graph[node]: 
                 if not val in seen: 
+                    seen.add(node)
                     dfs(val)
-            nonlocal num_groups
-            num_groups += 1
-
-        for i in range(len(isConnected)): 
-            for j in range(1, len(isConnected[i])):
+            
+        n = len(isConnected)
+        for i in range(n): 
+            for j in range(1, n):
                 if isConnected[i][j]: 
                     graph[i].append(j)
                     graph[j].append(i) 
 
-        for val in range(len(isConnected)): 
-            dfs(val)
+        for val in range(n):
+            if val not in seen: 
+                num_groups += 1
+                seen.add(val) 
+                dfs(val)
         return num_groups
 """
 Example 1:
