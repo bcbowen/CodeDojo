@@ -1,9 +1,31 @@
 import pytest
+from collections import defaultdict
 
 class Solution:
     def findCircleNum(self, isConnected: list[list[int]]) -> int:
-        pass
+        graph = defaultdict(list[int])
+        seen = set()
+        num_groups = 0
+        def dfs(node: int):
+            if node in seen: 
+                return
+             
+            seen.add(node)
+            for val in graph[node]: 
+                if not val in seen: 
+                    dfs(val)
+            nonlocal num_groups
+            num_groups += 1
 
+        for i in range(len(isConnected)): 
+            for j in range(1, len(isConnected[i])):
+                if isConnected[i][j]: 
+                    graph[i].append(j)
+                    graph[j].append(i) 
+
+        for val in range(len(isConnected)): 
+            dfs(val)
+        return num_groups
 """
 Example 1:
 Input: isConnected = [[1,1,0],[1,1,0],[0,0,1]]
