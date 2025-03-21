@@ -11,11 +11,7 @@ class Solution:
         for i in range(1, len(nums)): 
             prefix_sums[i] = prefix_sums[i - 1] + nums[i]
 
-        
-        #left = 0 - k
-        #center = 0
-        #right = 0 + k
-        
+                
         for center in range(len(nums)): 
             left = center - k
             right = center + k

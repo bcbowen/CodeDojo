@@ -2,36 +2,23 @@ import pytest
 
 class Solution:
     def findMaxLength(self, nums: list[int]) -> int:
-        ones = 0
-        zeros = 0
-
-        left = 0
-        for right in range(len(nums)): 
-            if nums[right] == 0: 
-                zeros += 1
-            else: 
-                ones += 1
-
-        
-
-        """
-        total = 0
-        #last = 0
-        max_diff = 0
-
-        
+        max_len = 0
+        first_seen = { 0: -1 }
+        current_val = 0
         for i, v in enumerate(nums): 
             if v == 0: 
-                total -= 1
+                current_val -= 1
             else: 
-                total += 1
+                current_val += 1
+            
+            if not current_val in first_seen: 
+                first_seen[current_val] = i
+            else: 
+                current_len = i - first_seen[current_val]
+                max_len = max(max_len, current_len)
 
-            if total == 0: 
-                #diff = i - last + 1
-                max_diff = i + 1 #max(diff, max_diff)
-                #last = i
-        return max_diff
-        """
+        return max_len
+
 """
 Example 1:
 Input: nums = [0,1]
