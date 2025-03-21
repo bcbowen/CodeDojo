@@ -2,22 +2,31 @@ import pytest
 
 class Solution:
     def subarraySum(self, nums: list[int], k: int) -> int:
+        if len(nums) < 1: 
+            return 0
+        elif len(nums) == 1: 
+            return 1 if nums[0] == k else 0
+
         sums = [0] * len(nums)
         sums[0] = nums[0]
         for i in range(1, len(nums)): 
             sums[i] = sums[i - 1] + nums[i]
         count = 0 
-        left = 0
-        total = 0
-        for right in range(len(nums)):
-            total += sums[right]
+        left = -1
+        for right in range(len(sums)):
+            if sums[right] > k: 
+                if left == -1: 
+                    left += 1
 
-            if total == k: 
+                while sums[right] - sums[left] > k and right > left + 1: 
+                    left += 1    
+                
+                if sums[right] - sums[left] == k: 
+                    count += 1
+
+            elif sums[right] == k: 
                 count += 1
             
-            while total >= k: 
-                total -= sums[left]
-                left += 1
         return count
             
 
@@ -32,7 +41,9 @@ Output: 2
 """
 @pytest.mark.parametrize("nums, k, expected", [
      ([1,1,1], 2, 2),
-     ([1,2,3], 3, 2) 
+     ([1,2,3], 3, 2), 
+     ([1], 0, 0), 
+     ([-1, -1, 1], 0, 1)
 ])
 def test_subarraySum( nums: list[int], k: int, expected: int):
     sol = Solution()
