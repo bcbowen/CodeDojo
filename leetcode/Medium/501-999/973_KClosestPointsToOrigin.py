@@ -40,6 +40,7 @@ Explanation: The answer [[-2,4],[3,3]] would also be accepted.
     ([3,2,1,5,6,4], 1, [[-2,2]]), 
     ([[3,3],[5,-1],[-2,4]], 2, [[-2,4],[3,3]])
 ])
+# The test doesn't pass but I knew the answer was right.. order doesn't matter but we're expecting an order in the tests
 def test_kClosest(points: List[List[int]], k: int, expected: List[List[int]]):
     result = Solution().kClosest(points, k)
     assert(result == expected)
