@@ -152,7 +152,7 @@ def calc_parimeter2(key: str, cells : list[tuple[int, int]]):
         # todo: based on current direction see if we continue or turn, update perimiter and 
         # keep going until we get back to start
         
-
+        pass
 
 
 
