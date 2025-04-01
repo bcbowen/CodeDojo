@@ -1,6 +1,5 @@
 import operator
 import pytest
-import heapq 
 from typing import List
 from collections import defaultdict
 
