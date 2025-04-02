@@ -1,5 +1,5 @@
 import pytest
-from card import Card 
+from models.card import Card 
 from typing import List
 
 class Player: 
