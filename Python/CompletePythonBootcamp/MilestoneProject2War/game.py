@@ -46,12 +46,15 @@ class Game:
         elif player1Card.value > player2Card.value: 
             message = f"{player1.name} takes {player2.name}'s {player2Card} with a {player1Card}"
             player1.hand.extend(self.table)
+            self.table.clear()
             
         else: 
             message = f"{player2.name} takes {player1.name}'s {player1Card} with a {player2Card}"
             player2.hand.extend(self.table)
+            self.table.clear()
         
         message += f" {player1.name} has {len(player1.hand)} cards; {player2.name} has {len(player2.hand)} cards"
+        
         return True, message
 
 
