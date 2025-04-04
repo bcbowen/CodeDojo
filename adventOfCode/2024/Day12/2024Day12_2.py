@@ -27,30 +27,9 @@ def load_grid(file_name: str) -> list[list[str]]:
         grid = [(list(line.strip())) for line in file.readlines()]
     return grid
 
-"""
-perimeter = + 1 for each side bordered by another value or an edge
-"""
-def calc_perimiter(grid: list[list[str]], row : int, col: int): 
-    val = grid[row][col]
-    p = 0
-    # west
-    if col == 0 or grid[row][col - 1] != val: 
-        p += 1
-    # east
-    if col == len(grid[0]) - 1 or grid[row][col + 1] != val: 
-        p += 1
-    # north
-    if row == 0 or grid[row - 1][col] != val: 
-        p += 1
-    # south 
-    if row == len(grid) - 1 or grid[row + 1][col] != val: 
-        p += 1
-
-    return p
-
 def traverse_connected_cells(grid: list[list[str]], visited: set[tuple[int, int]], position: tuple[int, int], plots : dict[str, list[tuple[int, int]]]): 
     value = grid[position[0]][position[1]]
-    #visited.add(position)
+    
     q = []
     q.append(position)
     area = 0
@@ -91,7 +70,7 @@ Take group of cells and find the 2 corners:
 - Top Left: min y, min x
 - Bottom Right: max y, max x
 """
-def find_corners(cells : list[tuple[int, int]]) -> tuple[tuple[int, int], tuple[int, int]]:
+def count_corners(cells : list[tuple[int, int]]) -> int:
     y_coords, x_coords = zip(*cells)
     return ((min(y_coords), min(x_coords)),(max(y_coords, max(x_coords))))
 
@@ -113,7 +92,7 @@ def init_grid(lower_corner: tuple[int, int]) -> list[list[str]]:
 find a right edge of the grid to start with. 
 Once we find the edge, follow outline to top 
 Then we'll calc the perimiter from that cell going counter clockwise
-"""
+
 def find_edge(grid: list[list[str]]) -> tuple[int, int]:
     row = len(grid)
     col = len(grid[row])
@@ -121,10 +100,10 @@ def find_edge(grid: list[list[str]]) -> tuple[int, int]:
         col -= 1
 
     return row, col
-
+"""
     
 
-def calc_parimeter2(key: str, cells : list[tuple[int, int]]):
+def calc_parimeter(key: str, cells : list[tuple[int, int]]):
     corners = find_corners(cells)
     grid = init_grid(corners[1])
     for cell in cells: 
@@ -158,10 +137,8 @@ def calc_parimeter2(key: str, cells : list[tuple[int, int]]):
 
 
     return perimeter    
-
-    
-
-def day12(file_name: str) -> tuple[int, int]: 
+   
+def day12_part2(file_name: str) -> tuple[int, int]: 
     grid = load_grid(file_name)
     # plots key = garden, val = [p, a]
     plots = {}
@@ -171,36 +148,15 @@ def day12(file_name: str) -> tuple[int, int]:
             if ((row, col)) in visited: 
                 continue
             traverse_connected_cells(grid, visited, (row, col), plots)
-    result1 = part1(plots)
-    result2 = part2(plots)
 
-    return result1, result2
-
-def part1(plots: dict[tuple[int, int, list[tuple[int, int]]]]): 
-    result = 0
-    for key in plots: 
-        for group in plots[key]: 
-            result += group[0] * group[1]
+    result = 42
 
     return result
 
-def part2(plots: dict[tuple[int, int, list[tuple[int, int]]]]) -> int: 
-    return 2
-
 def main(): 
     file_name = "input.txt"
-    result1, result2 = day12(file_name)
-    print(f"Part 1 result for {file_name}: {result1}")
-    print(f"Part 2 result for {file_name}: {result2}")
-
-@pytest.mark.parametrize("file_name, expected", [
-    ("sample.txt", 140),
-    ("sample2.txt", 772),
-    ("sample3.txt", 1930) 
-])
-def test_day12_part1(file_name : str, expected: int): 
-    result1, _ = day12(file_name)
-    assert(result1 == expected)
+    result = day12_part2(file_name)
+    print(f"Part 1 result for {file_name}: {result}")
 
 @pytest.mark.parametrize("file_name, expected", [
     ("sample.txt", 80),
@@ -209,7 +165,7 @@ def test_day12_part1(file_name : str, expected: int):
     ("sample4.txt", 236)
 ])
 def test_day12_part2(file_name : str, expected: int): 
-    _, result2 = day12(file_name)
+    _, result2 = day12_part2(file_name)
     assert(result2 == expected)    
 
 if __name__ == "__main__": 
