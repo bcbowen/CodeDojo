@@ -1,6 +1,7 @@
 import pytest
 from typing import List
 from collections import deque
+from collections import defaultdict
 
 class Router:
 
@@ -9,61 +10,87 @@ class Router:
         self.packetQueue = deque()
         self.memoryLimit = memoryLimit
         self.packetSet = set()
+        self.packetLookup = defaultdict(deque)
 
     def addPacket(self, source: int, destination: int, timestamp: int) -> bool:
         packet = (source, destination, timestamp)
-        if packet in self.packetSet: 
-            return False 
+        if packet in self.packetSet:
+            return False
         self.packetSet.add(packet)
-        if len(self.packetQueue) == self.memoryLimit: 
-            self.packetQueue.popleft()
+        self.packetLookup[destination].append(packet)
+        if len(self.packetQueue) == self.memoryLimit:
+            discard = self.packetQueue.popleft()
+            self.packetLookup[discard[destination]].popleft()
         self.packetQueue.append(packet)
         return True
 
     def forwardPacket(self) -> List[int]:
-        if len(self.packetQueue) == 0: 
-            return [] 
-        
+        if len(self.packetQueue) == 0:
+            return []
+
         packet = self.packetQueue.popleft()
-        self.packetSet.remove(packet) 
+        self.packetSet.remove(packet)
+        self.packetLookup[packet[1]].popleft()
         return [packet[0], packet[1], packet[2]]
-        
-    def find_start_index(self, startTime: int, endTime: int) -> int: 
-            if endTime < self.packetQueue[len(self.packetQueue) - 1][2]: 
+
+    """
+    def find_start_index(self, startTime: int, endTime: int) -> int:
+            if endTime < self.packetQueue[len(self.packetQueue) - 1][2]:
                 return -1
-            if self.packetQueue[0][2] >= startTime and self.packetQueue[0][2] <= endTime: 
+            if self.packetQueue[0][2] >= startTime and self.packetQueue[0][2] <= endTime:
                 return 0
             i = 0
             j = len(self.packetQueue) - 1
             mid = 0
-            
-            while j >= i: 
-                mid = i + (j - i) // 2 
-                if self.packetQueue[mid][2] == startTime: 
-                    if self.packetQueue[mid - 1][2] < startTime: 
+
+            while j >= i:
+                mid = i + (j - i) // 2
+                if self.packetQueue[mid][2] == startTime:
+                    if self.packetQueue[mid - 1][2] < startTime:
                         break
-                    else: 
+                    else:
                         i = mid - 1
-                elif self.packetQueue[mid][2] < startTime: 
+                elif self.packetQueue[mid][2] < startTime:
                     i = mid + 1
-                
-                else: 
+
+                else:
                     j = mid - 1
             return mid
-    
+    """
     def getCount(self, destination: int, startTime: int, endTime: int) -> int:
         count = 0
-        
-        i = self.find_start_index(startTime, endTime)
-        if i == -1: 
+        def find_start_index(packets : List[int]) -> int:
+            #packets = self.packetLookup[destination]
+            if not packets or packets[0] > endTime or packets[-1] < startTime:
+                return -1
+            elif packets[0] >= startTime and packets[0] <= endTime:
+                return 0
+            elif packets[-1] >= startTime and packets[-2] < startTime:
+                return len(packets) - 1
+
+            start = 0
+            end = len(packets) - 1
+            while start <= end:
+                mid = start + (end - start) // 2
+                midTimeStamp = packets[mid][2]
+                if midTimeStamp >= startTime and packets[mid - 1][2] < startTime:
+                    return mid
+                elif midTimeStamp < startTime:
+                    start = mid + 1
+                else:
+                    end = mid - 1
+            return mid
+
+        i = find_start_index(self.packetLookup[destination])
+        if i == -1:
             return False
-        
-        for j in range(i, len(self.packetQueue)): 
+
+        for j in range(i, len(self.packetQueue)):
             packet = self.packetQueue[j]
             packetTime = packet[2]
-            if packetTime > endTime: 
+            if packetTime > endTime:
                 break
-            if packetTime >= startTime and packet[1] == destination: 
+            if packetTime >= startTime and packet[1] == destination:
                 count += 1
         return count
 
@@ -83,7 +110,7 @@ Input:
 [[3], [1, 4, 90], [2, 5, 90], [1, 4, 90], [3, 5, 95], [4, 5, 105], [], [5, 2, 110], [5, 100, 110]]
 
 Output:
-[null, true, true, false, true, true, [2, 5, 90], true, 1] 
+[null, true, true, false, true, true, [2, 5, 90], true, 1]
 
 Explanation
 
@@ -122,7 +149,7 @@ def test_example1():
 
     result = r.getCount(5, 100, 110)
     assert(result == 1)
-    
+
 """
 
 Example 2:
@@ -133,7 +160,7 @@ Input:
 [[2], [7, 4, 90], [], []]
 
 Output:
-[null, true, [7, 4, 90], []] 
+[null, true, [7, 4, 90], []]
 
 Explanation
 
@@ -143,7 +170,7 @@ router.forwardPacket(); // Return [7, 4, 90].
 router.forwardPacket(); // There are no packets left, return [].
 """
 
-def test_example2(): 
+def test_example2():
     r = Router(2)
     result = r.addPacket(7, 4, 90)
     assert(result == True)
@@ -151,7 +178,7 @@ def test_example2():
     result = r.forwardPacket()
     assert(result == [7, 4, 90])
 
-    result = r.forwardPacket() 
+    result = r.forwardPacket()
     assert(result == [])
 
 """
@@ -163,7 +190,7 @@ Expected:
 [null,true,1,[4,2,1],0,true,1]
 """
 
-def test_example3(): 
+def test_example3():
     r = Router(5)
     result = r.addPacket(4, 2, 1)
     assert(result == True)
@@ -171,7 +198,7 @@ def test_example3():
     result = r.getCount(2, 1, 1)
     assert(result == 1)
 
-    result = r.forwardPacket() 
+    result = r.forwardPacket()
     assert(result == [4, 2, 1])
 
     result = r.getCount(2, 1, 1)
@@ -188,7 +215,7 @@ def test_example3():
 [[3],[1,4,6],[4,1,4]]
 """
 
-def test_example4(): 
+def test_example4():
     r = Router(3)
     r.addPacket(1, 4, 6)
     result = r.getCount(4, 1, 4)
@@ -204,7 +231,7 @@ Output
 Expected
 [null,true,true,true,1]
 """
-def test_case_613(): 
+def test_case_613():
     r = Router(3)
     r.addPacket(5, 1, 1)
     r.addPacket(5, 4, 1)
@@ -212,41 +239,43 @@ def test_case_613():
     result = r.getCount(1, 1, 1)
     assert(result == 1)
 
-
+"""
 @pytest.mark.parametrize("size, packets, startTime, endTime, expected", [
     (3, [(5, 1, 1), (5, 4, 1), (2, 5, 1)], 1, 2, 0),
     (100, [
-            (1, 2, 1), 
-            (1, 2, 2), 
-            (1, 2, 2), 
+            (1, 2, 1),
+            (1, 2, 2),
+            (1, 2, 2),
             (1, 2, 3),
             (1, 2, 3),
             (1, 2, 4)
-         ], 3, 5, 3), 
+         ], 3, 5, 3),
     (100, [
-            (1, 2, 1), 
-            (1, 2, 2), 
-            (1, 2, 2), 
+            (1, 2, 1),
+            (1, 2, 2),
+            (1, 2, 2),
             (1, 2, 3),
             (1, 2, 3),
             (1, 2, 4)
          ], 6, 8, -1),
     (100, [
-            (1, 2, 6), 
-            (1, 2, 7), 
-            (1, 2, 7), 
+            (1, 2, 6),
+            (1, 2, 7),
+            (1, 2, 7),
             (1, 2, 8),
             (1, 2, 8),
             (1, 2, 9)
-         ], 1, 2, -1)     
+         ], 1, 2, -1)
 ])
-def test_find_start_index(size: int, packets: List[tuple[int, int, int]], startTime: int, endTime: int, expected: int): 
+"""
+
+def test_find_start_index(size: int, packets: List[tuple[int, int, int]], startTime: int, endTime: int, expected: int):
     r = Router(size)
-    for source, dest, timestamp in packets: 
+    for source, dest, timestamp in packets:
         r.addPacket(source, dest, timestamp)
     result = r.find_start_index(startTime, endTime)
     assert(expected == result)
-    
+
 
 if __name__ == "__main__":
-    pytest.main([__file__]) 
+    pytest.main([__file__])
