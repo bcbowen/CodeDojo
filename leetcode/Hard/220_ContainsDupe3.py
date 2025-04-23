@@ -1,6 +1,7 @@
 import json
 import pytest
 import time
+from sortedcontainers import SortedList
 from typing import List
 from pathlib import Path
 
@@ -12,6 +13,24 @@ nums[i] == nums[j] and abs(i - j) <= k.
 """
 class Solution:
     def containsNearbyAlmostDuplicate(self, nums: List[int], indexDiff: int, valueDiff: int) -> bool:
+        neighbors = SortedList()
+
+        for i in range(len(nums)):
+            num = nums[i]
+            # find successor to current element
+            bi = neighbors.bisect_left(num)
+            if bi != len(neighbors) and neighbors[bi] <= num + valueDiff: 
+                return True
+            if bi > 0 and num <= neighbors[bi - 1] + valueDiff: 
+                return True
+            neighbors.add(num)
+
+            if len(neighbors) > indexDiff: 
+                neighbors.remove(nums[i - indexDiff]) 
+
+        return False
+    
+    def containsNearbyAlmostDuplicate_a(self, nums: List[int], indexDiff: int, valueDiff: int) -> bool:
         if indexDiff >= len(nums): 
             return self.containsNearbyAlmostDuplicate(nums, len(nums) - 1, valueDiff)
         
@@ -28,6 +47,24 @@ class Solution:
             for j in range(i - 1, i - indexDiff - 1, -1): 
                 if abs(nums[i] - nums[j]) <= valueDiff: 
                     return True
+        return False
+    
+    def containsNearbyAlmostDuplicate_sol(self, nums, k, t):
+        set_ = SortedList()
+        for i in range(len(nums)):
+            # Find the successor of current element
+            idx = set_.bisect_left(nums[i])
+            if idx != len(set_) and set_[idx] <= nums[i] + t:
+                return True
+
+            # Find the predecessor of current element
+            if idx > 0 and nums[i] <= set_[idx - 1] + t:
+                return True
+
+            set_.add(nums[i])
+            if len(set_) > k:
+                set_.remove(nums[i - k])
+
         return False
 
 """
@@ -61,7 +98,10 @@ nums = [1,2,2,3,4,5], indexDiff = 3, valueDiff = 0, expected True
 def test_containsNearbyAlmostDuplicate(nums: List[int], indexDiff: int, valueDiff: int, expected: bool):
     result = Solution().containsNearbyAlmostDuplicate(nums, indexDiff, valueDiff)
     assert(result == expected) 
+"""
+First attempt takes about 11 seconds
 
+"""
 def test_40BigInput(): 
     data_path = Path(__file__).parent.parent / "Data"
     file_name = "220_40.txt"    
