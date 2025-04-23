@@ -4,7 +4,7 @@ import time
 from sortedcontainers import SortedList
 from typing import List
 from pathlib import Path
-
+from sortedcontainers import SortedList
 
 """
 Given an integer array nums and an integer k, 
