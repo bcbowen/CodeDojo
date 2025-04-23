@@ -12,7 +12,7 @@ if project_root not in sys.path:
     sys.path.append(project_root)
 
 # Now the import should work
-from Helpers.BinaryTreeHelpers import TreeNode, populate_tree
+from Helpers.BinaryTreeHelpers import TreeNode, populate_tree, get_definition
 
 # Definition for a binary tree node.
 # class TreeNode:
@@ -21,34 +21,36 @@ from Helpers.BinaryTreeHelpers import TreeNode, populate_tree
 #         self.left = left
 #         self.right = right
 class Solution:
-    def countNodes(self, root: Optional[TreeNode]) -> int:
-        if not root:
-            return 0
-        return 1 + self.countNodes(root.left) + self.countNodes(root.right)
-    
-    
+    def invertTree(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
+        if root: 
+            temp = root.left
+            root.left = self.invertTree(root.right)
+            root.right = self.invertTree(temp)
+
+        return root
 
 """
 Example 1:
-Input: root = [1,2,3,4,5,6]
-Output: 6
+Input: root = [4,2,7,1,3,6,9]
+Output: [4,7,2,9,6,3,1]
 
 Example 2:
-Input: root = []
-Output: 0
+Input: root = [2,1,3]
+Output: [2,3,1]
 
 Example 3:
-Input: root = [1]
-Output: 1
+Input: root = []
+Output: []
 """
 @pytest.mark.parametrize("values, expected", [
-    ("[1,2,3,4,5,6]", 6), 
-    ("[]", 0), 
-    ("[1]", 1)
+    ("[4,2,7,1,3,6,9]", "[4,7,2,9,6,3,1]"), 
+    ("[2,1,3]", "[2,3,1]"), 
+    ("[]", "[]")
 ])
-def test_countNodes(values: str, expected: int):
+def test_invertTree(values: str, expected: str):
     root = populate_tree(values)
-    result = Solution().countNodes(root)
+    result_tree = Solution().invertTree(root)
+    result = get_definition(result_tree)
     assert(result == expected)
 
 
