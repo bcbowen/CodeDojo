@@ -7,9 +7,10 @@ def main():
 
 def part1(salt: str) -> int: 
     candidates = {} 
+    keys = {}
     key_count = 0
     i = 0
-    while key_count < 64: # this will be 64
+    while key_count < 64: 
         
         val = (salt + str(i)).encode()
         hashed = hashlib.md5(val).hexdigest()
@@ -20,13 +21,16 @@ def part1(salt: str) -> int:
             match_group = match.group()
             if len(match_group) == 5: 
                 if match_group[0] in candidates and i - candidates[match_group[0]] <= 1000:
+                    keys[match_group] = i
                     key_count += 1
 
                 del candidates[match_group[0]]
+                break
             else: 
                 if not match_group[0] in candidates: 
                     candidates[match_group[0]] = 0
                 candidates[match_group[0]] = i
+                break
             
         i += 1
 
