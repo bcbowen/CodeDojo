@@ -16,34 +16,29 @@ def part1(salt: str) -> int:
 
         val = (salt + str(i)).encode()
         hashed = hashlib.md5(val).hexdigest()
-        #pattern = r'(\w)\1{2}(?!\1)|(\w)\2{4}(?!\2)'
-        pattern5 = r"(\w)\1{4,}"
-        pattern3 = r"(\w)\1{2,}"
-        #matches = re.finditer(pattern, hashed)
+        pattern = r'(\w)\1{2,}'
 
         """
-        m = re.search(pattern_five, s)
-        if m:
-            print(f"Found 5+: {m.group()}")
+        def get_first_repeat(s):
+    # Find the first sequence of at least 3 repeated characters
+    match = re.search(r'(\w)\1{2,}', s)
+    if match:
+        repeated_seq = match.group()
+        if len(repeated_seq) >= 5:
+            return repeated_seq
         else:
-            # If no 5+, try to find at least 3
-            m = re.search(pattern_three, s)
-            if m:
-                print(f"Found 3+: {m.group()}")
-            else:
-                print("No match")
+            return repeated_seq[:3]
+    return None
         """
-        match = re.search(pattern5, hashed)
+        match = re.search(pattern, hashed)
         if match:
             match_group = match.group() 
-            if match_group[0] in candidates and i - candidates[match_group[0]] < 1000:
-                keys[match_group] = i
-                del candidates[match_group[0]] 
-                key_count += 1
-        else: 
-            match = re.search(pattern3, hashed)
-            if match: 
-                match_group = match.group()
+            if len(match_group) >= 5: 
+                if match_group[0] in candidates and i - candidates[match_group[0]] < 1000:
+                    keys[match_group] = i
+                    del candidates[match_group[0]] 
+                    key_count += 1
+            else: 
                 if not match_group[0] in candidates: 
                     candidates[match_group[0]] = 0
                 candidates[match_group[0]] = i
