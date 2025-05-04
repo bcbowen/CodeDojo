@@ -29,6 +29,7 @@ def find_index(salt, rounds):
                     for m in range(len(h2) - 5):
                         if h2[m:m+5] == char * 5:
                             found_one = True
+                            print(f"{char}({found + 1}): {i}, {i + k}")
                             break
                 if found_one:
                     found += 1
