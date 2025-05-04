@@ -5,7 +5,9 @@ from typing import List
 class Solution:
     def snakesAndLadders(self, board: List[List[int]]) -> int:
 
-        def move():
+        def get_next(current: tuple[int, int]): 
+
+        def move(current: tuple[int, int], current_count: int):
             pass
         pass
 
@@ -30,9 +32,9 @@ class Solution:
         
         row = Solution.get_row(row_size, space)
         if row % 2 == 1:
-            col = (space - 1) % row_size
+            col = row_size - 1 if space % row_size == 0 else space % row_size - 1
         else:
-            col = row_size - (space % row_size) 
+            col = 0 if space % row_size == 0 else row_size - 1 - (space % row_size - 1)
         return col
 
 
