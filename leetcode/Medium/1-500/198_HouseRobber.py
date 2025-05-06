@@ -3,7 +3,23 @@ from typing import List
 
 class Solution:
     def rob(self, nums: List[int]) -> int:
-        pass
+        cache = {}
+
+        def dp(i: int) -> int: 
+            if i in cache: 
+                return cache[i]
+            
+            if i == 0: 
+                cache[0] = nums[0]
+                return nums[0]
+            elif i == 1: 
+                cache[1] = max(nums[0], nums[1])
+                return cache[1]
+            else: 
+                cache[i] = max(dp(i - 2) + nums[i], dp(i - 1))
+                return cache[i]
+
+        return dp(len(nums) - 1)
 
 """
 Example 1:
@@ -22,7 +38,7 @@ Total amount you can rob = 2 + 9 + 1 = 12.
     ([1,2,3,1], 4), 
     ([2,7,9,3,1], 12)
 ])
-def rob(nums: List[int], expected: int):
+def test_rob(nums: List[int], expected: int):
     result = Solution().rob(nums)
     assert(result == expected)
 
