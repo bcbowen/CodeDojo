@@ -1,5 +1,10 @@
 import pytest
+from typing import List
 
+def build_grid(size: int) -> List[List[int]]:
+    grid = []
+    for i in range(size): 
+        grid.append([0] + size)
 
 def main(): 
     val = 325489
