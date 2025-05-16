@@ -3,14 +3,19 @@ from typing import List
 
 class Solution:
     def maxProfit(self, prices: List[int]) -> int:
-        profit = 0
-        hold = [0] * len(prices)
-        free = [0] * len(prices)
-        hold[0] = -(prices[0])
+        sold = [0] * len(prices)
+        held = [0] * len(prices)
+        reset = [0] * len(prices)
+        
+        held[0] = -prices[0]
+        reset[0] = 0
 
-        for i in range(): 
-            pass 
-        return profit
+        for i in range(1, len(prices)): 
+            sold[i] = held[i - 1] + prices[i]
+            held[i] = max(held[i - 1], reset[i - 1] - prices[i])
+            reset[i] = max(reset[i - 1], sold[i - 1])
+
+        return max(sold[-1], held[-1], reset[-1])
 
 """
 Example 1:
