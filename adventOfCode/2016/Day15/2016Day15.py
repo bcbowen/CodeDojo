@@ -2,7 +2,7 @@ import pytest
 from pathlib import Path
 from typing import List, Tuple
 
-def get_input_filepath(file_name: str) -> str:
+def get_input_filepath(file_name: str) -> Path:
         current_path = Path(__file__).parent
         day = current_path.name
         current_path = current_path.parent
