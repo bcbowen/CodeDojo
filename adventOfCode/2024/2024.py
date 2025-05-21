@@ -1,7 +1,8 @@
 import pytest
+#from typing import List
 from pathlib import Path
 
-def get_input_filepath(file_name: str) -> str:
+def get_input_filepath(file_name: str) -> Path:
         current_path = Path(__file__).parent
         day = current_path.name
         current_path = current_path.parent
