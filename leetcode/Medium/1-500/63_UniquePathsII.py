@@ -5,7 +5,7 @@ class Solution:
     def uniquePathsWithObstacles(self, obstacleGrid: List[List[int]]) -> int:
         m = len(obstacleGrid)
         n = len(obstacleGrid[0])
-        dp = [[col for col in range(m)] for row in range(n)]
+        dp = [[-1 for _ in range(n)] for _ in range(m)]
         
         for row in range(m): 
             for col in range(n):
