@@ -9,6 +9,7 @@ class Solution:
 
         def move(current: tuple[int, int], current_count: int):
             pass
+        
         pass
 
     """
@@ -18,19 +19,19 @@ class Solution:
     08 07 06 05
     01 02 03 04
     """
-    def get_coordinates(board: List[List[int]], space: int) -> tuple[int, int]:
+    def get_coordinates(self, board: List[List[int]], space: int) -> tuple[int, int]:
         # The board is square so rows == cols
         side = len(board[0])
         
-        row = Solution.get_row(side, space)
-        col = Solution.get_col(side, space)
+        row = self.get_row(side, space)
+        col = self.get_col(side, space)
         return (row, col)
     
-    def get_col(row_size: int, space: int) -> int: 
+    def get_col(self, row_size: int, space: int) -> int: 
         if space == 1: 
             return 0
         
-        row = Solution.get_row(row_size, space)
+        row = self.get_row(row_size, space)
         if row % 2 == 1:
             col = row_size - 1 if space % row_size == 0 else space % row_size - 1
         else:
@@ -38,7 +39,7 @@ class Solution:
         return col
 
 
-    def get_row(row_size: int, space: int) -> int:
+    def get_row(self, row_size: int, space: int) -> int:
         row = row_size - math.ceil(space / row_size)
         return row 
 
