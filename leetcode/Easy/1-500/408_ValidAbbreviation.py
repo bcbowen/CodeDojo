@@ -1,23 +1,27 @@
 import pytest
+import re
 
 class Solution:
     def validWordAbbreviation(self, word: str, abbr: str) -> bool:
+        pattern = r"\d+|[a-z]+"
+
         i = 0
-        while i < len(word): 
-            j = i
-            jump = 0
-            while j < len(abbr) and abbr[j].isdigit(): 
-                j += 1
-            if j > i:
-                jump = int(word[i:j - 1])
-                i += jump
-                jump = 0
-                if i >= len(word): 
+        for group in re.findall(pattern, abbr): 
+            if group[0].isdigit():
+                if group[0] == '0': 
                     return False
-            if word[i] != abbr[i]: 
-                return False
-            i += 1 
-        return True
+                i += int(group)
+                if i > len(word): 
+                    return False
+            else: 
+                for j in range(len(group)):
+                    if i == len(word): 
+                        return False 
+                    if word[i] != group[j]: 
+                        return False
+                    i += 1
+        
+        return i == len(word)
 
 """
 Example 1:
@@ -29,10 +33,31 @@ Example 2:
 Input: word = "apple", abbr = "a2e"
 Output: false
 Explanation: The word "apple" cannot be abbreviated as "a2e".
+
+TC9: 
+word = "abbde" abbr = "a1b01e" expected: False
+
+TC11: 
+word = "a" abbr = "2" expected: False
+
+TC14: 
+word = "hi" abbr = "2i" expected False (RTE)
+
+TC173: 
+word = "internationalization" abbr = "i5a11o1" expected: True
+
+TC318: 
+word = "hi" abbr = "1" expected: False
+
 """
 @pytest.mark.parametrize("word, abbr, expected", [
     ("internationalization", "i12iz4n", True), 
-    ("apple", "a2e", False)
+    ("apple", "a2e", False), 
+    ("abbde", "a1b01e", False), 
+    ("a", "2", False), 
+    ("internationalization", "i5a11o1", True),
+    ("hi", "2i", False), 
+    ("hi", "1", False)
 ])
 def test_validWordAbbreviation(word: str, abbr: str, expected: bool):
     result = Solution().validWordAbbreviation(word, abbr)
