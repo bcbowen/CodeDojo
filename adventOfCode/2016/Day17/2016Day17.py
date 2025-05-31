@@ -1,7 +1,7 @@
 import pytest
 import hashlib
 from collections import deque
-from typing import List, Tuple
+from typing import List, Tuple, Deque
 
 # Up, Down, Left, Right
 directions = [(-2, 0), (2, 0), (0, -2), (0, 2)]
@@ -39,10 +39,11 @@ def is_unlocked(board: List[List[str]], current: Tuple[int, int], next: Tuple[in
     return board[cy + dy][cx + dx] == ' '
 
 def check_path(board: List[List[str]]) -> bool: 
-    destination = (1, 1)
-    current = (8, 8)
+    destination = (8, 8)
+    current = (1, 1)
     seen = set()
-    q = deque([current])
+    q = deque()
+    q.append(current)
     seen.add(current)
     while q: 
         current = q.popleft()
@@ -149,6 +150,13 @@ def test_is_unlocked(board: List[List[str]], current: Tuple[int, int], next: Tup
     result = is_unlocked(board, current, next)
     assert(result == expected)
 
+# udlr
+def get_shortest_path(start_code: str) -> str:
+    val = hashlib.md5(start_code.encode()).hexdigest()
+    current = (1, 1)
+    # only d and r can be unlocked from the initial position
+    if val[1].isalpha(): 
+
 def main(): 
     pass
 
@@ -158,6 +166,20 @@ def part1():
 
 def test_part1(): 
     pass
+
+"""
+If your passcode were ihgpwlah, the shortest path would be DDRRRD.  
+With kglvqrro, the shortest path would be DDUDRLRRUDRD.
+With ulqzkmiv, the shortest would be DRURDRUDDLLDLUURRDULRLDUUDDDRR. 
+"""
+@pytest.mark.parametrize("start_code, expected", [
+    ("ihgpwlah", "DDRRRD"), 
+    ("kglvqrro", "DDUDRLRRUDRD"), 
+    ("ulqzkmiv", "DRURDRUDDLLDLUURRDULRLDUUDDDRR")
+])
+def test_get_shortest_path(start_code: str, expected: str): 
+    result = get_shortest_path(start_code)
+    assert(result == expected)
 
 @pytest.mark.parametrize("row, col, expected", [
     (1, 1, True),
