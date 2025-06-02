@@ -4,7 +4,12 @@ from collections import deque
 from typing import List, Tuple, Deque
 
 # Up, Down, Left, Right
+UP = 0
+DOWN = 1
+LEFT = 2
+RIGHT = 3
 directions = [(-2, 0), (2, 0), (0, -2), (0, 2)]
+lock_directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
 
 def init_board() -> List[List[str]]: 
     board = []
@@ -37,6 +42,11 @@ def is_unlocked(board: List[List[str]], current: Tuple[int, int], next: Tuple[in
     dx = int((nx - cx) / 2)
 
     return board[cy + dy][cx + dx] == ' '
+
+def unlock(board: List[List[str]], position: Tuple[int, int], direction : int): 
+    d = lock_directions[direction]
+    unlock_positon = (position[0] + d[0], position[1] + d[1])
+    board[unlock_positon[0]][unlock_positon[1]] = ' '
 
 def check_path(board: List[List[str]]) -> bool: 
     destination = (8, 8)
@@ -152,10 +162,15 @@ def test_is_unlocked(board: List[List[str]], current: Tuple[int, int], next: Tup
 
 # udlr
 def get_shortest_path(start_code: str) -> str:
+    board = init_board()
     val = hashlib.md5(start_code.encode()).hexdigest()
     current = (1, 1)
+    q = 
     # only d and r can be unlocked from the initial position
-    if val[1].isalpha(): 
+    if val[DOWN].isalpha(): 
+        unlock(board, current, DOWN)
+    if val[RIGHT].isalpha(): 
+        unlock(board, current, RIGHT)
 
 def main(): 
     pass
