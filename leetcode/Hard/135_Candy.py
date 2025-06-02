@@ -7,20 +7,19 @@ class Solution:
             return len(ratings)
         elif len(ratings) == 2: 
             return 2 if ratings[0] == ratings[1] else 3
-        
-        total = 0
 
         distribution = [1] * len(ratings)
         for i in range(1, len(ratings)): 
             if ratings[i] > ratings[i - 1]: 
-                distribution[i] += 1
-        
-        for i in range(len(ratings) - 2, -1, -1): 
-            if ratings[i] > ratings[i + 1]: 
-                distribution[i] += 1
+                distribution[i] = distribution[i - 1] + 1
+        sum = distribution[-1]
 
-        total = sum(distribution)
-        return total
+        for i in range(len(ratings) - 2, -1, -1): 
+            if ratings[i] > ratings[i + 1] and distribution[i] <= distribution[i + 1]: 
+                distribution[i] = distribution[i + 1] + 1
+            sum += distribution[i]
+
+        return sum
 
 """
 Example 1:
