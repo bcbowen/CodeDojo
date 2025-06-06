@@ -1,16 +1,89 @@
 import math
 import pytest
-from typing import List
+from collections import deque
+from typing import List, Tuple
 
 class Solution:
     def snakesAndLadders(self, board: List[List[int]]) -> int:
 
-        def get_next(current: tuple[int, int]): 
-
+        
+        
         def move(current: tuple[int, int], current_count: int):
             pass
         
-        pass
+        return 4
+
+    """
+    16 15 14 13
+    09 10 11 12
+    08 07 06 05
+    01 02 03 04
+
+    
+    07 08 09
+    06 05 04
+    01 02 03
+    
+    get_next: for the given space, get the coordinates for the next space. For even rows 
+    this will be the space to the right or above the last column in the row. For odd rows 
+    this will be the space to the left or above the first column in the row.
+
+    size = l = w
+    for odd sizes, even rows go l -> r
+    for even sizes, odd rows go l -> r
+    """
+    @staticmethod
+    def get_next(board: List[List[int]], current: Tuple[int, int]) -> Tuple[int, int]: 
+        size = len(board)
+        is_even = size % 2 == 0
+
+        # if we're already at the first space we can't move any more, stay put
+        if is_even: 
+            if current == (0, 0): 
+                return current
+        else: 
+            if current == (0, size - 1): 
+                return current
+        
+        
+        row, col = current
+
+        if is_even: 
+            # for even sizes, odd rows go l -> r
+            if row % 2 == 1: 
+                # ltr
+                if col < size - 1: 
+                    # room to move in current row
+                    return (row, col + 1)
+                else: 
+                    # this is the end, next row up
+                    return (row - 1, size - 1)
+            else: 
+                # rtl
+                if col > 0: 
+                    #room to move in current row
+                    return (row, col - 1)
+                else: 
+                    # this is the end, next row up
+                    return (row - 1, 0)
+        else: 
+            # for odd sizes, even rows go l -> r
+            if row % 2 == 0: 
+                # ltr
+                if col < size - 1: 
+                    # room to move in current row
+                    return (row, col + 1)
+                else: 
+                    # this is the end, next row up
+                    return (row - 1, size - 1)
+            else: 
+                # rtl
+                if col > 0: 
+                    #room to move in current row
+                    return (row, col - 1)
+                else: 
+                    # this is the end, next row up
+                    return (row - 1, 0)
 
     """
     Translate space into coordinates
@@ -19,27 +92,29 @@ class Solution:
     08 07 06 05
     01 02 03 04
     """
-    def get_coordinates(self, board: List[List[int]], space: int) -> tuple[int, int]:
+    @staticmethod
+    def get_coordinates(board: List[List[int]], space: int) -> tuple[int, int]:
         # The board is square so rows == cols
         side = len(board[0])
         
-        row = self.get_row(side, space)
-        col = self.get_col(side, space)
+        row = Solution.get_row(side, space)
+        col = Solution.get_col(side, space)
         return (row, col)
     
-    def get_col(self, row_size: int, space: int) -> int: 
+    @staticmethod
+    def get_col(row_size: int, space: int) -> int: 
         if space == 1: 
             return 0
         
-        row = self.get_row(row_size, space)
+        row = Solution.get_row(row_size, space)
         if row % 2 == 1:
             col = row_size - 1 if space % row_size == 0 else space % row_size - 1
         else:
             col = 0 if space % row_size == 0 else row_size - 1 - (space % row_size - 1)
         return col
 
-
-    def get_row(self, row_size: int, space: int) -> int:
+    @staticmethod
+    def get_row(row_size: int, space: int) -> int:
         row = row_size - math.ceil(space / row_size)
         return row 
 
@@ -69,73 +144,36 @@ Input: board = [
             ]
 Output: 1
 """
-@pytest.mark.parametrize("board, expected", [
-    ([
-        [-1,-1,-1,-1,-1,-1],
-        [-1,-1,-1,-1,-1,-1],
-        [-1,-1,-1,-1,-1,-1],
-        [-1,35,-1,-1,13,-1],
-        [-1,-1,-1,-1,-1,-1],
-        [-1,15,-1,-1,-1,-1]
-    ], 4),
-    ([
-        [-1,-1],
-        [-1,3]
-    ], 1)
+@pytest.mark.parametrize("size, jumps, expected", [
+    (6, [(3, 1, 35), (3, 4, 13), (5,1,15)], 4),
+    (2, [(1, 1, 3)], 1)
 ])
-def test_snakesAndLadders(board: List[List[int]], expected: int):
+def test_snakesAndLadders(size: int, jumps: List[Tuple[int, int, int]], expected: int):
+    board = generate_board(size, jumps)
     result = Solution().snakesAndLadders(board)
     assert(result == expected)
 
-@pytest.mark.parametrize("board, space, expected", [
-    ([
-        [-1,-1,-1,-1,-1,-1],
-        [-1,-1,-1,-1,-1,-1],
-        [-1,-1,-1,-1,-1,-1],
-        [-1,35,-1,-1,13,-1],
-        [-1,-1,-1,-1,-1,-1],
-        [-1,15,-1,-1,-1,-1]
-    ], 1, (5, 0)),
-    ([
-        [-1,-1,-1,-1,-1,-1],
-        [-1,-1,-1,-1,-1,-1],
-        [-1,-1,-1,-1,-1,-1],
-        [-1,35,-1,-1,13,-1],
-        [-1,-1,-1,-1,-1,-1],
-        [-1,15,-1,-1,-1,-1]
-    ], 8, (4, 4)),
-    ([
-        [-1,-1,-1,-1,-1,-1],
-        [-1,-1,-1,-1,-1,-1],
-        [-1,-1,-1,-1,-1,-1],
-        [-1,35,-1,-1,13,-1],
-        [-1,-1,-1,-1,-1,-1],
-        [-1,15,-1,-1,-1,-1]
-    ], 28, (1, 3)),
-    ([
-        [-1,-1,-1,-1,-1,-1],
-        [-1,-1,-1,-1,-1,-1],
-        [-1,-1,-1,-1,-1,-1],
-        [-1,35,-1,-1,13,-1],
-        [-1,-1,-1,-1,-1,-1],
-        [-1,15,-1,-1,-1,-1]
-    ], 36, (0, 0)),
-    ([
-        [-1,-1],
-        [-1,3]
-    ], 3, (0, 1)),
-    ([
-        [-1,-1],
-        [-1,3]
-    ], 4, (0, 0)),
-    ([
-        [-1,-1],
-        [-1,3]
-    ], 1, (1, 0))
+@pytest.mark.parametrize("size, jumps, space, expected", [
+    (6, [(3, 1, 35), (3, 4, 13), (5,1,15)], 1, (5, 0)),
+    (6, [(3, 1, 35), (3, 4, 13), (5,1,15)], 8, (4, 4)),
+    (6, [(3, 1, 35), (3, 4, 13), (5,1,15)], 28, (1, 3)),
+    (6, [(3, 1, 35), (3, 4, 13), (5,1,15)], 36, (0, 0)),
+    (2, [(1, 1, 3)], 3, (0, 1)),
+    (2, [(1, 1, 3)], 4, (0, 0)),
+    (2, [(1, 1, 3)], 1, (1, 0))
 ])
-def test_get_coordinates(board : List[List[int]], space: int, expected: tuple[int, int]):
-    result = Solution.get_coordinates(board, space)
+def test_get_coordinates(size: int, jumps: List[Tuple[int, int, int]], space: int, expected: tuple[int, int]):
+    board = generate_board(size, jumps)
+    result = Solution().get_coordinates(board, space)
     assert(result == expected)
+
+def generate_board(size: int, jumps: List[Tuple[int, int, int]]) -> List[List[int]]: 
+    board = [[-1] * size] * size
+    for jump in jumps: 
+        row, col, space = jump
+        board[row][col] = space
+
+    return board
 
 """
     16 15 14 13
@@ -177,6 +215,98 @@ def test_get_row(row_size: int, space: int, expected: int):
     result = Solution.get_row(row_size, space)
     assert(result == expected)
 
+"""
+16 15 14 13
+09 10 11 12
+08 07 06 05
+01 02 03 04
+
+These tests assume an empty 4X4 board which will be generated to reduce the complexity of the test params
+"""
+@pytest.mark.parametrize("current, expected", [
+    ((3, 0), (3, 1)),
+    ((3, 1), (3, 2)),
+    ((3, 2), (3, 3)),
+    ((3, 3), (2, 3)),
+    ((2, 3), (2, 2)),
+    ((2, 2), (2, 1)),
+    ((2, 1), (2, 0)),
+    ((2, 0), (1, 0)),
+    ((1, 3), (0, 3)),
+    ((0, 1), (0, 0)), 
+    ((0, 0), (0, 0))
+])
+def test_get_next_even(current: Tuple[int, int], expected: Tuple[int, int]): 
+    # generate 4x4 board
+    size = 4
+    board = generate_board(size, []) #[[-1] * 4] * 4
+    result = Solution.get_next(board, current)
+    assert(result == expected)
+
+"""
+07 08 09
+06 05 04
+01 02 03
+
+These tests assume an empty 4X4 board which will be generated to reduce the complexity of the test params
+"""
+@pytest.mark.parametrize("current, expected", [
+    ((2, 0), (2, 1)),
+    ((2, 1), (2, 2)),
+    ((2, 2), (1, 2)),
+    ((1, 2), (1, 1)),
+    ((1, 1), (1, 0)),
+    ((1, 0), (0, 0)),
+    ((0, 0), (0, 1)),
+    ((0, 1), (0, 2)),
+    ((0, 2), (0, 2))
+])
+def test_get_next_odd(current: Tuple[int, int], expected: Tuple[int, int]): 
+    # generate 3x3 board
+    size = 3
+    board = generate_board(3, []) #[[-1] * 3] * 3
+    result = Solution.get_next(board, current)
+    assert(result == expected)
+
+"""
+    6x6: 
+    [
+        [-1,-1,-1,-1,-1,-1],
+        [-1,-1,-1,-1,-1,-1],
+        [-1,-1,-1,-1,-1,-1],
+        [-1,35,-1,-1,13,-1],
+        [-1,-1,-1,-1,-1,-1],
+        [-1,15,-1,-1,-1,-1]
+    ]
+
+    2x2: 
+    [
+        [-1,-1],
+        [-1,3]
+    ]
+
+    4x4 no jumps: 
+    [
+        [-1,-1,-1,-1],
+        [-1,-1,-1,-1],
+        [-1,-1,-1,-1],
+        [-1,-1,-1,-1]
+    ]
+
+    3x3 no jumps: 
+    [
+        [-1,-1,-1],
+        [-1,-1,-1],
+        [-1,-1,-1]
+    ]
+"""
+def test_generate_board(size: int, jumps: List[Tuple[int, int, int]]): 
+    board = generate_board(size, jumps)
+    assert(len(board) == size)
+    assert(len(board[0]) == size)
+    for jump in jumps: 
+        row, col, val = jump
+        assert(board[row][col] == val)
 
 if __name__ == "__main__":
     pytest.main([__file__])
