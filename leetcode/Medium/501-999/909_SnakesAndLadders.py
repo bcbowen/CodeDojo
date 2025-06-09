@@ -8,16 +8,33 @@ class Solution:
     def snakesAndLadders(self, board: List[List[int]]) -> int:
 
         q = deque() 
-        game_on = True
+        seen = set()
+        goal = Solution.get_final(board)
         # initial rolls (1 - 6) 
         moves = 0
         current = (len(board) - 1, 0)
-        while game_on: 
-            moves += 1
+        q.append((current, 1))
+        seen.add(current)
+        while q:
+            current, moves = q.popleft() 
+
             for _ in range(6):
-                next = Solution.get_next(
-        
-        
+                next = Solution.get_next(board, current)
+                if board[next[0]][next[1]] != -1: 
+                    jump = Solution.get_coordinates(board, board[next[0]][next[1]])
+                    if jump == goal: 
+                        break
+                    elif not jump in seen: 
+                        seen.add(jump)
+                        q.append((jump, moves + 1))
+                else: 
+                    if next == goal: 
+                        break
+                    elif not next in seen:
+                        seen.add(next)
+                        q.append((next, moves + 1))
+                current = next
+            
         return moves
 
     """
@@ -201,7 +218,7 @@ def test_get_coordinates(size: int, jumps: List[Tuple[int, int, int]], space: in
     assert(result == expected)
 
 def generate_board(size: int, jumps: List[Tuple[int, int, int]]) -> List[List[int]]: 
-    board = [[-1] * size] * size
+    board = [[-1] * size for _ in range(size)]
     for jump in jumps: 
         row, col, space = jump
         board[row][col] = space
@@ -345,6 +362,12 @@ def test_get_final(size: int, expected: Tuple[int, int]):
         [-1,-1,-1]
     ]
 """
+@pytest.mark.parametrize("size, jumps", [
+    (6, [(3, 1, 35), (3, 4, 13), (5,1,15)]),
+    (2, [(1, 1, 3)]), 
+    (4, []),    
+    (3, [])
+])
 def test_generate_board(size: int, jumps: List[Tuple[int, int, int]]): 
     board = generate_board(size, jumps)
     assert(len(board) == size)
