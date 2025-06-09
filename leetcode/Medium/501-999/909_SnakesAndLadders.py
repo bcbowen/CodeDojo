@@ -4,14 +4,51 @@ from collections import deque
 from typing import List, Tuple
 
 class Solution:
+
     def snakesAndLadders(self, board: List[List[int]]) -> int:
 
+        q = deque() 
+        game_on = True
+        # initial rolls (1 - 6) 
+        moves = 0
+        current = (len(board) - 1, 0)
+        while game_on: 
+            moves += 1
+            for _ in range(6):
+                next = Solution.get_next(
         
         
-        def move(current: tuple[int, int], current_count: int):
-            pass
+        return moves
+
+    """
+    16 15 14 13
+    09 10 11 12
+    08 07 06 05
+    01 02 03 04
+
+    
+    07 08 09
+    06 05 04
+    01 02 03
+    
+    get_next: for the given space, get the coordinates for the next space. For even rows 
+    this will be the space to the right or above the last column in the row. For odd rows 
+    this will be the space to the left or above the first column in the row.
+
+    size = l = w
+    for odd sizes, even rows go l -> r
+    for even sizes, odd rows go l -> r
+    """
+    @staticmethod
+    def get_final(board: List[List[int]]) -> Tuple[int, int]: 
         
-        return 4
+        is_even = len(board) % 2 == 0
+        # if we're already at the first space we can't move any more, stay put
+        if is_even: 
+            return (0,0)
+        
+        return (0, len(board) - 1)
+        
 
     """
     16 15 14 13
@@ -38,13 +75,9 @@ class Solution:
         is_even = size % 2 == 0
 
         # if we're already at the first space we can't move any more, stay put
-        if is_even: 
-            if current == (0, 0): 
-                return current
-        else: 
-            if current == (0, size - 1): 
-                return current
-        
+        final = Solution.get_final(board)
+        if current == final: 
+            return current       
         
         row, col = current
 
@@ -266,6 +299,18 @@ def test_get_next_odd(current: Tuple[int, int], expected: Tuple[int, int]):
     size = 3
     board = generate_board(3, []) #[[-1] * 3] * 3
     result = Solution.get_next(board, current)
+    assert(result == expected)
+
+@pytest.mark.parametrize("size, expected", [
+    (3, (0, 2)),
+    (5, (0, 4)),
+    (4, (0, 0)),
+    (6, (0, 0))
+])
+def test_get_final(size: int, expected: Tuple[int, int]): 
+    # generate 3x3 board
+    board = generate_board(size, [])
+    result = Solution.get_final(board)
     assert(result == expected)
 
 """
