@@ -9,7 +9,7 @@ DOWN = 1
 LEFT = 2
 RIGHT = 3
 directions = [(-2, 0), (2, 0), (0, -2), (0, 2)]
-lock_directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+#lock_directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
 
 def init_board() -> List[List[str]]: 
     board = []
@@ -33,7 +33,7 @@ def is_inbounds(row: int, col: int) -> bool:
     if col < 1 or col > 7: 
         return False
     return True
-
+"""
 def is_unlocked(board: List[List[str]], current: Tuple[int, int], next: Tuple[int, int]) -> bool: 
     cy, cx = current
     ny, nx = next
@@ -160,17 +160,48 @@ def test_is_unlocked(board: List[List[str]], current: Tuple[int, int], next: Tup
     result = is_unlocked(board, current, next)
     assert(result == expected)
 
+"""
+
 # udlr
 def get_shortest_path(start_code: str) -> str:
     board = init_board()
     val = hashlib.md5(start_code.encode()).hexdigest()
     current = (1, 1)
-    q = 
+    q = deque()
     # only d and r can be unlocked from the initial position
     if val[DOWN].isalpha(): 
-        unlock(board, current, DOWN)
+        row, col = current[0] + directions[DOWN][0], current[1] + directions[DOWN][1]
+        q.append(("D", (row, col)))
+
     if val[RIGHT].isalpha(): 
-        unlock(board, current, RIGHT)
+        row, col = current[0] + directions[RIGHT][0], current[1] + directions[RIGHT][1]
+        q.append(("R", (row, col)))
+
+    while q: 
+        path, current = q.popleft()
+        val = hashlib.md5(path.encode()).hexdigest()
+
+        if val[UP].isalpha(): 
+            row, col = current[0] + directions[UP][0], current[1] + directions[UP][1]
+            if is_inbounds(row, col): 
+                q.append(("U", (row, col)))
+            
+        if val[DOWN].isalpha(): 
+            row, col = current[0] + directions[DOWN][0], current[1] + directions[DOWN][1]
+            if is_inbounds(row, col): 
+                q.append(("D", (row, col)))
+
+        if val[RIGHT].isalpha(): 
+            row, col = current[0] + directions[RIGHT][0], directions[RIGHT][1]
+            if is_inbounds(row, col): 
+                q.append(("R", (row, col))) 
+    
+        if val[LEFT].isalpha(): 
+            row, col = current[0] + directions[LEFT][0], directions[LEFT][1]
+            if is_inbounds(row, col): 
+                q.append(("L", (row, col)))
+
+
 
 def main(): 
     pass
