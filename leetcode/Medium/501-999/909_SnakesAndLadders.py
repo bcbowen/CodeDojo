@@ -15,27 +15,30 @@ class Solution:
         current = (len(board) - 1, 0)
         q.append((current, 1))
         seen.add(current)
-        while q:
+        found = False
+        while q and not found:
             current, moves = q.popleft() 
 
             for _ in range(6):
                 next = Solution.get_next(board, current)
                 if board[next[0]][next[1]] != -1: 
                     jump = Solution.get_coordinates(board, board[next[0]][next[1]])
-                    if jump == goal: 
+                    if jump == goal:
+                        found = True 
                         break
                     elif not jump in seen: 
                         seen.add(jump)
                         q.append((jump, moves + 1))
                 else: 
-                    if next == goal: 
+                    if next == goal:
+                        found = True 
                         break
                     elif not next in seen:
                         seen.add(next)
                         q.append((next, moves + 1))
                 current = next
             
-        return moves
+        return moves if found else -1
 
     """
     16 15 14 13
@@ -153,15 +156,19 @@ class Solution:
     
     @staticmethod
     def get_col(row_size: int, space: int) -> int: 
-        if space == 1: 
-            return 0
-        
         row = Solution.get_row(row_size, space)
-        if row % 2 == 1:
-            col = row_size - 1 if space % row_size == 0 else space % row_size - 1
-        else:
-            col = 0 if space % row_size == 0 else row_size - 1 - (space % row_size - 1)
-        return col
+        if row_size % 2 == 0: 
+            if row % 2 == 1:
+                col = row_size - 1 if space % row_size == 0 else space % row_size - 1
+            else:
+                col = 0 if space % row_size == 0 else row_size - 1 - (space % row_size - 1)
+            return col
+        else: 
+            if row % 2 == 0:
+                col = row_size - 1 if space % row_size == 0 else space % row_size - 1
+            else:
+                col = 0 if space % row_size == 0 else row_size - 1 - (space % row_size - 1)
+            return col
 
     @staticmethod
     def get_row(row_size: int, space: int) -> int:
@@ -193,10 +200,35 @@ Input: board = [
                 [-1,3]
             ]
 Output: 1
+
+TC 214
+board =
+[
+    [1,1,-1],
+    [1,1,1],
+    [-1,1,1]
+]
+
+Expected
+-1
+
+TC 242
+board =
+[
+    [-1,-1,-1],
+    [-1,9,8],
+    [-1,8,9]
+]
+
+Expected
+1
+
 """
 @pytest.mark.parametrize("size, jumps, expected", [
     (6, [(3, 1, 35), (3, 4, 13), (5,1,15)], 4),
-    (2, [(1, 1, 3)], 1)
+    (2, [(1, 1, 3)], 1), 
+    (3, [(2, 1, 8), (2, 2, 9), (1, 1, 9), (1, 2, 8)], 1), 
+    (3, [(2, 1, 1), (2, 2, 1), (1, 0, 1), (1, 1, 1), (1, 2, 1), (0, 0, 1), (0, 1, 1)], -1)
 ])
 def test_snakesAndLadders(size: int, jumps: List[Tuple[int, int, int]], expected: int):
     board = generate_board(size, jumps)
@@ -230,6 +262,11 @@ def generate_board(size: int, jumps: List[Tuple[int, int, int]]) -> List[List[in
     09 10 11 12
     08 07 06 05
     01 02 03 04
+
+    
+    07 08 09
+    06 05 04
+    01 02 03 
 """
 @pytest.mark.parametrize("row_size, space, expected", [
     (4, 1, 0),
@@ -239,7 +276,16 @@ def generate_board(size: int, jumps: List[Tuple[int, int, int]]) -> List[List[in
     (4, 8, 0),
     (4, 10, 1),
     (4, 14, 2),
-    (4, 12, 3), 
+    (4, 12, 3),
+    (3, 1, 0),
+    (3, 2, 1),
+    (3, 3, 2),
+    (3, 4, 2),
+    (3, 5, 1),
+    (3, 6, 0),
+    (3, 7, 0),
+    (3, 8, 1),
+    (3, 9, 2)
 ])
 def test_get_col(row_size: int, space: int, expected: int): 
     result = Solution.get_col(row_size, space)
