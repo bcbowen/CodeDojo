@@ -1,6 +1,15 @@
 import pytest
 class Solution:
     def minBitFlips(self, start: int, goal: int) -> int:
+        dist = 0
+        mask = 1
+        while mask <= start or mask <= goal: 
+            if (start & mask) ^ (goal & mask): 
+                dist += 1
+            mask <<= 1
+        return dist
+
+    def minBitFlips_1(self, start: int, goal: int) -> int:
         b1 = bin(start)[2:]
         b2 = bin(goal)[2:]
         diff = len(b1) - len(b2)

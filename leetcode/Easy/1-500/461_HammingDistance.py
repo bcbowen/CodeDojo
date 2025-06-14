@@ -2,6 +2,15 @@ import pytest
 
 class Solution:
     def hammingDistance(self, x: int, y: int) -> int:
+        dist = 0
+        mask = 1
+        while mask <= x or mask <= y: 
+            if (x & mask) ^ (y & mask): 
+                dist += 1
+            mask <<= 1
+        return dist
+    
+    def hammingDistance_1(self, x: int, y: int) -> int:
         b1 = bin(x)[2:]
         b2 = bin(y)[2:]
         diff = len(b1) - len(b2)
