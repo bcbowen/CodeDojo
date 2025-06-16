@@ -8,11 +8,12 @@ class Solution:
         start = intervals[0][0]
         end = intervals[0][1]
         for i in range(1, len(intervals)): 
-            if end < intervals[i][0]: 
-                end = max(end, intervals[i - 1][1])
+            if intervals[i][0] > end:
                 merged.append([start, end])
                 start = intervals[i][0]
                 end = intervals[i][1]
+            else: 
+                end = max(end, intervals[i][1])
         end = max(end, intervals[-1][1])
         merged.append([start, end])
 
