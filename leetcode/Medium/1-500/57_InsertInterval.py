@@ -6,6 +6,16 @@ class Solution:
     def insert(self, intervals: List[List[int]], newInterval: List[int]) -> List[List[int]]:
         result = []
 
+        begin = -1 
+        end = -1
+
+        for interval in intervals: 
+            begin = 
+
+    # first attempt, doesn't work
+    def insert_1(self, intervals: List[List[int]], newInterval: List[int]) -> List[List[int]]:
+        result = []
+
         if newInterval[1] < intervals[0][0]: 
             result.append(newInterval)
             result.extend(intervals)
