@@ -1,7 +1,7 @@
 import pytest
 import hashlib
 from collections import deque
-from typing import List, Tuple, Deque
+#from typing import List, Tuple, Deque
 
 # Up, Down, Left, Right
 UP = 0
@@ -11,6 +11,7 @@ RIGHT = 3
 directions = [(-2, 0), (2, 0), (0, -2), (0, 2)]
 #lock_directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
 
+"""
 def init_board() -> List[List[str]]: 
     board = []
     board.append([c for c in "#########"])
@@ -24,7 +25,7 @@ def init_board() -> List[List[str]]:
     board.append([c for c in "####### V"])
 
     return board
-
+"""
 
 # current position is in the playable area on the board
 def is_inbounds(row: int, col: int) -> bool: 
@@ -162,56 +163,84 @@ def test_is_unlocked(board: List[List[str]], current: Tuple[int, int], next: Tup
 
 """
 
+"""
+Board: 
+S: start
+V: vault
+#########
+#S| | | #
+#-#-#-#-#
+# | | | #
+#-#-#-#-#
+# | | | #
+#-#-#-#-#
+# | | |  
+####### V
+"""
+
 # udlr
 def get_shortest_path(start_code: str) -> str:
-    board = init_board()
+    def is_open(c: str) -> bool: 
+        return c.isalpha() and c != 'a'
+    
+    #board = init_board()
     val = hashlib.md5(start_code.encode()).hexdigest()
     current = (1, 1)
+    goal = (7, 7)
     q = deque()
     # only d and r can be unlocked from the initial position
     if val[DOWN].isalpha(): 
         row, col = current[0] + directions[DOWN][0], current[1] + directions[DOWN][1]
-        q.append(("D", (row, col)))
+        q.append((start_code + "D", (row, col)))
 
     if val[RIGHT].isalpha(): 
         row, col = current[0] + directions[RIGHT][0], current[1] + directions[RIGHT][1]
-        q.append(("R", (row, col)))
+        q.append((start_code + "R", (row, col)))
 
     while q: 
         path, current = q.popleft()
+        if current == goal: 
+            return path[len(start_code):]
+        
         val = hashlib.md5(path.encode()).hexdigest()
 
-        if val[UP].isalpha(): 
+        if is_open(val[UP]): 
             row, col = current[0] + directions[UP][0], current[1] + directions[UP][1]
             if is_inbounds(row, col): 
-                q.append(("U", (row, col)))
+                q.append((path + "U", (row, col)))
             
-        if val[DOWN].isalpha(): 
+        if is_open(val[DOWN]): 
             row, col = current[0] + directions[DOWN][0], current[1] + directions[DOWN][1]
             if is_inbounds(row, col): 
-                q.append(("D", (row, col)))
+                q.append((path + "D", (row, col)))
 
-        if val[RIGHT].isalpha(): 
-            row, col = current[0] + directions[RIGHT][0], directions[RIGHT][1]
+        if is_open(val[RIGHT]): 
+            row, col = current[0] + directions[RIGHT][0], current[1] + directions[RIGHT][1]
             if is_inbounds(row, col): 
-                q.append(("R", (row, col))) 
+                q.append((path + "R", (row, col))) 
     
-        if val[LEFT].isalpha(): 
-            row, col = current[0] + directions[LEFT][0], directions[LEFT][1]
+        if is_open(val[LEFT]): 
+            row, col = current[0] + directions[LEFT][0], current[1] + directions[LEFT][1]
             if is_inbounds(row, col): 
-                q.append(("L", (row, col)))
+                q.append((path + "L", (row, col)))
 
-
+    return "NOPE"
 
 def main(): 
-    pass
+    start_code = "edjrjqaa"
+    result = get_shortest_path(start_code)
+    print(f"Part1 result: {result}")
 
-def part1(): 
-    pass
+def part1(start_code: str) -> str: 
+    result = get_shortest_path(start_code)
+    return result
 
 
 def test_part1(): 
-    pass
+    start_code = "ihgpwlah"
+    expected = "DDRRRD"
+    result = get_shortest_path(start_code)
+    assert(result == expected)
 
 """
 If your passcode were ihgpwlah, the shortest path would be DDRRRD.  
@@ -219,6 +248,7 @@ With kglvqrro, the shortest path would be DDUDRLRRUDRD.
 With ulqzkmiv, the shortest would be DRURDRUDDLLDLUURRDULRLDUUDDDRR. 
 """
 @pytest.mark.parametrize("start_code, expected", [
+    ("hijkl", "NOPE"),
     ("ihgpwlah", "DDRRRD"), 
     ("kglvqrro", "DDUDRLRRUDRD"), 
     ("ulqzkmiv", "DRURDRUDDLLDLUURRDULRLDUUDDDRR")
@@ -239,6 +269,7 @@ def test_is_inbounds(row : int, col: int, expected: bool):
     result = is_inbounds(row, col)
     assert(result == expected)
 
+"""
 def test_init_board(): 
     board = init_board()
     assert(len(board) == 9)
@@ -247,6 +278,9 @@ def test_init_board():
     assert(board[1][2] == '|')
     assert(board[1][1] == 'S')
     assert(board[8][8] == 'V')
+"""
+
 
 if __name__ == "__main__": 
     pytest.main([__file__])
+    main()
