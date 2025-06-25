@@ -4,6 +4,7 @@ from typing import List
 class Solution:
     def findKDistantIndices(self, nums: List[int], key: int, k: int) -> List[int]:
         result = set()
+        
         key_locations = []
         for i, num in enumerate(nums): 
             if num == key: 
