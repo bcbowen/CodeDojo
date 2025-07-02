@@ -18,7 +18,7 @@ class Solution:
     def diameterOfBinaryTree(self, root: Optional[TreeNode]) -> int:
         max_diameter = 0
         
-        def longest_path(node: TreeNode) -> int: 
+        def longest_path(node: Optional[TreeNode]) -> int: 
             if not node: 
                 return 0
             nonlocal max_diameter

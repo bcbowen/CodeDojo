@@ -21,6 +21,7 @@ class Solution:
         while queue: 
             for _ in range(len(queue)): 
                 node = queue.popleft()
+                assert(node)
                 diff = abs(target - node.val)
                 if diff == min_diff: 
                     min_val = min(node.val, min_val)
@@ -31,7 +32,7 @@ class Solution:
                     queue.append(node.left)
                 if node.right: 
                     queue.append(node.right)
-        return min_val    
+        return int(min_val)    
 
 """
 Example 1:

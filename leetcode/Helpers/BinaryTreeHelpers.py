@@ -1,9 +1,10 @@
 import pytest
 import json
+from typing import Deque, Optional
 from collections import deque
 
 class TreeNode:
-    def __init__(self, val=0, left=None, right=None):
+    def __init__(self, val : int =0, left : Optional["TreeNode"] = None, right : Optional["TreeNode"] = None):
          self.val = val
          self.left = left
          self.right = right
@@ -22,11 +23,11 @@ def parse_values(definition: str) -> list[int | None]:
 """
 example definition: [1,4,4,null,2,2,null,1,null,6,8,null,null,null,null,1,3]
 """
-def get_definition(root: TreeNode) -> str:
+def get_definition(root: Optional[TreeNode]) -> str:
     if not root: 
         return "[]"
      
-    queue = deque([root])
+    queue : Deque[Optional[TreeNode]] = deque([root])
     values = []
     while queue: 
         for _ in range(len(queue)): 
@@ -50,24 +51,27 @@ def get_definition(root: TreeNode) -> str:
 """
 example definition: [1,4,4,null,2,2,null,1,null,6,8,null,null,null,null,1,3]
 """
-def populate_tree(definition: str) -> TreeNode: 
+def populate_tree(definition: str) -> TreeNode | None: 
     tree_vals = parse_values(definition)
     #root = TreeNode(tree_vals[0])
     if not tree_vals: 
         return None
     
     it = iter(tree_vals)
-    root = TreeNode(next(it))
-    current = [root]
-    for node in current: 
-        val = next(it, None)
-        if val is not None: 
-            node.left = TreeNode(val)
-            current.append(node.left)
-        val = next(it, None)
-        if val is not None: 
-            node.right = TreeNode(val)
-            current.append(node.right)
+    next_val = next(it)
+    root = None
+    if next_val: 
+        root = TreeNode(next_val)
+        current = [root]
+        for node in current: 
+            val = next(it, None)
+            if val is not None: 
+                node.left = TreeNode(val)
+                current.append(node.left)
+            val = next(it, None)
+            if val is not None: 
+                node.right = TreeNode(val)
+                current.append(node.right)
     return root
 
 
@@ -114,6 +118,7 @@ def test_get_definition():
    current.right = TreeNode(2)
    current.right.left = TreeNode(1)
    current = root.right
+   assert(current)
    current.left = TreeNode(2)
    current.left.left = TreeNode(6)
    current = current.left
@@ -144,21 +149,33 @@ def test_get_tree():
    definition = "[1,4,4,null,2,2,null,1,null,6,8,null,null,null,null,1,3]"
 
    root = populate_tree(definition)
+   assert(root)
    current = root
-   assert current.val == 1
-   assert current.left.val == 4
-   assert current.right.val == 4
+   assert (current.val == 1)
+   assert(current.left)
+   assert (current.left.val == 4)
+   assert(current.right)
+   assert (current.right.val == 4)
    current = current.left
-   assert current.right.val == 2
-   assert current.right.left.val == 1
+   assert(current.right)
+   assert (current.right.val == 2)
+   assert(current.right.left)
+   
+   assert (current.right.left.val == 1)
    current = root.right
+   assert(current)
+   assert(current.left)
    assert current.left.val == 2
-   assert current.left.left.val == 6
-   assert current.right == None
+   assert(current.left.left)
+   assert (current.left.left.val == 6)
+   assert (current.right == None)
    current = current.left
-   assert current.right.val == 8
-   assert current.right.left.val == 1
-   assert current.right.right.val == 3
+   assert(current.right)
+   assert (current.right.val == 8)
+   assert(current.right.left)
+   assert (current.right.left.val) == 1
+   assert(current.right.right)
+   assert(current.right.right.val) == 3
 
 """
 Start with a definition string, parse to a tree and back to a definition. The final value should match
@@ -169,6 +186,7 @@ the starting value
 ])
 def test_codec(definition: str): 
     tree = populate_tree(definition)
+    assert(tree)
     serialized = get_definition(tree)
     assert(definition == serialized)
 
