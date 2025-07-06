@@ -22,14 +22,15 @@ class Solution:
         queue = deque([root])
         while queue: 
             level_len = len(queue)
+            node = None
             for _ in range(level_len): 
                 node = queue.popleft()
                 if node.left: 
                     queue.append(node.left)
                 if node.right: 
                     queue.append(node.right)
-
-            result.append(node.val)
+            if node: 
+                result.append(node.val)
         return result
 
 @pytest.mark.parametrize("definition, expected", [
