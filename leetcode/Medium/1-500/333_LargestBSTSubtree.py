@@ -14,7 +14,6 @@ if project_root not in sys.path:
 from Helpers.BinaryTreeHelpers import TreeNode, populate_tree
 
 
-"""
 # Each node will return min node value, max node value, size
 class NodeValue:
     def __init__(self, min_node, max_node, max_size):
@@ -23,38 +22,27 @@ class NodeValue:
         self.max_size = max_size
 
 class Solution:
-    def largest_bst_subtree_helper(self, root):
-        # An empty tree is a BST of size 0.
-        if not root:
-            return NodeValue(float('inf'), float('-inf'), 0)
-
-        # Get values from left and right subtree of current tree.
-        left = self.largest_bst_subtree_helper(root.left)
-        right = self.largest_bst_subtree_helper(root.right)
+    def largestBSTSubtreeHelper(self, root: Optional[TreeNode]) -> NodeValue: 
+        result = NodeValue(float('inf'), -float('inf'), 0)
+        if not root: 
+            return result
         
-        # Current node is greater than max in left AND smaller than min in right, it is a BST.
-        if left.max_node < root.val < right.min_node:
-            # It is a BST.
-            return NodeValue(min(root.val, left.min_node), max(root.val, right.max_node), 
-                             left.max_size + right.max_size + 1)
+        left_value = self.largestBSTSubtreeHelper(root.left)
+        right_value = self.largestBSTSubtreeHelper(root.right)
+
+        is_bst = left_value.max_node < root.val and right_value.min_node > root.val
+
+        if is_bst: 
+            result.min_node = min(left_value.min_node, root.val)
+            result.max_node = max(right_value.max_node, root.val)
+            result.max_size = right_value.max_size + left_value.max_size + 1
+        else: 
+            # Otherwise, return [-inf, inf] so that parent can't be valid BST
+            result.min_node = -float('inf')
+            result.max_node = float('inf')
+            result.max_size = max(left_value.max_size, right_value.max_size)
         
-        # Otherwise, return [-inf, inf] so that parent can't be valid BST
-        return NodeValue(float('-inf'), float('inf'), max(left.max_size, right.max_size))
-
-    def largestBSTSubtree(self, root: Optional[TreeNode]) -> int:
-        return self.largest_bst_subtree_helper(root).max_size
-"""
-
-# Each node will return min node value, max node value, size
-class NodeValue:
-    def __init__(self, min_node, max_node, max_size):
-        self.max_node = max_node
-        self.min_node = min_node
-        self.max_size = max_size
-
-class Solution:
-    def largestBSTSubtreeHelper(self) -> NodeValue: 
-        pass
+        return result
 
     def largestBSTSubtree(self, root: Optional[TreeNode]) -> int:
         return self.largestBSTSubtreeHelper(root).max_size
@@ -73,8 +61,8 @@ class Solution_1:
             if not node: 
                 continue
 
-            if Solution.is_bst(node): 
-                result = Solution.count_nodes(node)
+            if Solution_1.is_bst(node): 
+                result = Solution_1.count_nodes(node)
                 break
             q.append(node.left)
             q.append(node.right)
@@ -98,10 +86,10 @@ class Solution_1:
         if not root: 
             return False
         
-        if root.left and (root.left.val >= root.val or not Solution.is_bst(root.left)): 
+        if root.left and (root.left.val >= root.val or not Solution_1.is_bst(root.left)): 
             return False
         
-        if root.right and (root.right.val <= root.val or not Solution.is_bst(root.right)): 
+        if root.right and (root.right.val <= root.val or not Solution_1.is_bst(root.right)): 
             return False
         return True
 
