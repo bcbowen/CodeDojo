@@ -1,9 +1,34 @@
+import heapq
 import pytest
 from typing import List
 
 class Solution:
     def findCheapestPrice(self, n: int, flights: List[List[int]], src: int, dst: int, k: int) -> int:
-        return 2
+        if k == 0: 
+            return -1
+        
+        flight_graph = {}
+        for fm, to, price in flights: 
+            if not fm in flight_graph: 
+                flight_graph[fm] = []
+            flight_graph[flights[fm]].append((to, price))
+        
+        heap = []
+        cheapest = -1
+        for to, price in flight_graph[src]:
+            if to == dst: 
+                cheapest = price
+            heapq.heappush(heap, (to, price, 1))
+            
+        while heap:
+            to, price, hops = heapq.heappop(heap)
+            if to == dst and hops <= k: 
+                cheapest = min(cheapest, price)
+            for next, next_price in flight_graph[to]: 
+                heapq.heappush(heap, (next, price + next_price, hops + 1))
+
+        return cheapest
+    
        
 """
 Example 1:
