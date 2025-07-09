@@ -23,7 +23,6 @@ class Solution:
             to, price, hops, path = heapq.heappop(heap)
             if to == dst and hops <= k: 
                 cheapest = min(cheapest, price)
-#            if to in flight_graph:     
             for next, next_price in flight_graph[to]: 
                 new_hops = hops + 1
                 if next not in path and new_hops <= k: 
