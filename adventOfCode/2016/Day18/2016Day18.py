@@ -47,7 +47,7 @@ def get_value(previous_row: str, position: int) -> str:
     
     return '^' if is_trap else '.'
 
-def part1(file_name: str, row_count: int) -> int: 
+def day18(file_name: str, row_count: int) -> int: 
     first_row = get_first_row(file_name)
     current_row = first_row
     safe_count = current_row.count('.')
@@ -55,11 +55,14 @@ def part1(file_name: str, row_count: int) -> int:
         current_row = generate_row(current_row)
         safe_count += current_row.count('.')
     
-    print(f"Part 1 {file_name} safe count: {safe_count}")
+    print(f"{file_name} safe count: {safe_count} for {row_count} rows")
     return safe_count
 
 def main(): 
-    part1("input.txt", 40)
+    result = day18("input.txt", 40)
+    print(f"Part 1 result: {result}")
+    result = day18("input.txt", 400000)
+    print(f"Part 2 result: {result}")
 
 
 @pytest.mark.parametrize("previous_row, index, expected", [
@@ -141,8 +144,8 @@ def test_generate_row(previous_row: str, expected: str):
     ("sample_row1.txt", 3, 6), 
     ("sample_row2.txt", 10, 38)
 ])
-def test_part1(file_name: str, row_count: int, expected: int): 
-    result = part1(file_name, row_count)
+def test_day18(file_name: str, row_count: int, expected: int): 
+    result = day18(file_name, row_count)
     assert(result == expected)
 
 if __name__ == "__main__":
