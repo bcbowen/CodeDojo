@@ -15,6 +15,12 @@ def get_input_filepath(file_name: str) -> Path:
         input_path = private_files_base / year / day / file_name
         return input_path
 
+def get_first_row(file_name: str) -> str: 
+    file_path = get_input_filepath(file_name)
+    with open(file_path, "r") as file: 
+        row = file.readline()
+    return row
+
 """
 A new tile is a trap only in one of the following situations:
 
@@ -25,26 +31,81 @@ A new tile is a trap only in one of the following situations:
 """
 def generate_row(previous_row : str) -> str:
     new_row = ['.'] * len(previous_row)
-    # left edge
-    if previous_row[0] != previous_row[1]: 
-        new_row[0] = '^'
-    for i in range(1, len(previous_row) - 1):
-        if previous_row[i] == '^' and xor(previous_row[i - 1] == '^', previous_row[i + 1] == '^'):
-            new_row[i] = '^'
-        elif previous_row == '.' and xor(previous_row[i - 1] == '^', previous_row[i + 1] == '^'): 
-            new_row[i] = '^'  
-    # right edge
-    if previous_row[-1] != previous_row[-2]: 
-        new_row[-1] = '^'
+    for i in range(len(previous_row)): 
+        new_row[i] = get_value(previous_row, i)
 
     return ''.join(new_row)      
 
+def get_value(previous_row: str, position: int) -> str: 
+    is_trap = False
+    if position == 0: 
+        is_trap = previous_row[1] == '^'
+    elif position == len(previous_row) - 1: 
+        is_trap = previous_row[-2] == '^'
+    else: 
+        is_trap = previous_row[position - 1] != previous_row[position + 1]
+    
+    return '^' if is_trap else '.'
 
+def part1(file_name: str, row_count: int) -> int: 
+    first_row = get_first_row(file_name)
+    current_row = first_row
+    safe_count = current_row.count('.')
+    for _ in range(row_count - 1): 
+        current_row = generate_row(current_row)
+        safe_count += current_row.count('.')
+    
+    print(f"Part 1 {file_name} safe count: {safe_count}")
+    return safe_count
 
 def main(): 
-    pass
+    part1("input.txt", 40)
+
+
+@pytest.mark.parametrize("previous_row, index, expected", [
+    (".^...", 0, "^"),
+    ("^^...", 0, "^"),
+    ("^....", 0, "."),
+    ("..^..", 3, "^"),
+    ("..^^.", 3, "^"),
+    (".^^^.", 2, "."),
+    ("..^^.", 2, "^"),
+    ("...^.", 2, "^"), 
+    (".....", 2, ".") 
+])
+def test_get_value(previous_row: str, index: int, expected: str): 
+    result = get_value(previous_row, index)
+    assert(result == expected)
+
+@pytest.mark.parametrize("file_name, expected", [
+    ("sample_row1.txt", "..^^."), 
+    ("sample_row2.txt", ".^^.^.^^^^")
+])
+def test_get_first_row(file_name: str, expected: str): 
+    result = get_first_row(file_name)
+    assert(result == expected)
 
 """
+
+```text
+ABCDE
+12345
+```
+
+The type of tile 2 is based on the types of tiles A, B, and C; 
+the type of tile 5 is based on tiles D, E, and an imaginary "safe" tile. 
+Let's call these three tiles from the previous row the left, center, and right tiles, 
+respectively. Then, a new tile is a trap only in one of the following situations:
+
+- Its left and center tiles are traps, but its right tile is not.  
+- Its center and right tiles are traps, but its left tile is not.  
+- Only its left tile is a trap.  
+- Only its right tile is a trap.  
+
+In any other situation, the new tile is safe.
+
+
+
 ..^^.
 .^^^^
 ^^..^
@@ -65,11 +126,23 @@ def main():
     ("..^^.", ".^^^^"), 
     (".^^^^", "^^..^"), 
     (".^^.^.^^^^", "^^^...^..^"), 
+    (".^^^..^.^^", "^^.^^^..^^"), 
+    (".^^.^.^^^^", "^^^...^..^"),
+    ("^.^^.^.^^.", "..^^...^^^"),
+    (".^^^^.^^.^", "^^..^.^^.."),
+    ("^^^^..^^^.", "^..^^^^.^^"),
     (".^^^..^.^^", "^^.^^^..^^")
-
 ])
 def test_generate_row(previous_row: str, expected: str): 
     result = generate_row(previous_row)
+    assert(result == expected)
+
+@pytest.mark.parametrize("file_name, row_count, expected", [
+    ("sample_row1.txt", 3, 6), 
+    ("sample_row2.txt", 10, 38)
+])
+def test_part1(file_name: str, row_count: int, expected: int): 
+    result = part1(file_name, row_count)
     assert(result == expected)
 
 if __name__ == "__main__":
