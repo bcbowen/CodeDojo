@@ -25,15 +25,16 @@ class Solution:
             level_len = len(queue)
             for _ in range(level_len): 
                 node = queue.popleft()
-                if row % 2 == 0: 
-                    values.append(node.val)
-                else: 
-                    values.insert(0, node.val)
-                
-                if node.left: 
-                    queue.append(node.left)
-                if node.right: 
-                    queue.append(node.right)
+                if node: 
+                    if row % 2 == 0: 
+                        values.append(node.val)
+                    else: 
+                        values.insert(0, node.val)
+                    
+                    if node.left: 
+                        queue.append(node.left)
+                    if node.right: 
+                        queue.append(node.right)
             result.append(values)
             row += 1
             
