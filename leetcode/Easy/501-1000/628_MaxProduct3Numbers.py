@@ -14,14 +14,6 @@ class Solution:
        
 
         if nums[1] < 0: 
-            #nums2 = [] 
-            #nums2.append(nums[1] * nums[0])
-            #nums2.append(nums[-1])
-            #nums2.append(nums[-2])
-            #nums2.append(nums[-3])
-            #nums2.sort()
-            
-            #return nums2[-1] * nums2[-2] * nums2[-3]
             return max(nums[0] * nums[1] * nums[-1], nums[-1] * nums[-2] * nums[-3])
         else: 
             return nums[-1] * nums[-2] * nums[-3]
