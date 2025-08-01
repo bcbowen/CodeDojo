@@ -52,14 +52,21 @@ def exchange_gifts(player_count: int) -> int:
     result = exchange.play()
     return result
 
+def main(): 
+    part1()
 
 def test_part1(): 
     result = exchange_gifts(5)
     expected = 3
     assert(result == expected)
 
+def part1(): 
+    elf_count = 3001330
+    result = exchange_gifts(elf_count)
+    print(f'Part 1 result for {elf_count} elves: {result}')
 
-
+# Part2: seems we should find midpoint in the linked list using fast/slow
 
 if __name__ == "__main__": 
     pytest.main([__file__])
+    main()
