@@ -23,8 +23,9 @@ class GiftExchange:
     @staticmethod
     def configure_exchange(players: int) -> "GiftExchange":
         exchange = GiftExchange()
-        for i in range(players): 
+        for i in range(2, players + 1): 
             exchange.add()
+        exchange.last.next = exchange.first
         return exchange 
 
     def play(self) -> int:
@@ -38,6 +39,9 @@ class GiftExchange:
             if current == self.last:
                 self.first = current.next.next 
                 current.next = self.first
+            elif current.next == self.last: 
+                self.last = current
+                current.next = current.next.next
             else: 
                 current.next = current.next.next
             current = current.next
