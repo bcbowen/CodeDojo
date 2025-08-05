@@ -13,6 +13,7 @@ def get_input_filepath(file_name: str) -> Path:
 
         input_path = private_files_base / year / day / file_name
         return input_path
+
 class block_range: 
     def __init__(self, start: int, end: int): 
         self.start = start
@@ -65,7 +66,22 @@ def load_test_data(file_name: str) -> List[block_range]:
     return result
 
 def main(): 
-    pass
+    file_name = "input.txt"
+    part1(file_name)   
+    
+
+def part1(file_name: str) -> int: 
+    ip_data = load_test_data(file_name)
+    block_range.combine(ip_data)
+    first = block_range.find_first(ip_data)
+    print(f'First available ip address for file {file_name} is {first}')    
+    return first
+
+def test_part1(): 
+    file_name = "sample.txt"
+    expected = 3
+    result = part1(file_name)
+    assert(result == expected)
 
 """
 5-8
