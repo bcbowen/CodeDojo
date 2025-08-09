@@ -20,6 +20,11 @@ class block_range:
         self.end = end
     
     @staticmethod
+    def get_max_val(val: int) -> int: 
+        s = str(val)
+        return int('9' * len(s))
+
+    @staticmethod
     def parse(val: str) -> "block_range": 
          vals = val.split('-')
          if len(vals) != 2: 
@@ -70,9 +75,12 @@ class block_range:
     @staticmethod
     def find_available_ip_count(values: "List[block_range]") -> int: 
         ip_count = 0
-        for i in range(len(values)):
+        for i in range(1, len(values)):
             if values[i].start - values[i - 1].end > 1: 
-                ip_count += values[i].start - values[i - 1].end
+                ip_count += values[i].start - values[i - 1].end - 1
+        max_ip = values[-1].end
+        max_possible_ip = block_range.get_max_val(max_ip)
+        ip_count += max_possible_ip - max_ip
         return ip_count 
 
 def load_test_data(file_name: str) -> List[block_range]: 
@@ -114,6 +122,18 @@ def test_part2():
     expected = 2
     result = part2(file_name)
     assert(result == expected)
+
+@pytest.mark.parametrize("val, expected", [
+    (4, 9),
+    (34, 99), 
+    (234, 999), 
+    (2432, 9999), 
+    (23433, 99999), 
+    (123456, 999999)
+])
+def test_get_max_val(val: int, expected: int):
+    result = block_range.get_max_val(val)
+    assert(expected == result) 
 
 """
 5-8
