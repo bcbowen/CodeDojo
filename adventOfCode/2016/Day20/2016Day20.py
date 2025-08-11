@@ -74,13 +74,18 @@ class block_range:
     """
     @staticmethod
     def find_available_ip_count(values: "List[block_range]") -> int: 
-        ip_count = 0
+        max_ip = values[-1].end
+        ip_count = block_range.get_max_val(max_ip) + 1
+        """
         for i in range(1, len(values)):
             if values[i].start - values[i - 1].end > 1: 
                 ip_count += values[i].start - values[i - 1].end - 1
-        max_ip = values[-1].end
-        max_possible_ip = block_range.get_max_val(max_ip)
+        
         ip_count += max_possible_ip - max_ip
+        """
+        for value in values: 
+            ip_count -= (value.end - value.start + 1)
+
         return ip_count 
 
 def load_test_data(file_name: str) -> List[block_range]: 
@@ -104,6 +109,8 @@ def part1(file_name: str) -> int:
     print(f'First available ip address for file {file_name} is {first}')    
     return first
 
+
+# too high: 5705870133
 def part2(file_name: str) -> int: 
     ip_data = load_test_data(file_name)
     combined = block_range.combine(ip_data)
@@ -154,6 +161,17 @@ def test_combine(ip_ranges: List[str], expected: List[str]):
     assert(len(combined) == len(expected))
     for i in range(len(combined)):
         assert(str(combined[i]) == expected[i]) 
+
+
+@pytest.mark.parametrize("ranges, expected", [
+    ([[0, 2], [4, 8]], 2), 
+    ([[0, 2], [5, 6]], 5),
+    ([[0, 1], [5, 9], [11, 49]], 54)
+])
+def test_find_available_ip_count(ranges: List[List[int]], expected: int): 
+    block_ranges = [block_range(start, end) for start, end in ranges]
+    result = block_range.find_available_ip_count(block_ranges)
+    assert(result == expected)
 
 """
 5-8
