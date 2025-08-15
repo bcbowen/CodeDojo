@@ -1,6 +1,5 @@
 import time
 import pytest
-#from collections import deque
 from typing import List
 
 class Solution:
@@ -9,7 +8,6 @@ class Solution:
         n = len(img[0])
         # N NE E SE S SW W NW
         directions = [(-1, 0), (-1, 1), (0, 1), (1, 1), (1, 0), (1, -1), (0, -1), (-1, -1)]
-        #seen = set()
         def is_inbounds(row: int, col: int) -> bool: 
             if row < 0 or row >= m: 
                 return False
