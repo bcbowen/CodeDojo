@@ -39,7 +39,7 @@ class Solution:
                     result.append(interval)
                     in_progress = False
                     begin = -1
-                if interval[1] >= newInterval[1]:
+                elif interval[1] >= newInterval[1]:
                     result.append([begin, interval[1]])
                     begin = -1
                     in_progress = False                   
@@ -47,6 +47,10 @@ class Solution:
                 if newInterval[0] < interval[1] and newInterval[1] >= interval[0]: 
                     in_progress = True
                     begin = min(newInterval[0], interval[0])
+                    if newInterval[1] <= interval[1]: 
+                        result.append([begin, interval[1]])
+                        begin = -1
+                        in_progress = False
                 else: 
                     result.append(interval)
 

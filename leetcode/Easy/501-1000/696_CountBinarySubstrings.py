@@ -1,9 +1,38 @@
 import pytest
 
 class Solution:
+    def countBinarySubstrings(self, s: str) -> int:
+        turn = 1
+        i = 0
+        j = 1
+        count1 = 1
+        count2 = 0
+        current_char = s[0]
+        substrings = []
+        while i < len(s): 
+            while j < len(s) and s[j] == current_char: 
+                count1 += 1
+                j += 1
+            
+            current_char = s[j]
+            while j < len(s) and s[j] == current_char: 
+                count2 += 1
+                if count1 == count2: 
+                    substrings.append(s[i:j + 1])
+            i += 1
+            
+            count1 = 1
+            current_char = s[i]
+            j = i + 1
+            if count1 == count2: 
+                substrings.append(s[i - 1: i + 1])
+
+        return len(substrings) 
+
+    
     # Note: need to stop as soon as we have seen both 0s and 1s and 
     # increment i and start over
-    def countBinarySubstrings(self, s: str) -> int:
+    def countBinarySubstrings_1(self, s: str) -> int:
         i = 0
         j = 1
         substrings = []
