@@ -1,10 +1,8 @@
-function main(): void {
-  const projectName = "support.ai";
-  console.log(welcome(projectName));
-}
+import { log, chats } from "./chats.js";
+const button = document.getElementById("enable-button")!;
 
-function welcome(name : string) {
-  return "Hello, " + name.toLowerCase();
-}
+button.addEventListener("click", () => {
+  window.supportAI.enableAutoReply();
+});
 
-main();
+log(chats);
