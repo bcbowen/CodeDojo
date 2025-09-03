@@ -30,6 +30,7 @@ class SudokuBoard:
     def __init__(self): 
         self._board = [[SudokuCell() for _ in range(9)] for _ in range(9)]
         self._wire_horizontal_events()
+        self._wire_vertical_events()
 
     def set_value(self, row: int, col: int, val:int): 
         self._board[row][col].set_value(val)
@@ -51,6 +52,12 @@ class SudokuBoard:
     all the other cells
     """
     def _wire_horizontal_events(self): 
+        start_col = 0
+        end_col = 8
+
+        for row in range(0, 9): 
+            self._wire_events(row, row, start_col, end_col)
+        """
         for row in range(9): 
             for cell in range(9):
                 subscriber = self._board[row][cell] 
@@ -59,7 +66,50 @@ class SudokuBoard:
                         continue
                     emitter = self._board[row][col]
                     emitter.value_set.subscribe(subscriber.exclude_value)
+        """
 
+    """
+    Every cell in a col will subscribe to the value changed event for all the
+    other cells
+    """
+    def _wire_vertical_events(self): 
+        start_row = 0
+        end_row = 8
+        for col in range(0, 9): 
+            self._wire_events(start_row, end_row, col, col)
+
+    """
+            Zones of 9 (3X3): 
+            _____________
+            | 1 | 2 | 3 |
+            |____________
+            | 4 | 5 | 6 |
+            |____________
+            | 7 | 8 | 9 |
+            |____________
+
+    """
+
+    """
+    Every cell in range will subscribe to the value changed event for 
+    all the other cells
+    """
+    def _wire_events(self, start_row: int, end_row: int, start_col: int, end_col: int): 
+        
+        cells = [] 
+        for row in range(start_row, end_row + 1): 
+            for col in range(start_col, end_col + 1): 
+                cells.append((row, col))
+
+        for cell_row, cell_col in cells: 
+            for row in range(start_row, end_row + 1): 
+                for col in range(start_col, end_col + 1): 
+                    if row == cell_row and col == cell_col: 
+                        continue
+                    subscriber = self._board[cell_row][cell_col] 
+                        
+                    emitter = self._board[row][col]
+                    emitter.value_set.subscribe(subscriber.exclude_value)
     
 
 
@@ -133,12 +183,15 @@ def test_board_setup_smoke_test():
     assert(board.get_value(0, 1) == 0)
 
     # cells in the 1st row should have removed 3 as a possible value
-    assert((3 in board._board[0][1].possible_values) == False)
-    assert((3 in board._board[0][8].possible_values) == False)
+    assert((3 not in board._board[0][1].possible_values))
+    assert((3 not in board._board[0][8].possible_values))
     
     # cell in the second row in last col should have 3 as a possible value
     assert(3 in board._board[1][8].possible_values)
-    
+
+    # cells in the 1st column should have removed 3 as a possible value
+    assert((3 not in board._board[1][0].possible_values))
+    assert((3 not in board._board[8][0].possible_values))
 
     # first cell should have only one possible value: 3
     assert(len(board._board[0][0].possible_values) == 1)
