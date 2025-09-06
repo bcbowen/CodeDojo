@@ -10,12 +10,13 @@ class Solution:
             val = matrix[row][col]
 
             next_row = row + 1
-            next_col = 1
+            next_col = col + 1
             while next_row < len(matrix) and next_col < len(matrix[0]): 
                 if matrix[next_row][next_col] != val: 
                     return False
                 next_row += 1
                 next_col += 1
+            return True
 
         start_points = []
         for row in range(len(matrix)): 
