@@ -31,6 +31,7 @@ class SudokuBoard:
         self._board = [[SudokuCell() for _ in range(9)] for _ in range(9)]
         self._wire_horizontal_events()
         self._wire_vertical_events()
+        self._wire_zone_events()
 
     def set_value(self, row: int, col: int, val:int): 
         self._board[row][col].set_value(val)
@@ -57,16 +58,6 @@ class SudokuBoard:
 
         for row in range(0, 9): 
             self._wire_events(row, row, start_col, end_col)
-        """
-        for row in range(9): 
-            for cell in range(9):
-                subscriber = self._board[row][cell] 
-                for col in range(9): 
-                    if col == cell: 
-                        continue
-                    emitter = self._board[row][col]
-                    emitter.value_set.subscribe(subscriber.exclude_value)
-        """
 
     """
     Every cell in a col will subscribe to the value changed event for all the
@@ -89,6 +80,24 @@ class SudokuBoard:
             |____________
 
     """
+    def _wire_zone_events(self): 
+        # row, col of each zone upper left and lower right corners
+        zones = [[(0, 0), (2, 2)], 
+                 [(0, 3), (2, 5)], 
+                 [(0, 6), (2, 8)],
+
+                 [(3, 0), (5, 2)], 
+                 [(3, 3), (5, 5)], 
+                 [(3, 6), (5, 8)],
+                 
+                 [(6, 0), (8, 2)], 
+                 [(6, 3), (8, 5)], 
+                 [(6, 6), (8, 8)]
+        ]
+
+        for zone in zones: 
+            self._wire_events(zone[0][0], zone[1][0], zone[0][1], zone[1][1])
+
 
     """
     Every cell in range will subscribe to the value changed event for 
@@ -196,6 +205,10 @@ def test_board_setup_smoke_test():
     # first cell should have only one possible value: 3
     assert(len(board._board[0][0].possible_values) == 1)
     assert(board._board[0][0].possible_values[0] == 3)
+
+    # all cells in first zone should have removed 3 as a possible value
+    assert((3 not in board._board[1][2].possible_values))
+    
 
 if __name__ == "__main__":
     pytest.main([__file__]) 
