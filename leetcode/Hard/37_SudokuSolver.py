@@ -2,10 +2,9 @@ import pytest
 from typing import List, Callable, Any
 
 class Solution:
-    def solveSudoku(self, board: List[List[str]]) -> None:
-        """
-        Do not return anything, modify board in-place instead.
-        """
+    def solveSudoku(self, values: List[List[str]]) -> None:
+        board = SudokuBoard.parse(values)
+
 
 class SudokuCell:
     def __init__(self, value: int = 0):
@@ -47,6 +46,28 @@ class SudokuBoard:
                 if values[row][col] != "": 
                     board.set_value(row, col, int(values[row][col]))
         return board
+
+    def get_count(self) -> int: 
+        count = 0
+        for row in range(9): 
+            for col in range(9): 
+                if self._board[row][col]._value > 0: 
+                    count += 1
+        return count
+
+    # A region is valid if it contains at most one instance of values 1 - 9
+    def validate_region(self, begin_row: int, end_row: int, begin_col: int, end_col: int) -> bool:
+        # extra space for convenience - 1-based indices
+        counts = [0] * 10
+
+        for row in range(begin_row, end_row + 1): 
+            for col in range(begin_col, end_col + 1): 
+                val = self._board[row][col]._value
+                if val > 0:
+                    if counts[val] > 0: 
+                        return False
+                    counts[val] += 1
+        return True
 
     """
     Every cell in a row will subscribe to the value changed event for 
@@ -208,7 +229,60 @@ def test_board_setup_smoke_test():
 
     # all cells in first zone should have removed 3 as a possible value
     assert((3 not in board._board[1][2].possible_values))
-    
+
+
+def get_easy_board() -> SudokuBoard: 
+    values = []
+    values.append(["6", "", "", "9", "3", "7", "5", "8", ""])
+    values.append(["", "", "9", "5", "", "", "4", "6", "3"])
+    values.append(["5", "8", "", "", "", "6", "", "9", ""])
+    values.append(["", "7", "2", "", "", "", "", "", "9"])
+    values.append(["8", "", "", "", "9", "4", "", "", "7"])
+    values.append(["4", "", "6", "3", "", "2", "", "", ""])
+    values.append(["", "1", "4", "", "", "", "2", "5", ""])
+    values.append(["", "", "8", "4", "3", "2", "1", "", ""])
+    values.append(["", "6", "", "", "1", "", "", "3", ""])
+    return SudokuBoard.parse(values)    
+
+def test_get_easy_board(): 
+    board = get_easy_board()
+    assert(board._board[0][0]._value == 6)
+    assert(board._board[0][1].possible_values == [2, 4])
+    assert(board._board[0][2].possible_values == [1])
+    assert(board._board[2][2].possible_values == [1, 3, 7])
+    assert(board._board[8][6].possible_values == [7, 8, 9])
+    assert(board._board[8][1]._value == 6)
+    assert(board._board[2][5]._value == 6)
+
+def test_get_count(): 
+    board = get_easy_board()
+    # number of hardcoded values from the easy board above
+    expected = 38
+    assert(board.get_count() == expected)
+
+def test_invalid_row_fails_validation(): 
+    board = SudokuBoard()
+    # set_value(r, c, v)
+    board.set_value(0, 1, 1)
+    board.set_value(0, 2, 2)
+    board.set_value(0, 3, 3)
+    board.set_value(0, 4, 4)
+    board.set_value(0, 5, 5)
+    board.set_value(0, 6, 1)
+    expected = False
+    assert(board.validate_region(0, 0, 0, 8) == expected)
+
+def test_valid_row_passes_validation(): 
+    board = SudokuBoard()
+    # set_value(r, c, v)
+    board.set_value(0, 1, 1)
+    board.set_value(0, 2, 2)
+    board.set_value(0, 3, 3)
+    board.set_value(0, 4, 4)
+    board.set_value(0, 5, 5)
+    board.set_value(0, 6, 6)
+    expected = True
+    assert(board.validate_region(0, 0, 0, 8) == expected)
 
 if __name__ == "__main__":
     pytest.main([__file__]) 
