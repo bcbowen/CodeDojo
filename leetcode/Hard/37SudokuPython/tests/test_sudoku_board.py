@@ -36,26 +36,26 @@ def test_board_setup_smoke_test():
 
 def get_easy_board() -> SudokuBoard: 
     values = []
-    values.append(["6", "", "", "9", "3", "7", "5", "8", ""])
-    values.append(["", "", "9", "5", "", "", "4", "6", "3"])
-    values.append(["5", "8", "", "", "", "6", "", "9", ""])
-    values.append(["", "7", "2", "", "", "", "", "", "9"])
-    values.append(["8", "", "", "", "9", "4", "", "", "7"])
-    values.append(["4", "", "6", "3", "", "2", "", "", ""])
-    values.append(["", "1", "4", "", "", "", "2", "5", ""])
-    values.append(["", "", "8", "4", "3", "2", "1", "", ""])
-    values.append(["", "6", "", "", "1", "", "", "3", ""])
+    values.append(["", "9", "", "2", "1", "4", "", "", "6"])
+    values.append(["2", "1", "7", "", "", "", "", "", "8"])
+    values.append(["", "", "", "8", "", "9", "1", "3", ""])
+    values.append(["9", "2", "", "3", "8", "", "", "6", ""])
+    values.append(["", "8", "5", "", "", "", "", "2", "9"])
+    values.append(["", "7", "", "9", "6", "", "", "", "5"])
+    values.append(["7", "", "", "", "5", "1", "2", "", ""])
+    values.append(["4", "", "", "", "", "8", "7", "", ""])
+    values.append(["1", "", "8", "", "2", "", "6", "", "4"])
     return SudokuBoard.parse(values)    
 
 def test_get_easy_board(): 
     board = get_easy_board()
-    assert(board._board[0][0]._value == 6)
-    assert(board._board[0][1].possible_values == [2, 4])
-    assert(board._board[0][2].possible_values == [1])
-    assert(board._board[2][2].possible_values == [1, 3, 7])
-    assert(board._board[8][6].possible_values == [7, 8, 9])
-    assert(board._board[8][1]._value == 6)
-    assert(board._board[2][5]._value == 6)
+    assert(board._board[0][1]._value == 9)
+    assert(board._board[0][0].possible_values == [3, 5, 8])
+    assert(board._board[0][2].possible_values == [3])
+    assert(board._board[2][2].possible_values == [4, 6])
+    assert(board._board[8][7].possible_values == [5, 9])
+    assert(board._board[8][0]._value == 1)
+    assert(board._board[2][5]._value == 9)
 
 def test_get_count(): 
     board = get_easy_board()
@@ -88,10 +88,28 @@ def test_valid_row_passes_validation():
     assert(board.validate_region(0, 0, 0, 8) == expected)
 
 @pytest.mark.parametrize("row_number, expected", [
-    (1, [6, 0, 0, 9, 3, 7, 5, 8, 0]), 
-    (6, [4, 0, 6, 3, 0, 2, 0, 0, 0])
+    (1, [0, 9, 0, 2, 1, 4, 0, 0, 6]), 
+    (6, [0, 7, 0, 9, 6, 0, 0, 0, 5])
 ])
 def test_get_row_cells(row_number: int, expected: List[int]): 
     board = get_easy_board()
     row = board.get_row_cells(row_number)
+    assert(row == expected)
+
+@pytest.mark.parametrize("row_number, expected", [
+    (1, [0, 2, 0, 9, 0, 0, 7, 4, 1]), 
+    (6, [4, 0, 9, 0, 0, 0, 1, 8, 0])
+])
+def test_get_col_cells(row_number: int, expected: List[int]): 
+    board = get_easy_board()
+    row = board.get_col_cells(row_number)
+    assert(row == expected)
+
+@pytest.mark.parametrize("zone_number, expected", [
+    (1, [0, 9, 0, 2, 1, 7, 0, 0, 0]), 
+    (6, [0, 6, 0, 0, 2, 9, 0, 0, 5])
+])
+def test_get_zone_cells(zone_number: int, expected: List[int]): 
+    board = get_easy_board()
+    row = board.get_zone_cells(zone_number)
     assert(row == expected)

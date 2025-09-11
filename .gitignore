@@ -19,7 +19,8 @@ mono_crash.*
 # Jupyter checkpoints
 .ipynb_checkpoints
 
-.vscode
+.vscode/*
+!.vscode/launch.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -40,7 +41,6 @@ env/
 
 # IDE-specific files
 .idea/
-.vscode/
 
 # Build results
 [Dd]ebug/

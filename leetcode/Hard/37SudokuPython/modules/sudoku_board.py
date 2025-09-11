@@ -92,25 +92,6 @@ class SudokuBoard:
 
     def _wire_zone_events(self): 
         
-        """
-        # row, col of each zone upper left and lower right corners
-        zones = [[(0, 0), (2, 2)], 
-                 [(0, 3), (2, 5)], 
-                 [(0, 6), (2, 8)],
-
-                 [(3, 0), (5, 2)], 
-                 [(3, 3), (5, 5)], 
-                 [(3, 6), (5, 8)],
-                 
-                 [(6, 0), (8, 2)], 
-                 [(6, 3), (8, 5)], 
-                 [(6, 6), (8, 8)]
-        ]
-
-        for zone in zones: 
-            self._wire_events(zone[0][0], zone[1][0], zone[0][1], zone[1][1])
-
-        """
         for i in range(1, 10):
             zone = self._zones[i] 
             self._wire_events(zone[0][0], zone[1][0], zone[0][1], zone[1][1])
@@ -141,7 +122,7 @@ class SudokuBoard:
         row_cells = []
         row_index = row_number - 1
         for col in range(9): 
-            row_cells.append(self._board[row_index][col])
+            row_cells.append(self._board[row_index][col]._value)
 
         return row_cells
 
@@ -150,7 +131,7 @@ class SudokuBoard:
         col_index = col_number - 1
         col_cells = []
         for row in range(9): 
-            col_cells.append(self._board[row][col_index])
+            col_cells.append(self._board[row][col_index]._value)
         
         return col_cells
     
@@ -159,7 +140,8 @@ class SudokuBoard:
         zone = self._zones[zone_number]
         zone_cells = [] 
 
-        for row in range(zone[0][0], zone[0][1] + 1): 
-            for col in range(zone[1][0], zone[1][1] + 1): 
-                zone_cells.append(self._board[row][col])
+        for row in range(zone[0][0], zone[1][0] + 1): 
+            for col in range(zone[0][1], zone[1][1] + 1): 
+                zone_cells.append(self._board[row][col]._value)
         return zone_cells
+
