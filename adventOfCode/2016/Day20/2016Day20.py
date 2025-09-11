@@ -20,11 +20,6 @@ class block_range:
         self.end = end
     
     @staticmethod
-    def get_max_val(val: int) -> int: 
-        s = str(val)
-        return int('9' * len(s))
-
-    @staticmethod
     def parse(val: str) -> "block_range": 
          vals = val.split('-')
          if len(vals) != 2: 
@@ -49,9 +44,8 @@ class block_range:
             else:
                 highest = max(highest, values[i].end)
         
-        if end == -1: 
-            result.append(block_range(begin, values[-1].end))
-        
+        result.append(block_range(begin,  highest))
+
         return result
 
     def __str__(self) -> str:
@@ -74,15 +68,9 @@ class block_range:
     """
     @staticmethod
     def find_available_ip_count(values: "List[block_range]") -> int: 
-        max_ip = values[-1].end
-        ip_count = block_range.get_max_val(max_ip) + 1
-        """
-        for i in range(1, len(values)):
-            if values[i].start - values[i - 1].end > 1: 
-                ip_count += values[i].start - values[i - 1].end - 1
-        
-        ip_count += max_possible_ip - max_ip
-        """
+        ip_range = 4294967296
+        ip_count = ip_range
+
         for value in values: 
             ip_count -= (value.end - value.start + 1)
 
@@ -110,7 +98,7 @@ def part1(file_name: str) -> int:
     return first
 
 
-# too high: 5705870133
+# too high: 837429
 def part2(file_name: str) -> int: 
     ip_data = load_test_data(file_name)
     combined = block_range.combine(ip_data)
@@ -126,21 +114,9 @@ def test_part1():
 
 def test_part2(): 
     file_name = "sample.txt"
-    expected = 2
+    expected = 4294967288
     result = part2(file_name)
     assert(result == expected)
-
-@pytest.mark.parametrize("val, expected", [
-    (4, 9),
-    (34, 99), 
-    (234, 999), 
-    (2432, 9999), 
-    (23433, 99999), 
-    (123456, 999999)
-])
-def test_get_max_val(val: int, expected: int):
-    result = block_range.get_max_val(val)
-    assert(expected == result) 
 
 """
 5-8
@@ -161,17 +137,6 @@ def test_combine(ip_ranges: List[str], expected: List[str]):
     assert(len(combined) == len(expected))
     for i in range(len(combined)):
         assert(str(combined[i]) == expected[i]) 
-
-
-@pytest.mark.parametrize("ranges, expected", [
-    ([[0, 2], [4, 8]], 2), 
-    ([[0, 2], [5, 6]], 5),
-    ([[0, 1], [5, 9], [11, 49]], 54)
-])
-def test_find_available_ip_count(ranges: List[List[int]], expected: int): 
-    block_ranges = [block_range(start, end) for start, end in ranges]
-    result = block_range.find_available_ip_count(block_ranges)
-    assert(result == expected)
 
 """
 5-8
