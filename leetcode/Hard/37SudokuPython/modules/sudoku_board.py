@@ -141,7 +141,7 @@ class SudokuBoard:
         row_cells = []
         row_index = row_number - 1
         for col in range(9): 
-            row_cells.append(self._board[row_index][col])
+            row_cells.append(self._board[row_index][col]._value)
 
         return row_cells
 
@@ -150,7 +150,7 @@ class SudokuBoard:
         col_index = col_number - 1
         col_cells = []
         for row in range(9): 
-            col_cells.append(self._board[row][col_index])
+            col_cells.append(self._board[row][col_index]._value)
         
         return col_cells
     
@@ -161,5 +161,5 @@ class SudokuBoard:
 
         for row in range(zone[0][0], zone[0][1] + 1): 
             for col in range(zone[1][0], zone[1][1] + 1): 
-                zone_cells.append(self._board[row][col])
+                zone_cells.append(self._board[row][col]._value)
         return zone_cells
