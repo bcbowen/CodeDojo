@@ -104,3 +104,12 @@ def test_get_col_cells(row_number: int, expected: List[int]):
     board = get_easy_board()
     row = board.get_col_cells(row_number)
     assert(row == expected)
+
+@pytest.mark.parametrize("zone_number, expected", [
+    (1, [0, 9, 0, 2, 1, 7, 0, 0, 0]), 
+    (6, [0, 6, 0, 0, 2, 9, 0, 0, 5])
+])
+def test_get_zone_cells(zone_number: int, expected: List[int]): 
+    board = get_easy_board()
+    row = board.get_zone_cells(zone_number)
+    assert(row == expected)
