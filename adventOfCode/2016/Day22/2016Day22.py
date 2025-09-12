@@ -50,8 +50,27 @@ def load_input() -> List[List[StorageNode | None]]:
 
     return nodes    
 
+def part1(storage_nodes: List[List[StorageNode | None]]) -> int:
+    count = 0
+    for row in storage_nodes:
+        for node_a in row:
+            if node_a is None or node_a.used == 0:
+                continue
+            for other_row in storage_nodes:
+                for node_b in other_row:
+                    if node_b is None or node_a == node_b:
+                        continue
+                    if node_a.used <= node_b.avail:
+                        count += 1
+
+    return count
+
 def main(): 
-    pass
+    storage_nodes = load_input()
+    result1 = part1(storage_nodes)
+    print(f"Part 1: {result1}")
+    # result2 = part2(storage_nodes)
+    # print(f"Part 2: {result2}")
 
 
 def test_load_input(): 
