@@ -1,12 +1,38 @@
+import math
 import pytest
 from collections import deque
-from typing import List
+from typing import List, Deque, Tuple
 
 # TODO: When we come accross a zero we have to flush the digits array and move to the number following 
 # the zero and start over
 
 def get_max_product(digit_count: int, values: List[int]) -> int: 
-    return 4
+    i = -1
+    number_buffer = deque()
+    max_product = 1
+    while i < len(values): 
+        (next_index, number_buffer) = load_array(i, digit_count, number_buffer, values)
+        if len(number_buffer) < digit_count: 
+            break
+        i = next_index
+        product = math.prod(number_buffer)
+        max_product = max(max_product, product)
+    return max_product
+
+def load_array(position: int, buffer_length: int, number_buffer: Deque[int], values: List[int]) -> Tuple[int, Deque[int]]:
+    if len(number_buffer) > 0: 
+        number_buffer.popleft()
+
+    while len(number_buffer) < buffer_length and position < len(values) - 1:
+        position += 1
+        if values[position] == 0: 
+            number_buffer.clear()
+            continue
+        else: 
+            number_buffer.append(values[position])
+    return (position, number_buffer)
+
+
 
 """
 def 
@@ -73,7 +99,7 @@ def get_input() -> List[int]:
         result.extend([int(c) for c in line if c.isdigit()])
     return result
 
-def big_test(): 
+def test_big_input(): 
     inputs = get_input()
     expected = 5832
     result = get_max_product(4, inputs)
@@ -83,8 +109,32 @@ def test_get_input():
     result = get_input()
     assert (len(result) == 1000)
 
+@pytest.mark.parametrize("position, buffer_length, number_buffer, values, expected", [
+    (-1, 4, deque([]), [1, 2, 3, 4, 5], (3, deque([1, 2, 3, 4]))), 
+    (3, 4, deque([1, 2, 3, 4]), [1, 2, 3, 4, 5, 6], (4, deque([2, 3, 4, 5]))), 
+    (-1, 3, deque([]), [1, 2, 0, 4, 5, 6, 7, 8], (5, deque([4, 5, 6])))
+
+])
+def test_load_array(position: int, buffer_length: int, number_buffer: Deque[int], values: List[int], expected: Tuple[int, Deque[int]]):
+    result = load_array(position, buffer_length, number_buffer, values)
+    assert(result == expected)
+
+@pytest.mark.parametrize("digit_count, values, expected", [
+    (2, [1, 2, 3, 4, 5], 20), 
+    (2, [9, 0, 3, 4, 5], 20),
+    (2, [9, 0, 3, 4, 5, 0], 20),
+    (2, [4, 5, 3, 1, 2], 20),
+    (2, [4, 5, 0, 1, 0], 20)
+])
+def test_get_max_product_small(digit_count: int, values: List[int], expected: int): 
+    result = get_max_product(digit_count, values)
+    assert(result == expected)
+
 def main(): 
-    print("coming soon")
+    inputs = get_input()
+    result = get_max_product(13, inputs)
+    print(f"Euler 8 result {result}") 
 
 if __name__ == "__main__":
     pytest.main([__file__]) 
+    main()
