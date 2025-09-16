@@ -29,8 +29,50 @@ def load_commands(file_name: str) -> List[str]:
         commands = file.readlines()
     return commands
 
+def process_command(command: str, password: str) -> str:
+    parts = command.split()
+    if parts[0] == "swap": 
+        if parts[1] == "position": 
+            i1 = int(parts[2])
+            i2 = int(parts[5])
+            return swap_positions(password, i1, i2)
+        elif parts[1] == "letter": 
+            c1 = parts[2]
+            c2 = parts[5]
+            return swap_letters(password, c1, c2)
+    elif parts[0] == "rotate": 
+        if parts[1] == "left": 
+            moves = int(parts[2])
+            return rotate_left(password, moves)
+        elif parts[1] == "right": 
+            moves = int(parts[2])
+            return rotate_right(password, moves)
+        elif parts[1] == "based": 
+            c = parts[6]
+            return rotate_position(password, c)
+    elif parts[0] == "reverse": 
+        start_index = int(parts[2])
+        end_index = int(parts[4])
+        return reverse(password, start_index, end_index)
+    elif parts[0] == "move": 
+        from_index = int(parts[2])
+        to_index = int(parts[5])
+        return move(password, from_index, to_index)
+
+    raise ValueError(f"Unknown command {command}") 
+
 def main(): 
-    pass
+    file_name = "inputPassword.txt"
+    pwd = load_password(file_name)
+    commands = load_commands("input.txt")
+    part1(pwd, commands)
+
+def part1(password: str, commands: List[str]): 
+    for command in commands: 
+        password = process_command(command.strip(), password)
+        print(f"After '{command.strip()}': {password}")
+    print(f"Final password: {password}")
+    return password
 
 def swap_positions(value: str, i1: int, i2: int) -> str: 
     chars = [c for c in value]
@@ -38,7 +80,7 @@ def swap_positions(value: str, i1: int, i2: int) -> str:
 
     return "".join(chars)
 
-def swap_letters(value: str, c1: str, c2: str): 
+def swap_letters(value: str, c1: str, c2: str) -> str: 
     if c1 == c2: 
         return value
     i1 = -1
@@ -55,6 +97,9 @@ def swap_letters(value: str, c1: str, c2: str):
                 break
     if i1 > -1 and i2 > -1: 
         return swap_positions(value, i1, i2)
+
+    else: 
+        raise ValueError(f"Could not find both letters {c1} and {c2} in {value}")
 
 def rotate_right(value: str, moves: int) -> str: 
     if moves > len(value):  
@@ -89,15 +134,20 @@ def reverse(value: str, start_index: int, end_index: int) -> str:
     return "".join(chars)  
 
 def move(value: str, from_index: int, to_index: int) -> str: 
-    chars = []
-    for i in range(to_index): 
-        if i == from_index: 
-            continue
-        chars.append(value[i])
-    chars.append(value[from_index])
-    for i in range(to_index + 1, len(value)):
-        chars.append(value[i])
+    if from_index == to_index: 
+        return value
+    chars = [c for c in value]
+    del chars[from_index]
+    chars.insert(to_index, value[from_index]) 
+    
     return "".join(chars) 
+
+def rotate_position(value: str, c: str) -> str: 
+    index = value.index(c)
+    moves = 1 + index
+    if index >= 4: 
+        moves += 1
+    return rotate_right(value, moves)    
 
 """
 swap position X with position Y means that the letters at indexes X and Y (counting from 0) 
@@ -199,12 +249,43 @@ def test_move(value: str, from_index: int, to_index: int, expected: str):
     result = move(value, from_index, to_index)
     assert(result == expected)
 
+
+"""
+
+move position 3 to position 0 removes the letter at position 3 (a), then inserts it at position 0 (the front of the string): abdec.
+
+rotate based on position of letter b finds the index of letter b (1), then rotates the string right once plus a number of times equal to that index (2): ecabd.
+
+rotate based on position of letter d finds the index of letter d (4), then rotates the string right once, plus a number of times equal to that index, plus an additional time because the index was at least 4, for a total of 6 right rotations: decab.
+
+"""
+@pytest.mark.parametrize("value, c, expected", [
+    ("abdec", 'b', "ecabd"), 
+    ("ecabd", 'd', "decab"),
+    ("abcde", 'a', "eabcd"),
+    ("abcde", 'b', "deabc"),
+    ("abcde", 'c', "cdeab"),
+    ("abcde", 'd', "bcdea"),
+    ("abcde", 'e', "eabcd")
+])
+def test_rotate_position(value: str, c: str, expected: str): 
+    result = rotate_position(value, c)
+    assert(result == expected)
+
+
 def test_load_password(): 
     expected = "abcde"
     file_name = "samplePassword.txt"
     result = load_password(file_name)
     assert(result == expected)
 
+
+def test_part1():
+    file_name = "samplePassword.txt"
+    pwd = load_password(file_name)
+    commands = load_commands("sample.txt")
+    part1(pwd, commands)
+    # expected = "decab"
 
 
 if __name__ == "__main__":
