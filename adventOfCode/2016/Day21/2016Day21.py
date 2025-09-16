@@ -61,11 +61,46 @@ def process_command(command: str, password: str) -> str:
 
     raise ValueError(f"Unknown command {command}") 
 
+def process_inverse_command(command: str, password: str) -> str:
+    parts = command.split()
+    if parts[0] == "swap": 
+        if parts[1] == "position": 
+            i1 = int(parts[2])
+            i2 = int(parts[5])
+            return swap_positions(password, i1, i2)
+        elif parts[1] == "letter": 
+            c1 = parts[2]
+            c2 = parts[5]
+            return swap_letters(password, c1, c2)
+    elif parts[0] == "rotate": 
+        if parts[1] == "left": 
+            moves = int(parts[2])
+            return rotate_right(password, moves)
+        elif parts[1] == "right": 
+            moves = int(parts[2])
+            return rotate_left(password, moves)
+        elif parts[1] == "based": 
+            c = parts[6]
+            return rotate_position(password, c)
+    elif parts[0] == "reverse": 
+        start_index = int(parts[2])
+        end_index = int(parts[4])
+        return reverse(password, start_index, end_index)
+    elif parts[0] == "move": 
+        # reverse the from and to for inverse
+        from_index = int(parts[5])
+        to_index = int(parts[2])
+        return move(password, from_index, to_index)
+
+    raise ValueError(f"Unknown command {command}") 
+
+
 def main(): 
     file_name = "inputPassword.txt"
     pwd = load_password(file_name)
     commands = load_commands("input.txt")
     part1(pwd, commands)
+    part2()
 
 def part1(password: str, commands: List[str]): 
     for command in commands: 
@@ -73,6 +108,16 @@ def part1(password: str, commands: List[str]):
         print(f"After '{command.strip()}': {password}")
     print(f"Final password: {password}")
     return password
+
+def part2():
+    pwd_file = "part2Password.txt"
+    pwd = load_password(pwd_file)
+    commands = load_commands("input.txt") 
+    for command in reversed(commands): 
+        # need to reverse the command
+        pwd = process_inverse_command(command.strip(), pwd)
+
+    print(f"Final password: {pwd}")
 
 def swap_positions(value: str, i1: int, i2: int) -> str: 
     chars = [c for c in value]
