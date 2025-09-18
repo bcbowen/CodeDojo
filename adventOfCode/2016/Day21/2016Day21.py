@@ -62,6 +62,13 @@ def process_command(command: str, password: str) -> str:
     raise ValueError(f"Unknown command {command}") 
 
 def process_inverse_command(command: str, password: str) -> str:
+    def inverse_rotate_position(c: str) -> str:
+        for i in range(len(password)):
+            trial = rotate_left(password, i)
+            if rotate_position(trial, c) == password:
+                return trial
+        raise Exception("Unable to inverse rotate_position")
+
     parts = command.split()
     if parts[0] == "swap": 
         if parts[1] == "position": 
@@ -79,9 +86,9 @@ def process_inverse_command(command: str, password: str) -> str:
         elif parts[1] == "right": 
             moves = int(parts[2])
             return rotate_left(password, moves)
-        elif parts[1] == "based": 
+        elif parts[1] == "based":
             c = parts[6]
-            return rotate_position(password, c)
+            return inverse_rotate_position(c)
     elif parts[0] == "reverse": 
         start_index = int(parts[2])
         end_index = int(parts[4])
