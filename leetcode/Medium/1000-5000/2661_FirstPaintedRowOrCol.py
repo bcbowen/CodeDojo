@@ -17,6 +17,7 @@ Explanation: The second column becomes fully painted at arr[3].
 """
 
 class Solution:
+    @staticmethod
     def get_location_lookup(mat: list[list[int]]) -> dict[int, tuple[int, int]]:
         lookup = {}
         for row in range(len(mat)):
@@ -39,7 +40,7 @@ class Solution:
             col_counts[col] += 1
             if col_counts[col] == row_len: 
                 return i
-
+        return -1
 
 @pytest.mark.parametrize("arr, mat, expected", [
     ([1,3,4,2], [[1,4],[2,3]], 2), 

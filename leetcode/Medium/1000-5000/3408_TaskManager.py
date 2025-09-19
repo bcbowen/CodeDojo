@@ -1,47 +1,49 @@
-import pytest
+import ast
 import heapq
-from collections import defaultdict
+import os
+import pytest
+from pathlib import Path
 from typing import List
 
 class TaskManager:
 
     def __init__(self, tasks: List[List[int]]):
-        self.tasks = {}
-        self.taskUsers = defaultdict(int)
         self.taskq = [] 
 
         for user_id, task_id, priority in tasks: 
             self.add(user_id, task_id, priority)
 
     def add(self, userId: int, taskId: int, priority: int) -> None:
-        if not userId in self.tasks: 
-            self.tasks[userId] = []
-        self.tasks[userId].append((taskId, priority))
-        heapq.heappush(self.taskq, (priority, taskId))
-        self.taskUsers[taskId] = userId
+        heapq.heappush(self.taskq, ((-priority, -taskId), userId))
 
     def edit(self, taskId: int, newPriority: int) -> None:
         
+        user_id = -1
+        for i in range(len(self.taskq)): 
+            
+            if self.taskq[i][0][1] == -taskId: 
+                user_id = self.taskq[i][1]
+                break
+            
+        if user_id == -1: 
+            raise Exception("User not found in heap!")
+
+        self.rmv(taskId)
+        self.add(user_id, taskId, newPriority)
 
     def rmv(self, taskId: int) -> None:
         for i in range(len(self.taskq)): 
-            if self.taskq[i][1] == taskId: 
+            if self.taskq[i][0][1] == -taskId: 
                 del self.taskq[i]
                 heapq.heapify(self.taskq)
                 break
-        user_id = self.taskUsers[taskId]
-        
-        for i in range(len(self.tasks[user_id])): 
-            if self.tasks[user_id][i][0] == taskId: 
-                del self.tasks[user_id][i]
-                break
-        del self.taskUsers[taskId]
 
     def execTop(self) -> int:
-        _, task_id = heapq.heappop(self.taskq)
-        user_id = self.taskUsers[task_id]
-        return user_id
-
+        if len(self.taskq) > 0: 
+            (_, _), user_id = heapq.heappop(self.taskq)
+            return user_id
+        else: 
+            return -1
 
 # Your TaskManager object will be instantiated and called as such:
 # obj = TaskManager(tasks)
@@ -76,6 +78,40 @@ def test_task_manager():
     expected = 5
     assert(result == expected)
 
+
+def test_659(): 
+
+    #def parse_list(line: str) -> list[int]: 
+    #    return list(map(int, line.strip("[]\n").split(',')))
+
+    data_path = Path(__file__).parent.parent.parent / "Data"
+    file_name = "3408_659.txt"
+    path = data_path / file_name
+    
+    
+    with open(path, "r") as file: 
+        commands = ast.literal_eval(file.readline()) 
+        args = ast.literal_eval(file.readline())
+
+    result = -1
+    tasks = args[0][0]
+    t = TaskManager(tasks)
+    for i in range(1, len(args)): 
+        match commands[i]: 
+            case "add": 
+                user_id, task_id, priority = args[i]
+                t.add(user_id, task_id, priority)
+            case "edit":
+                task_id, new_priority = args[i]
+                t.edit(task_id, new_priority)
+            case "execTop": 
+                result = t.execTop()
+            case "rmv": 
+                task_id = args[i][0]
+                t.rmv(task_id)
+
+    expected = 4
+    assert(result == expected)
 
 if __name__ == "__main__": 
     pytest.main([__file__])
