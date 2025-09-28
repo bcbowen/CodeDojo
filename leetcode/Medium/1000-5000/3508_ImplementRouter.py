@@ -33,7 +33,7 @@ class Router:
         self.packetLookup[packet[1]].popleft()
         return [packet[0], packet[1], packet[2]]
 
-    """
+    
     def find_start_index(self, startTime: int, endTime: int) -> int:
             if endTime < self.packetQueue[len(self.packetQueue) - 1][2]:
                 return -1
@@ -56,7 +56,7 @@ class Router:
                 else:
                     j = mid - 1
             return mid
-    """
+    
     def getCount(self, destination: int, startTime: int, endTime: int) -> int:
         count = 0
         def find_start_index(packets : List[int]) -> int:
@@ -239,7 +239,6 @@ def test_case_613():
     result = r.getCount(1, 1, 1)
     assert(result == 1)
 
-"""
 @pytest.mark.parametrize("size, packets, startTime, endTime, expected", [
     (3, [(5, 1, 1), (5, 4, 1), (2, 5, 1)], 1, 2, 0),
     (100, [
@@ -267,8 +266,6 @@ def test_case_613():
             (1, 2, 9)
          ], 1, 2, -1)
 ])
-"""
-
 def test_find_start_index(size: int, packets: List[tuple[int, int, int]], startTime: int, endTime: int, expected: int):
     r = Router(size)
     for source, dest, timestamp in packets:
