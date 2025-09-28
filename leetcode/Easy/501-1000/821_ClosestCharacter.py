@@ -15,37 +15,22 @@ class Solution:
         next_index = 0
         next = locations[next_index]
         for i in range(len(s)): 
-            if next_index >= 0 and i == next_index: 
-                previous = lo
-
-        return result    
-    """
-        i = 0
-        j = 0
-        while i < len(s): 
+            if i < next:
+                if previous > -1: 
+                    result[i] = min(next - i, i - previous)
+                else: 
+                    result[i] = next - i
+            else: 
+                result[i] = 0
+                previous = i
+                next_index += 1
+                if next_index < len(locations): 
+                    next = locations[next_index]
+                else: 
+                    next = 2 * len(s)
                 
-            while j < len(s) and s[j] != c: 
-                j += 1
-
-            if j >= len(s):
-                k = i
-                i += 1
-                while i < len(s):
-                    result[i] = i - k
-                    i += 1
-
-
-            while i != j:        
-                result[i] = j - i 
-                i += 1
-            result[i] = 0
-            while i < len(s) and s[i] == c: 
-                i = j + 1
-                j = i
-        
-        return result
-    """
-
+        return result    
+ 
 """
 Example 1:
 Input: s = "loveleetcode", c = "e"
@@ -59,10 +44,17 @@ The closest occurrence of 'e' for index 8 is at index 6, so the distance is abs(
 Example 2:
 Input: s = "aaab", c = "b"
 Output: [3,2,1,0]
+
+TC 12: 
+s = "aaba"
+c = "b"
+Expected [2,1,0,1]
+
 """
 @pytest.mark.parametrize("s, c, expected", [
     ("loveleetcode", "e", [3,2,1,0,1,0,0,1,2,2,1,0]),
-    ("aaab", "b", [3,2,1,0]) 
+    ("aaab", "b", [3,2,1,0]), 
+    ("aaba", "b", [2,1,0,1]) 
 ])
 def test_shortestToChar(s: str, c: str, expected: List[int]):
     result = Solution().shortestToChar(s, c)
