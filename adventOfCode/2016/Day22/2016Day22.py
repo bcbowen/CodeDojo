@@ -29,6 +29,9 @@ def get_input_filepath(file_name: str) -> Path:
         input_path = private_files_base / year / day / file_name
         return input_path
 
+def get_dimensions(line: str) -> Tuple[int, int]: 
+    
+
 # 38 col * 24 row
 def load_input() -> List[List[StorageNode | None]]:
 

@@ -6,7 +6,7 @@ class Solution:
     
     def findCheapestPrice(self, n: int, flights: List[List[int]], src: int, dst: int, k: int) -> int:
         flight_graph = {}
-        seen = set()
+        #seen = set()
         for i in range(n): 
             flight_graph[i] = []
 
@@ -19,7 +19,7 @@ class Solution:
             if to == dst: 
                 cheapest = price
             heapq.heappush(heap, (to, price, 0, set([src, to])))
-        seen.add(src)
+        #seen.add(src)
 
             
         while heap:
@@ -28,11 +28,12 @@ class Solution:
                 cheapest = min(cheapest, price)
             for next, next_price in flight_graph[to]: 
                 new_hops = hops + 1
-                if next not in seen and next not in path and new_hops <= k: 
+                #if next not in seen and next not in path and new_hops <= k: 
+                if next not in path and new_hops <= k: 
                     new_path = path.copy() 
                     new_path.add(next)
                     heapq.heappush(heap, (next, price + next_price, new_hops, new_path))
-            seen.add(to)
+            #seen.add(to)
 
         return int(cheapest) if cheapest < float('inf') else -1
     
