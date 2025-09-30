@@ -1,10 +1,41 @@
 import heapq
 import pytest
+from collections import deque
 from typing import List
 
 class Solution:
-    
+
     def findCheapestPrice(self, n: int, flights: List[List[int]], src: int, dst: int, k: int) -> int:
+        flight_graph = {}
+
+        dist = [float('inf')] * n
+        
+        for i in range(n): 
+            flight_graph[i] = []
+
+        for fm, to, price in flights: 
+            flight_graph[fm].append((to, price))
+        
+        q = deque()
+
+
+        for to, price in flight_graph[src]:
+            q.append((to, price))
+
+        hops = 0
+        while q and hops <= k:
+            for _ in range(len(q)): 
+                to, price = q.popleft()
+                if price < dist[to]:
+                    dist[to] = price
+                    for next_to, next_price in flight_graph[to]: 
+                        q.append((next_to, price + next_price))
+            hops += 1
+
+        return int(dist[dst]) if dist[dst] < float('inf') else -1
+    
+    # first attempt going to dykstra type solution, didn't work
+    def findCheapestPrice_1(self, n: int, flights: List[List[int]], src: int, dst: int, k: int) -> int:
         flight_graph = {}
         #seen = set()
         for i in range(n): 
@@ -67,17 +98,29 @@ TC 4:
 2
 1
 1
- 
+
+TC 58: 
+10
+flights =
+[[0,1,20],[1,2,20],[2,3,30],[3,4,30],[4,5,30],[5,6,30],[6,7,30],[7,8,30],[8,9,30],[0,2,9999],[2,4,9998],[4,7,9997]]
+0
+9
+4
+Expected: 30054
+
 """
 @pytest.mark.parametrize("n, flights, src, dst, k, expected", [
     (4, [[0,1,100],[1,2,100],[2,0,100],[1,3,600],[2,3,200]], 0, 3, 1, 700), 
     (3, [[0,1,100],[1,2,100],[0,2,500]], 0, 2, 1, 200), 
     (3, [[0,1,100],[1,2,100],[0,2,500]], 0, 2, 0, 500),
-    (5, [[4,1,1],[1,2,3],[0,3,2],[0,4,10],[3,1,1],[1,4,3]], 2, 1, 1, -1)
+    (5, [[4,1,1],[1,2,3],[0,3,2],[0,4,10],[3,1,1],[1,4,3]], 2, 1, 1, -1), 
+    (10, [[0,1,20],[1,2,20],[2,3,30],[3,4,30],[4,5,30],[5,6,30],[6,7,30],[7,8,30],[8,9,30],[0,2,9999],[2,4,9998],[4,7,9997]], 0, 9, 4, 30054),
 ])
 def test_findCheapestPrice(n: int, flights: List[List[int]], src: int, dst: int, k: int, expected: int):
     result = Solution().findCheapestPrice(n, flights, src, dst, k)
     assert(result == expected)
+
+
 
 #@pytest.mark.skip()
 def test_case_31_tle(): 
@@ -86,7 +129,7 @@ def test_case_31_tle():
     src = 13
     dst = 4
     k = 13
-    expected = 4
+    expected = 47
     result = Solution().findCheapestPrice(n, flights, src, dst, k)
     assert(result == expected)
 

@@ -2,7 +2,6 @@ import pytest
 
 class Solution:
     def binaryGap(self, n: int) -> int:
-        #s = bin(n)
         space = 0 
         max_space = 0
         counting = False
