@@ -14,10 +14,22 @@ if project_root not in sys.path:
 from Helpers.BinaryTreeHelpers import TreeNode, populate_tree
 
 class Solution:
+    
     def findSecondMinimumValue(self, root: Optional[TreeNode]) -> int:
-        if not root or not root.left or not root.right or root.left.val == root.right.val: 
+        if not root: 
             return -1
-        return max(root.left.val, root.right.val)
+        
+        self.secondMin = float('inf')
+        self.firstMin = root.val
+        def dfs(node: Optional[TreeNode]):
+            if node: 
+                if self.firstMin < node.val < self.secondMin: 
+                    self.secondMin = node.val
+                elif node.val == self.firstMin: 
+                    dfs(node.left)
+                    dfs(node.right) 
+        dfs(root)
+        return int(self.secondMin) if self.secondMin < float('inf') else -1
     
 """
 Example 1:
