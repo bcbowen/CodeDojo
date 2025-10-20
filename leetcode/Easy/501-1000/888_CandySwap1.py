@@ -7,3 +7,4 @@ class Solution:
         for alice_candy in aliceSizes: 
             if alice_candy + (bob_sum - alice_sum) // 2 in bob_set: 
                 return [alice_candy, alice_candy + (bob_sum - alice_sum) // 2]   
+        return []
