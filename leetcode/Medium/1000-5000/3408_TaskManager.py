@@ -2,8 +2,10 @@ import ast
 import heapq
 import os
 import pytest
+import time
 from pathlib import Path
 from typing import List
+
 
 class TaskManager:
 
@@ -95,6 +97,7 @@ def test_659():
 
     result = -1
     tasks = args[0][0]
+    start_time = time.perf_counter()  # Start the timer
     t = TaskManager(tasks)
     for i in range(1, len(args)): 
         match commands[i]: 
@@ -110,7 +113,13 @@ def test_659():
                 task_id = args[i][0]
                 t.rmv(task_id)
 
-    expected = 4
+    expected = 15243
+    
+    end_time = time.perf_counter()    # Stop the timer
+    #expected = False
+
+    execution_time = end_time - start_time
+    print(f"Execution time: {execution_time:.6f} seconds")
     assert(result == expected)
 
 if __name__ == "__main__": 

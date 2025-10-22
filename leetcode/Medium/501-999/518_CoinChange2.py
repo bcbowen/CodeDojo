@@ -1,8 +1,20 @@
 import pytest
+import time
 from typing import List
 
 class Solution:
     def change(self, amount: int, coins: List[int]) -> int:
+        # dp bottom up
+        combo_counts = [0] * (amount + 1)
+        combo_counts[0] = 1
+        for coin in coins: 
+            for i in range(coin, amount + 1): 
+                combo_counts[i] += combo_counts[i - coin] 
+
+        return combo_counts[-1]
+    
+    # first attempt: backtrack (TLE)
+    def change_bt_tle(self, amount: int, coins: List[int]) -> int:
         result = 0
         combos = set()
         def backtrack(remaining_amount: int, current_coins: List[int]):
@@ -53,6 +65,23 @@ Output: 1
 def test_change(amount: int, coins: List[int], expected: int):
     result = Solution().change(amount, coins)
     assert(result == expected)
+
+"""
+    initial backtrack solution (TLE): 
+    amount: 30 takes 4.5 seconds
+    amount: 35 takes 63 seconds
+    amount: 50 way too long
+    Test case 9 has amount 500 so runs ~forever
+"""
+def test_many_iterations(): 
+    coins = [1, 2, 5] 
+    amount = 35 
+    start_timer = time.perf_counter()
+    result = Solution().change(amount, coins)
+    end_timer = time.perf_counter()
+    execution_time = end_timer - start_timer
+    print(f"Execution time: {execution_time:.6f} seconds")
+    assert(execution_time < 20_000)
 
 if __name__ == "__main__":
     pytest.main([__file__]) 

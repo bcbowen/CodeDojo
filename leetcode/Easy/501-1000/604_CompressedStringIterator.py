@@ -14,12 +14,13 @@ class StringIterator:
             self.iterationsLeft -= 1
             return self.currentChar
         self.__setNext__()
-        self.iterationsLeft -= 1
+        if self.iterationsLeft > -1: 
+            self.iterationsLeft -= 1
         return self.currentChar
 
 
     def hasNext(self) -> bool:
-        return self.iterationsLeft > 0 or self.currentPosition < len(self.compressedString)
+        return self.iterationsLeft > 0 
     
     def __setNext__(self):
         if self.currentPosition < len(self.compressedString): 
@@ -35,7 +36,7 @@ class StringIterator:
                 self.currentPosition = pos
             else: 
                 self.iterationsLeft = 0
-                self.currentPosition = len(self.compressedString) - 1
+                self.currentPosition = -1
         else: 
             self.currentPosition = len(self.compressedString) - 1
             self.currentChar = ' '
