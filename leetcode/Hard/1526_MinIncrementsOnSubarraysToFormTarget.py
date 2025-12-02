@@ -69,6 +69,8 @@ def test_minNumberOperations(target: List[int], expected: int):
 
 """
 Initial version takes 30 seconds
+
+New version: Execution time: 0.000257 seconds
 """
 def test_61(): 
 
