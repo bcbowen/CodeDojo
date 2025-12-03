@@ -73,38 +73,50 @@ def find_valid_ranges(start: int, end: int) -> List[Tuple[int, int]]:
     return ranges
 
 """
-    start and end are valid numbers: same number of digits and both have an even number of digits
+    start and end are valid numbers: 
+    * same number of digits 
+    * both have an even number of digits
+
     Returns the number of invalid ids in this range
 """
 def find_invalid_ids_in_range(start: int, end: int) -> List[int]: 
+    """
     def increment_current(): 
         nonlocal current
         c_val = int(''.join([str(d) for d in current[0:mid_count]]))
         c_val += 1
         c_text = str(c_val)
-        #for i in range(mid_count): 
-        #    current[i] = int(c_text[i])
         current = [int(d) for d in c_text] + [0] * mid_count 
+    """
 
     result = []
-    start_digits = [int(d) for d in str(start)]
-    end_digits = [int(d) for d in str(end)]
-    mid_count = len(start_digits) // 2
-    for i in range(mid_count, len(start_digits)): 
-        start_digits[i] = 0
-        end_digits[i] = 0
+    #start_digits = [int(d) for d in str(start)]
+    #end_digits = [int(d) for d in str(end)]
+    
+    num_text = str(start)
+    mid_count = len(num_text) // 2
+    
+    start_root = int(num_text[0:mid_count])
 
-    current = start_digits.copy()
+    num_text = str(end)
+    end_root = int(num_text[0:mid_count])
 
-    while len(current) == len(end_digits) and current <= end_digits: 
-        val = int(''.join([str(d) for d in current[0:mid_count]]) * 2)
+    #for i in range(mid_count, len(start_digits)): 
+    #    start_digits[i] = 0
+    #    end_digits[i] = 0
+
+    current = start_root
+
+    while current <= end_root: 
+        num_text = str(current)
+        val = int(num_text * 2)
         if val >= start and val <= end: 
             result.append(val)
-            increment_current()
+            #increment_current()
         
         #else: 
         #    break
-
+        current += 1
     return result
 
 """
