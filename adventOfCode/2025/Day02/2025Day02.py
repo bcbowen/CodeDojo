@@ -40,7 +40,6 @@ def main():
     result = part1(file_name)
     print(f"Part 1 result: {result}")
 
-    # too low: 33906626186
 
 def get_max_value(current: int) -> int: 
     val_text = str(current)
@@ -80,18 +79,7 @@ def find_valid_ranges(start: int, end: int) -> List[Tuple[int, int]]:
     Returns the number of invalid ids in this range
 """
 def find_invalid_ids_in_range(start: int, end: int) -> List[int]: 
-    """
-    def increment_current(): 
-        nonlocal current
-        c_val = int(''.join([str(d) for d in current[0:mid_count]]))
-        c_val += 1
-        c_text = str(c_val)
-        current = [int(d) for d in c_text] + [0] * mid_count 
-    """
-
     result = []
-    #start_digits = [int(d) for d in str(start)]
-    #end_digits = [int(d) for d in str(end)]
     
     num_text = str(start)
     mid_count = len(num_text) // 2
@@ -101,10 +89,6 @@ def find_invalid_ids_in_range(start: int, end: int) -> List[int]:
     num_text = str(end)
     end_root = int(num_text[0:mid_count])
 
-    #for i in range(mid_count, len(start_digits)): 
-    #    start_digits[i] = 0
-    #    end_digits[i] = 0
-
     current = start_root
 
     while current <= end_root: 
@@ -112,10 +96,6 @@ def find_invalid_ids_in_range(start: int, end: int) -> List[int]:
         val = int(num_text * 2)
         if val >= start and val <= end: 
             result.append(val)
-            #increment_current()
-        
-        #else: 
-        #    break
         current += 1
     return result
 
