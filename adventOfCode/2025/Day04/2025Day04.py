@@ -21,8 +21,7 @@ def load_inputs(file_name: str) -> List[List[str]]:
          inputs = [[c for c in line.strip()] for line in file.readlines()]
     return inputs
 
-def part1(file_name: str) -> Tuple[List[List[str]], int]: 
-    board = load_inputs(file_name)
+def process_rolls(board: List[List[str]]) -> Tuple[List[List[str]], int]:
     roll_count = 0
     rolls = []
     limit = 4
@@ -40,6 +39,21 @@ def part1(file_name: str) -> Tuple[List[List[str]], int]:
 
     return (board, roll_count)
 
+def part1(file_name: str) -> Tuple[List[List[str]], int]: 
+    board = load_inputs(file_name)
+    board, roll_count = process_rolls(board)
+    return (board, roll_count)
+
+def part2(file_name: str) -> int: 
+    board = load_inputs(file_name)
+    total_count = 0
+    board, current_count = process_rolls(board)
+    total_count += current_count
+    while current_count > 0: 
+        board, current_count = process_rolls(board)
+        total_count += current_count
+
+    return total_count
 
 def count_rolls(board: List[List[str]], row: int, col: int) -> int: 
     def is_inbounds(row: int, col: int) -> bool: 
@@ -63,7 +77,10 @@ def count_rolls(board: List[List[str]], row: int, col: int) -> int:
 def main(): 
     file_name = "input.txt"
     _, count = part1(file_name)
-    print(f"Part1 result: {count}")
+    print(f"Part 1 result: {count}")
+
+    count = part2(file_name)
+    print(f"Part 2 result: {count}")
 
 def test_load_inputs(): 
     file_name = "sample.txt"
@@ -94,6 +111,12 @@ def test_part1():
 
     assert(expected_count == result_count)
     assert(expected_board == result_board)
+
+def test_part2(): 
+    file_name = "sample.txt"
+    expected_count = 43
+    result = part2(file_name)
+    assert(expected_count == result)
 
 if __name__ == "__main__":
     pytest.main([__file__])
