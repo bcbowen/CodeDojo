@@ -35,10 +35,22 @@ def part1(file_name: str) -> int:
         result += sum(ids)
     return result 
 
+def part2(file_name: str) -> int: 
+    inputs = load_inputs(file_name)
+    result = 0
+    for start, end in inputs:
+        ids = find_invalid_ids2(start, end)
+        result += sum(ids)
+    return result 
+
+
 def main(): 
     file_name = "input.txt"
     result = part1(file_name)
     print(f"Part 1 result: {result}")
+
+    result = part2(file_name)
+    print(f"Part 2 result: {result}")
 
 
 def get_max_value(current: int) -> int: 
@@ -113,6 +125,29 @@ def find_invalid_ids(start: int, end: int) -> List[int]:
         result.extend(find_invalid_ids_in_range(range_start, range_end))
     return result
 
+"""
+start and end can have a different number of digits. We'll find the valid ranges 
+for start and end and then find the invalid ids in each range. 
+
+A valid range has a start and end with an even number of digits, and both have the same number
+of digits
+"""
+def find_invalid_ids2(start: int, end: int) -> List[int]: 
+    result = [] 
+    for i in range(start, end + 1): 
+        if has_repeated_pattern(str(i)): 
+            result.append(i)
+    return result
+
+# part 2
+def has_repeated_pattern(s: str) -> bool:
+    n = len(s)
+    for size in range(1, n // 2 + 1):
+        if n % size == 0:                          # must divide evenly
+            chunk = s[:size]
+            if chunk * (n // size) == s:
+                return True
+    return False
 
 @pytest.mark.parametrize("start, end, expected", [
     (11, 22, [11, 22]), 
@@ -184,6 +219,13 @@ def test_part1():
     file_name = "sample.txt"
     result = part1(file_name)
     assert(result == expected)
+
+def test_part2(): 
+    expected = 4174379265
+    file_name = "sample.txt"
+    result = part2(file_name)
+    assert(result == expected)
+
 
 if __name__ == "__main__":
     pytest.main([__file__])
