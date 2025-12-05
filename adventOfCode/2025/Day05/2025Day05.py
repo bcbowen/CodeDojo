@@ -1,7 +1,10 @@
 import pytest
+from bisect import bisect_left
+from dataclasses import dataclass
 from typing import List, Tuple
 from pathlib import Path
 
+@dataclass
 class ProductRange: 
     def __init__(self, min_id: int, max_id: int): 
         self.min_id = min_id
@@ -11,30 +14,17 @@ class ProductRange:
     Return the previous index and whether the next index contains the product id
     """
     @staticmethod
-    def find(products: List[ProductRange], product_id: int) -> Tuple[int, bool]: 
-        # first check if product goes at beginning or end of list 
-        if len(products) == 0 or product_id < products[0].min_id: 
-             return (0, False)
-        elif product_id <= products[0].max_id: 
-             return (0, True)
-        elif product_id > products[-1].min_id: 
-             return (len(products) - 1, product_id <= products[-1].max_id)
+    def find(products: List["ProductRange"], product_id: int) -> Tuple[int, bool]: 
+        
+          ends = [p.max_id for p in products]
 
-        left = 0
-        right = len(products) - 1
-        mid = right // 2
-        while left <= right:
-            if products[mid].min_id <= product_id and products[mid].max_id >= product_id: 
-                 return (mid, True)
-            elif products[mid].min_id > product_id and products[mid - 1].max_id < product_id: 
-                 return (mid, False)
-            elif products[mid].min_id > product_id: 
-                 right = mid - 1
-            elif products[mid].max_id < product_id: 
-                 left = mid + 1
-            mid = right // 2
+          i = bisect_left(ends, product_id)
 
-        return (mid, False)
+          if i == len(products): 
+               i = len(products) - 1
+          
+          product = products[i]
+          return (i, product_id >= product.min_id and product_id <= product.max_id)
 
 def get_input_filepath(file_name: str) -> Path:
         current_path = Path(__file__).parent
@@ -51,27 +41,68 @@ def get_input_filepath(file_name: str) -> Path:
 def main(): 
     pass
 
-@pytest.mark.parametrize("products, product_id, expected", [
-    ([ProductRange(1, 5), ProductRange(10, 15), ProductRange(20, 25)], 0, (0, False)), 
-    ([ProductRange(1, 5), ProductRange(10, 15), ProductRange(20, 25)], 1, (0, True)), 
-    ([ProductRange(1, 5), ProductRange(10, 15), ProductRange(20, 25)], 3, (0, True)), 
-    ([ProductRange(1, 5), ProductRange(10, 15), ProductRange(20, 25)], 5, (0, True)), 
-    ([ProductRange(1, 5), ProductRange(10, 15), ProductRange(20, 25)], 6, (1, False)), 
-    ([ProductRange(1, 5), ProductRange(10, 15), ProductRange(20, 25)], 9, (1, False)),
+"""
+100 product ranges [1 - 5, 11 - 15, ..., 991 - 995]
+"""
+@pytest.mark.parametrize("product_id, expected", [
+     (0, (0, False)), 
+     (1, (0, True)), 
+     (3, (0, True)), 
+     (5, (0, True)), 
+     (6, (1, False)), 
+     (9, (1, False)),
 
-    ([ProductRange(1, 5), ProductRange(10, 15), ProductRange(20, 25)], 10, (1, True)), 
-    ([ProductRange(1, 5), ProductRange(10, 15), ProductRange(20, 25)], 11, (1, True)), 
-    ([ProductRange(1, 5), ProductRange(10, 15), ProductRange(20, 25)], 15, (1, True)), 
-    ([ProductRange(1, 5), ProductRange(10, 15), ProductRange(20, 25)], 16, (2, False)), 
-    ([ProductRange(1, 5), ProductRange(10, 15), ProductRange(20, 25)], 19, (2, False)), 
-    ([ProductRange(1, 5), ProductRange(10, 15), ProductRange(20, 25)], 20, (2, True)),
-    ([ProductRange(1, 5), ProductRange(10, 15), ProductRange(20, 25)], 21, (2, True)),
-    ([ProductRange(1, 5), ProductRange(10, 15), ProductRange(20, 25)], 25, (2, True)),
-    ([ProductRange(1, 5), ProductRange(10, 15), ProductRange(20, 25)], 26, (2, False)),
+     (10, (1, False)), 
+     (11, (1, True)), 
+     (15, (1, True)), 
+     (16, (2, False)), 
+     (19, (2, False)), 
+
+     (20, (2, False)),
+     (21, (2, True)),
+     (25, (2, True)),
+     (26, (3, False)),
+     
+     (930, (93, False)),
+     (931, (93, True)), 
+     (932, (93, True)), 
+     (935, (93, True)), 
+     (936, (94, False)), 
+
+     (640, (64, False)),
+     (641, (64, True)), 
+     (642, (64, True)), 
+     (645, (64, True)), 
+     (646, (65, False)), 
+
+     (500, (50, False)),
+     (501, (50, True)), 
+     (502, (50, True)), 
+     (505, (50, True)), 
+     (506, (51, False)), 
+
+     (390, (39, False)),
+     (391, (39, True)), 
+     (392, (39, True)), 
+     (395, (39, True)), 
+     (396, (40, False)), 
+
+     (180, (18, False)),
+     (181, (18, True)), 
+     (182, (18, True)), 
+     (185, (18, True)), 
+     (186, (19, False)), 
+
+     (1000, (99, False))
 ])
-def test_product_find(products: List[ProductRange], product_id: int, expected: Tuple[int, bool]):
-    result = ProductRange.find(products, product_id)
-    assert(result == expected)
+def test_product_find(product_id: int, expected: Tuple[int, bool]):
+     products = [] 
+     base = 1
+     for _ in range(100): 
+          products.append(ProductRange(base, base + 4))
+          base += 10
+     result = ProductRange.find(products, product_id)
+     assert(result == expected)
 
 
 if __name__ == "__main__":
