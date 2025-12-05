@@ -29,16 +29,17 @@ def get_input_filepath(file_name: str) -> Path:
         input_path = private_files_base / year / day / file_name
         return input_path
 
-def get_dimensions(line: str) -> Tuple[int, int]: 
+#def get_dimensions(line: str) -> Tuple[int, int]: 
     
 
 # 38 col * 24 row
-def load_input() -> List[List[StorageNode | None]]:
+def load_input() -> List[List[StorageNode]]:
 
     path = get_input_filepath("input.txt")
     with open(path, 'r') as f: 
         lines = f.readlines()
-    nodes : List[List[StorageNode | None]] = [[None for _ in range(38)] for _ in range(24)]
+    
+    temp_nodes : List[List[StorageNode | None ]]= [[None for _ in range(38)] for _ in range(24)]
     for line in lines[2:]: 
         parts = line.split()
         name = parts[0]
@@ -48,12 +49,18 @@ def load_input() -> List[List[StorageNode | None]]:
         use_pct = float(parts[4][:-1])
         node = StorageNode(name, size, used, avail, use_pct)
         col, row = node.get_position()
-        nodes[row][col] = node
+        temp_nodes[row][col] = node
         
+    nodes : List[List[StorageNode]] = []
+    for row in range(len(temp_nodes)):
+        new_row = [] 
+        for col in range(len(temp_nodes[0])): 
+            new_row.append(temp_nodes[row][col])
+        nodes.append(new_row)
 
     return nodes    
 
-def part1(storage_nodes: List[List[StorageNode | None]]) -> int:
+def part1(storage_nodes: List[List[StorageNode]]) -> int:
     count = 0
     for row in storage_nodes:
         for node_a in row:
@@ -68,12 +75,33 @@ def part1(storage_nodes: List[List[StorageNode | None]]) -> int:
 
     return count
 
+def part2(storage_nodes: List[List[StorageNode]]) -> int:
+    row, col = find_empty_node(storage_nodes)
+
+    
+
 def main(): 
     storage_nodes = load_input()
     result1 = part1(storage_nodes)
     print(f"Part 1: {result1}")
     # result2 = part2(storage_nodes)
     # print(f"Part 2: {result2}")
+
+
+def find_empty_node(nodes: List[List[StorageNode]]) -> Tuple[int, int]: 
+    for row in range(len(nodes)): 
+        for col in range(len(nodes[0])): 
+            if nodes[row][col].used == 0: 
+                return (row, col)
+    return (-1, -1)
+
+
+def test_find_empty_node(): 
+    nodes = load_input()
+    assert(nodes != None)
+    result = find_empty_node(nodes)
+    expected = (21, 35)
+    assert(result == expected)
 
 
 def test_load_input(): 
