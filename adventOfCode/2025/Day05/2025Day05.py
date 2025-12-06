@@ -16,20 +16,20 @@ class ProductRange:
     @staticmethod
     def find(products: List["ProductRange"], product_id: int) -> Tuple[int, bool]: 
         
-          ends = [p.max_id for p in products]
+        ends = [p.max_id for p in products]
 
-          i = bisect_left(ends, product_id)
+        i = bisect_left(ends, product_id)
 
-          if i == len(products): 
-               i = len(products) - 1
-          
-          product = products[i]
-          return (i, product_id >= product.min_id and product_id <= product.max_id)
+        if i == len(products): 
+            i = len(products) - 1
+        
+        product = products[i]
+        return (i, product_id >= product.min_id and product_id <= product.max_id)
 
     @staticmethod
     def parse(line: str) -> "ProductRange": 
-         fields = line.split('-')
-         return ProductRange(int(fields[0]), int(fields[1]))
+            fields = line.split('-')
+            return ProductRange(int(fields[0]), int(fields[1]))
 
     """
         23-40
@@ -41,20 +41,29 @@ class ProductRange:
 
     """
     @staticmethod
-    def moige(product_ranges: List[ProductRange]) -> List["ProductRange"]: 
-        product_ranges.sort(key = lambda p: p.max_id)
+    def moige(product_ranges: List["ProductRange"]) -> List["ProductRange"]:
+        if not product_ranges:
+            return []
 
-        current_range : "ProductRange" = product_ranges[0]
-        moiged = []
-        for i in range(1, len(product_ranges)): 
-            if product_ranges[i].min_id > current_range.max_id: 
+        # Sort by the *start* of the range
+        product_ranges.sort(key=lambda p: p.min_id)
+
+        current_range: "ProductRange" = product_ranges[0]
+        moiged: List["ProductRange"] = []
+
+        for i in range(1, len(product_ranges)):
+            r = product_ranges[i]
+
+            # No overlap → push current and start a new one
+            if r.min_id > current_range.max_id:   # use >= if touching ranges shouldn't merge
                 moiged.append(current_range)
-                current_range = product_ranges[i]
-            else: 
-                current_range.max_id = max(product_ranges[i].max_id, current_range.max_id)
-        
-        if current_range.min_id > moiged[-1].max_id: 
-            moiged.append(current_range)
+                current_range = r
+            else:
+                # Overlap → extend current range
+                current_range.max_id = max(current_range.max_id, r.max_id)
+
+        # Append the last accumulated range
+        moiged.append(current_range)
 
         return moiged
 
@@ -79,7 +88,7 @@ def get_inputs(file_name: str) -> Tuple[List[ProductRange], List[int]]:
     with open(path, "r") as file: 
         for line in file.readlines():
             if line.strip() == '': 
-                 continue
+                continue
             elif '-' in line: 
                 product_ranges.append(ProductRange.parse(line))
             else: 
@@ -124,8 +133,11 @@ def part2(file_name: str) -> int:
 
 def main(): 
     file_name = "input.txt"
-    result = part1_brute(file_name)
+    result = part1(file_name) 
     print(f"Part 1 result: {result}")
+
+    result = part1_brute(file_name)
+    print(f"Part 1 brute result: {result}")
 
     # 336047116961610 too low
     result = part2(file_name)
@@ -159,64 +171,64 @@ def test_load_inputs():
 100 product ranges [1 - 5, 11 - 15, ..., 991 - 995]
 """
 @pytest.mark.parametrize("product_id, expected", [
-     (0, (0, False)), 
-     (1, (0, True)), 
-     (3, (0, True)), 
-     (5, (0, True)), 
-     (6, (1, False)), 
-     (9, (1, False)),
+    (0, (0, False)), 
+    (1, (0, True)), 
+    (3, (0, True)), 
+    (5, (0, True)), 
+    (6, (1, False)), 
+    (9, (1, False)),
 
-     (10, (1, False)), 
-     (11, (1, True)), 
-     (15, (1, True)), 
-     (16, (2, False)), 
-     (19, (2, False)), 
+    (10, (1, False)), 
+    (11, (1, True)), 
+    (15, (1, True)), 
+    (16, (2, False)), 
+    (19, (2, False)), 
 
-     (20, (2, False)),
-     (21, (2, True)),
-     (25, (2, True)),
-     (26, (3, False)),
-     
-     (930, (93, False)),
-     (931, (93, True)), 
-     (932, (93, True)), 
-     (935, (93, True)), 
-     (936, (94, False)), 
+    (20, (2, False)),
+    (21, (2, True)),
+    (25, (2, True)),
+    (26, (3, False)),
+    
+    (930, (93, False)),
+    (931, (93, True)), 
+    (932, (93, True)), 
+    (935, (93, True)), 
+    (936, (94, False)), 
 
-     (640, (64, False)),
-     (641, (64, True)), 
-     (642, (64, True)), 
-     (645, (64, True)), 
-     (646, (65, False)), 
+    (640, (64, False)),
+    (641, (64, True)), 
+    (642, (64, True)), 
+    (645, (64, True)), 
+    (646, (65, False)), 
 
-     (500, (50, False)),
-     (501, (50, True)), 
-     (502, (50, True)), 
-     (505, (50, True)), 
-     (506, (51, False)), 
+    (500, (50, False)),
+    (501, (50, True)), 
+    (502, (50, True)), 
+    (505, (50, True)), 
+    (506, (51, False)), 
 
-     (390, (39, False)),
-     (391, (39, True)), 
-     (392, (39, True)), 
-     (395, (39, True)), 
-     (396, (40, False)), 
+    (390, (39, False)),
+    (391, (39, True)), 
+    (392, (39, True)), 
+    (395, (39, True)), 
+    (396, (40, False)), 
 
-     (180, (18, False)),
-     (181, (18, True)), 
-     (182, (18, True)), 
-     (185, (18, True)), 
-     (186, (19, False)), 
+    (180, (18, False)),
+    (181, (18, True)), 
+    (182, (18, True)), 
+    (185, (18, True)), 
+    (186, (19, False)), 
 
-     (1000, (99, False))
+    (1000, (99, False))
 ])
 def test_product_find(product_id: int, expected: Tuple[int, bool]):
-     products = [] 
-     base = 1
-     for _ in range(100): 
-          products.append(ProductRange(base, base + 4))
-          base += 10
-     result = ProductRange.find(products, product_id)
-     assert(result == expected)
+    products = [] 
+    base = 1
+    for _ in range(100): 
+        products.append(ProductRange(base, base + 4))
+        base += 10
+    result = ProductRange.find(products, product_id)
+    assert(result == expected)
 
 
 if __name__ == "__main__":
