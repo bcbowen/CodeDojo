@@ -51,16 +51,18 @@ def get_input_filepath(file_name: str) -> Path:
     input_path = private_files_base / year / day / file_name
     return input_path
 
-def get_inputs(file_name: str, word_len: int) -> List[HomeworkProblem]: 
+def get_inputs(file_name: str) -> List[HomeworkProblem]: 
     inputs = [] 
     lines = []
     path = get_input_filepath(file_name)
     with open(path, "r") as file: 
         lines = [line.strip('\n') + ' ' for line in file.readlines()]
 
-    input_count = len(lines[0]) // (word_len + 1)
-    for _ in range(input_count): 
-        inputs.append(HomeworkProblem())
+    
+    """
+    #input_count = len(lines[0]) // (word_len + 1)
+    #for _ in range(input_count): 
+    #    inputs.append(HomeworkProblem())
 
     # get numerical values
     for i in range(len(lines) - 1):
@@ -75,23 +77,48 @@ def get_inputs(file_name: str, word_len: int) -> List[HomeworkProblem]:
     values = lines[i].split()
     for i in range(len(values)): 
         inputs[i].operator = values[i]
+    """
+    next_problem = HomeworkProblem()
+    pos = 0
+    while len(lines[0]) > 0: 
+        for i in range(len(lines) - 1): 
+            if lines[i][pos] != ' ': 
+                break; 
+        else: 
+            # all rows are blank, this is a boundary
+            
+            for i in range(len(lines) - 1): 
+                next_problem.values.append(lines[i][0:pos])
+                lines[i] = lines[i][pos + 1:]
+            inputs.append(next_problem)
+            if any(s for s in lines): 
+                next_problem = HomeworkProblem()
+                pos = -1
+            else: 
+                break
+        pos += 1
+
+    # get operators
+    i = len(lines) - 1
+    values = lines[i].split()
+    for i in range(len(values)): 
+        inputs[i].operator = values[i]
+
     return inputs
 
 def main(): 
     file_name = 'input.txt'
-    word_len = 4
-    result = part1(file_name, word_len)
-    print(f"Part 1 result: {result}")
+    result = part2(file_name)
+    print(f"Part 2 result: {result}")
 
-def part1(file_name: str, word_len: int) -> int: 
-    inputs = get_inputs(file_name, word_len)
+def part2(file_name: str) -> int: 
+    inputs = get_inputs(file_name)
     return HomeworkProblem.calculate_all(inputs)
 
-def test_part1(): 
+def test_part2(): 
     file_name = "sample.txt"
-    word_len = 3
-    expected = 4277556
-    result = part1(file_name, word_len)
+    expected = 3263827
+    result = part2(file_name)
     assert(result == expected)
 
 
@@ -131,13 +158,14 @@ Now, the g
 ])
 def test_get_numbers(values: List[str], expected: List[int]): 
     p = HomeworkProblem()
+    p.values = values
     result = HomeworkProblem.parse_numbers(p)
     assert(result == expected)
 
 
 def test_get_inputs(): 
     file_name = "sample.txt"
-    inputs = get_inputs(file_name, 3)
+    inputs = get_inputs(file_name)
     assert(len(inputs) == 4)
     p = inputs[0]
     assert(len(p.values) == 3)
@@ -149,12 +177,12 @@ def test_get_inputs():
     assert(len(p.values) == 3)
     assert(p.operator == '+')
     assert(p.values[0] == "64 ")
-    assert(p.values[2] == "314 ")
+    assert(p.values[2] == "314")
 
 def test_get_inputs_2(): 
     file_name = "sample2.txt"
-    inputs = get_inputs(file_name, 4)
-    assert(len(inputs) == 4)
+    inputs = get_inputs(file_name)
+    assert(len(inputs) == 5)
     p = inputs[0]
     assert(len(p.values) == 4)
     assert(p.operator == '+')
