@@ -20,7 +20,7 @@ class HomeworkProblem:
                 return 0
     
     @staticmethod
-    def parse_numbers(p: HomeworkProblem) -> List[int]:
+    def parse_numbers(p: "HomeworkProblem") -> List[int]:
         result = []
         for i in range(len(p.values[0]) - 1, -1, -1): 
             digits = []
@@ -64,18 +64,11 @@ def get_inputs(file_name: str, word_len: int) -> List[HomeworkProblem]:
 
     # get numerical values
     for i in range(len(lines) - 1):
-        #values = lines[i].split()
-        #if len(inputs) == 0: 
-        #    for _ in range(len(values)): 
+        line = lines[i]
+
         for j in range(len(inputs)):
             pos = j * (word_len + 1)
-            inputs[j].values.append(lines[i][pos: pos + word_len - 1])
-
-
-        
-
-        #for i in range(len(values)): 
-        #    inputs[i].values.append(int(values[i]))
+            inputs[j].values.append(line[pos: pos + word_len])
 
     # get operators
     i = len(lines) - 1
@@ -86,17 +79,19 @@ def get_inputs(file_name: str, word_len: int) -> List[HomeworkProblem]:
 
 def main(): 
     file_name = 'input.txt'
-    result = part1(file_name)
+    word_len = 4
+    result = part1(file_name, word_len)
     print(f"Part 1 result: {result}")
 
-def part1(file_name: str) -> int: 
-    inputs = get_inputs(file_name, 4)
+def part1(file_name: str, word_len: int) -> int: 
+    inputs = get_inputs(file_name, word_len)
     return HomeworkProblem.calculate_all(inputs)
 
 def test_part1(): 
     file_name = "sample.txt"
+    word_len = 3
     expected = 4277556
-    result = part1(file_name)
+    result = part1(file_name, word_len)
     assert(result == expected)
 
 
@@ -155,6 +150,22 @@ def test_get_inputs():
     assert(p.operator == '+')
     assert(p.values[0] == "64 ")
     assert(p.values[2] == "314 ")
+
+def test_get_inputs_2(): 
+    file_name = "sample2.txt"
+    inputs = get_inputs(file_name, 4)
+    assert(len(inputs) == 4)
+    p = inputs[0]
+    assert(len(p.values) == 4)
+    assert(p.operator == '+')
+    assert(p.values[0] == "7   ")
+    assert(p.values[2] == "3849")
+
+    p = inputs[3]
+    assert(len(p.values) == 4)
+    assert(p.operator == '*')
+    assert(p.values[0] == "99 ")
+    assert(p.values[2] == "337")
 
 if __name__ == "__main__":
     pytest.main([__file__])
