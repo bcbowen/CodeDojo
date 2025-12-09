@@ -58,27 +58,8 @@ def get_inputs(file_name: str) -> List[HomeworkProblem]:
     with open(path, "r") as file: 
         lines = [line.strip('\n') + ' ' for line in file.readlines()]
 
+        next_problem = HomeworkProblem()
     
-    """
-    #input_count = len(lines[0]) // (word_len + 1)
-    #for _ in range(input_count): 
-    #    inputs.append(HomeworkProblem())
-
-    # get numerical values
-    for i in range(len(lines) - 1):
-        line = lines[i]
-
-        for j in range(len(inputs)):
-            pos = j * (word_len + 1)
-            inputs[j].values.append(line[pos: pos + word_len])
-
-    # get operators
-    i = len(lines) - 1
-    values = lines[i].split()
-    for i in range(len(values)): 
-        inputs[i].operator = values[i]
-    """
-    next_problem = HomeworkProblem()
     pos = 0
     while len(lines[0]) > 0: 
         for i in range(len(lines) - 1): 
