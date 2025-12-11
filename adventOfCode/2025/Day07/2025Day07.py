@@ -58,10 +58,55 @@ def part1(file_name: str) -> int:
                         board[row + 1][col - 1] = '|'
                     if col < len(board[row]) - 1: 
                         board[row + 1][col + 1] = '|' 
+            elif board[row - 1][col] == '|': 
+                board[row][col] = '|'
         row += 1
     
     #return count_splits(board)
     return split_count
+
+"""
+Add 2 hex values together. Ex: '7' + '4' = 'B'
+"""
+@staticmethod
+def combine(val1: str, val2: str) -> str:
+    return format(int(val1, 16) + int(val2, 16), 'X')
+
+def part2(file_name: str) -> int: 
+    """ 
+    When merging left and right streams
+     * If we are at the right edge (no more cols to the right), return '0'
+     * If there is a splitter to the right (current row, 2 cols to the right), the val is the value above the splitter
+     * if there is not a splitter to the right, and there is a value in the col to the right, it is that value
+     * otherwise, '0'
+    """
+    def get_right_val(row: int, col: int) -> str: 
+        if 
+        return '*'
+    
+    board = get_input(file_name)
+    row, col = find_start(board)
+    board[row + 1][col] = '1'
+    row += 1
+    #split_count = 0
+    while row < len(board): 
+        for col in range(len(board[row])): 
+            if board[row][col] == '^' and board[row - 1][col] != '.': 
+                #split_count += 1
+                if row < len(board) - 1:
+                    if col > 0 and board[row + 1][col - 1] == '.': 
+                        board[row + 1][col - 1] = board[row - 1][col]
+                    if col < len(board[row]) - 1 and board[row + 1][col - 1] == '.': 
+                        right_val = '0'
+
+                        board[row + 1][col + 1] = combine(board[row - 1][col])
+            elif board[row - 1][col] == '|': 
+                board[row][col] = '|'
+        row += 1
+    
+    #return count_splits(board)
+    return split_count
+
 
 # 1332 too low
 def main(): 
