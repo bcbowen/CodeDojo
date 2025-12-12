@@ -21,7 +21,7 @@ def get_input(file_name: str) -> List[List[str]]:
     path = get_input_filepath(file_name)
     inputs = []
     with open(path, "r") as file: 
-        inputs = [[c for c in line] for line in file.readlines()]
+        inputs = [[c for c in line.strip()] for line in file.readlines()]
     return inputs 
 
 
@@ -73,53 +73,41 @@ def part1(file_name: str) -> int:
 
 """
 Add 2 hex values together. Ex: '7' + '4' = 'B'
+Empty values (.) are treated as 0
 """
 @staticmethod
 def combine(val1: str, val2: str) -> str:
+    if val1 in ['.', 'S', '^']: 
+        val1 = '0'
+    if val2 in ['.', 'S', '^']: 
+        val2 = '0'
     return format(int(val1, 16) + int(val2, 16), 'X')
 
 @staticmethod
 def part2(file_name: str) -> int: 
-
-    """ 
-    When merging left and right streams
-     * If we are at the right edge (no more cols to the right), return '0'
-     * If there is a splitter to the right (current row, 2 cols to the right), the val is the value above the splitter
-     * if there is not a splitter to the right, and there is a value in the col to the right, it is that value
-     * otherwise, '0'
-    """
-    def get_right_val(row: int, col: int) -> str: 
-        right_edge = len(board[row]) - 1
-        if col >= right_edge - 1: 
-            return '0'
-        if row > 1 and right_edge - col  > 2 and board[row][ col + 2] == '^' and board[row - 1][col + 2] in string.hexdigits: 
-            return board[row - 1][col + 2]
-        if board[row - 1][col + 1] in string.hexdigits: 
-            return board[row - 1][col + 1]
-        
-        return '0'
-    
     board = get_input(file_name)
     row, col = find_start(board)
     board[row + 1][col] = '1'
     row += 1
-    #split_count = 0
-    while row < len(board): 
-        for col in range(len(board[row])): 
-            if board[row][col] == '^' and board[row - 1][col] in string.hexdigits:
-                #split_count += 1
-                if row < len(board) - 1:
-                    if col > 0 and board[row + 1][col - 1] == '.': 
-                        board[row + 1][col - 1] = board[row - 1][col]
-                    if col < len(board[row]) - 1 and board[row + 1][col + 1] == '.': 
-                        right_val = get_right_val(row, col)
-                        left_val = board[row - 1][col]
-                        board[row + 1][col + 1] = combine(left_val, right_val)
-            elif board[row - 1][col] in string.hexdigits: 
-                board[row][col] = board[row - 1][col] 
-        row += 1
-    
-    #return count_splits(board)
+    for row in range(2, len(board)):     
+        for col in range(0, len(board[row])): 
+            # If this is a splitter, cells to the left and right will have the value above
+            if board[row][col] == '^':                 
+                current_col_value = board[row - 1][col]
+                # left
+                new_val = combine(current_col_value, board[row][col - 1])
+                if new_val != '0' and col > 0: 
+                    board[row][col - 1] = new_val
+                
+                # right
+                new_val = combine(current_col_value, board[row][col + 1])
+                if new_val != '0' and col < len(board[row]): 
+                    board[row][col + 1] = new_val
+            else: 
+                # not a splitter, trickle down
+                if board[row - 1][col] != '.': 
+                    board[row][col] = combine(board[row][col], board[row - 1][col])
+
     total = 0
     for col in board[-1]: 
         if col != '.': 
@@ -127,11 +115,13 @@ def part2(file_name: str) -> int:
     return total 
 
 
-# 1332 too low
 def main(): 
     file_name = "input.txt"
     result = part1(file_name)
     print(f"Part 1 result: {result}")
+
+    result = part2(file_name)
+    print(f"Part 2 result: {result}")
 
 def test_part1(): 
     file_name = "sample.txt"
@@ -163,13 +153,19 @@ def test_get_input():
     file_name = "sample.txt"
     result = get_input(file_name)
     assert(len(result) == 16)
-    assert(len(result[0]) == 16)
+    assert(len(result[0]) == 15)
     assert(result[0][0] == '.')
     assert(result[0][7] == 'S')
 
+"""
+String values will either be hex digits or dots. Treat dots as 0
+"""
 @pytest.mark.parametrize("val1, val2, expected", [
     ('1', '2', '3'), 
-    ('7', '4', 'B')
+    ('7', '4', 'B'), 
+    ('1', '.', '1'), 
+    ('.', '1', '1'), 
+    ('.', '.', '0'), 
 ])
 def test_combine(val1: str, val2: str, expected: str): 
     result = combine(val1, val2)
