@@ -1,6 +1,6 @@
 import math
 import pytest
-from typing import List
+from typing import Dict, List, Tuple
 from pathlib import Path
 
 
@@ -85,15 +85,32 @@ def get_inputs(file_name: str) -> List[List[int]]:
     inputs = []
     with open(path, "r") as file: 
         inputs = [[int(d) for d in line.strip().split(',')] for line in file.readlines()]
+    
     return inputs
 
 def main(): 
     pass
 
-def part1(file_name: str, connection_count: int, rank: int) -> int: 
-    distances = {}
-    inputs = get_inputs(file_name)
+def get_distances(inputs: List[List[int]]) -> Dict[List[int], Tuple[junction, float]]: 
+    distances = {} 
+    for i in inputs:
+        distances[i] = []
+        current_junction = junction(i[0], i[1], i[2])
+        for j in inputs: 
+            if i == j: 
+                continue
+            new_junction = junction(j[0], j[1], j[2])
+            distance = junction.get_distance(current_junction, new_junction)
+            distances[i].append((new_junction, distance))
+        distances[i].sort(key=lambda x: x[1], reversed=True)
+    
+    return distances
 
+
+def part1(file_name: str, connection_count: int, rank: int) -> int: 
+    
+    inputs = get_inputs(file_name)
+    distances = get_distances(inputs)
 
 
 
