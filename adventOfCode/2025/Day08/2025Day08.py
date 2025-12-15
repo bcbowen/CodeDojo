@@ -1,12 +1,14 @@
+#import heapq
 import math
 import pytest
-from typing import Dict, List, Tuple
+from collections import defaultdict
 from pathlib import Path
+from typing import Dict, List, Tuple
 
 
 class UnionFind: 
     
-    def __init__(self, n):
+    def __init__(self, n: int):
         # parent[i] points to the parent of node i
         # Initially, every node is its own parent (representing n distinct sets)
         self.parent = list(range(n))
@@ -28,7 +30,7 @@ class UnionFind:
         self.parent[i] = self.find(self.parent[i])
         return self.parent[i]
     
-    def union(self, i, j):
+    def union(self, i: int, j: int):
         """
         Unions the sets containing i and j using Union by Rank optimization.
         """
@@ -53,16 +55,28 @@ class UnionFind:
             return True # Successfully performed a union
         return False # No union needed
         
-
+    def get_group_counts(self):
+        """
+        Calculates the size of each distinct group (set) in the Union-Find structure.
+        """
+        counts = defaultdict(int)
+        for i in range(len(self.parent)):
+            # Calling find here ensures all remaining elements compress their paths 
+            # and we count the true root representative.
+            root = self.find(i) 
+            counts[root] += 1
+        return counts
 
     #def are_connected(self, i: int, j: int) -> bool: 
     #    return self.find(i) == self.find(j)
 
 class junction: 
-    def __init__(self, x, y, z):
+    def __init__(self, id: int, x: int, y: int, z: int):
+        self.id = id
         self.x = x
         self.y = y
         self.z = z
+        self.dist : float = 0.0
 
     @staticmethod
     def get_distance(j1: junction, j2: junction) -> float: 
@@ -80,46 +94,86 @@ def get_input_filepath(file_name: str) -> Path:
     input_path = private_files_base / year / day / file_name
     return input_path
 
-def get_inputs(file_name: str) -> List[List[int]]: 
+def get_inputs(file_name: str) -> List[junction]: 
     path = get_input_filepath(file_name)
     inputs = []
     with open(path, "r") as file: 
-        inputs = [[int(d) for d in line.strip().split(',')] for line in file.readlines()]
-    
+        id = 0
+        for line in file.readlines():
+            vals = line.strip().split(',')
+            j = junction(id, int(vals[0]), int(vals[1]), int(vals[2]))
+            inputs.append(j)
+            id += 1
     return inputs
 
 def main(): 
     pass
 
-def get_distances(inputs: List[List[int]]) -> Dict[List[int], Tuple[junction, float]]: 
-    distances = {} 
-    for i in inputs:
-        distances[i] = []
-        current_junction = junction(i[0], i[1], i[2])
-        for j in inputs: 
-            if i == j: 
+def get_distances(inputs: List[junction]) -> Dict[int, List[junction]]: 
+    distances : Dict[int, List[junction]] = {} 
+    for source in inputs:
+        distances[source.id] = [] 
+        #current_junction = junction(i[0], i[1], i[2])
+        for dest in inputs: 
+            if source.id == dest.id: 
                 continue
-            new_junction = junction(j[0], j[1], j[2])
-            distance = junction.get_distance(current_junction, new_junction)
-            distances[i].append((new_junction, distance))
-        distances[i].sort(key=lambda x: x[1], reversed=True)
+            distance = junction.get_distance(source, dest)
+            dest.dist = distance
+            distances[source.id].append(dest)
+        #distances[source.id].sort(key = lambda x: x.dist)
     
+    for destination_list in distances.values(): 
+        destination_list.sort(key = lambda x: x.dist)
+
     return distances
 
 
 def part1(file_name: str, connection_count: int, rank: int) -> int: 
     
+    def get_closest_unconnected() -> List[int]: 
+        min_ids = []
+        min_dist = float('inf')
+        for i in range(len(inputs)):
+            #current = inputs[i]
+            for j in range(len(distances[i])): 
+                if distances[i][j].dist < min_dist and uf.find(i) == i: 
+                    min_dist = distances[i][j].dist
+                    min_ids = [i, distances[i][j].id]
+                elif distances[i][j].dist > min_dist: 
+                    break
+
+        return min_ids
+
+
+
     inputs = get_inputs(file_name)
     distances = get_distances(inputs)
-
-
+    uf = UnionFind(len(inputs))
+    for _ in range(connection_count): 
+        i, j = get_closest_unconnected()
+        uf.union(i, j)
+    
+    counts = uf.get_group_counts()
+    count_list = [] 
+    for val in counts.values(): 
+        count_list.append(val)
+    count_list.sort(reverse = True)
+    
+    return math.prod(count_list[0:rank + 1])
 
 def test_get_inputs(): 
     file_name = "sample.txt"
     result = get_inputs(file_name)
     assert(len(result) == 20)
-    assert(len(result[0]) == 3)
-    
+    box = result[0]
+    expectedX, expectedY, expectedZ = 162, 817, 812
+    assert((box.x, box.y, box.z) == (expectedX, expectedY, expectedZ))
+
+def test_part1(): 
+    file_name = "sample.txt"
+    result = part1(file_name, 10, 3)
+    expected = 40
+    assert(result == expected)
 
 if __name__ == "__main__":
     pytest.main([__file__])
