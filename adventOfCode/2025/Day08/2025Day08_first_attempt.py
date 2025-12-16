@@ -83,7 +83,7 @@ class junction:
         self.dist : float = 0.0
 
     @staticmethod
-    def get_distance(j1: junction, j2: junction) -> float: 
+    def get_distance(j1: "junction", j2: "junction") -> float: 
         return math.sqrt((j2.x - j1.x)**2 + (j2.y - j1.y)**2 + (j2.z - j1.z)**2) 
 
 def get_input_filepath(file_name: str) -> Path:
