@@ -3,6 +3,10 @@ import pytest
 from pathlib import Path
 from typing import Dict, List, Tuple
 
+"""
+borrowed this approach from hyperneutrino: 
+https://www.youtube.com/watch?v=Rd7c4Wx7QDg
+"""
 def get_input_filepath(file_name: str) -> Path:
     current_path = Path(__file__).parent
     day = current_path.name
