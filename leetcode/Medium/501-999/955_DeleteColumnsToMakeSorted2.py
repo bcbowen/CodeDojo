@@ -20,7 +20,7 @@ class Solution:
     def check_column(self, strs: List[str], i: int) -> int: 
         for row in range(1, len(strs)): 
             if ord(strs[row][i]) < ord(strs[row - 1][i]): 
-                if i == 0 or strs[row - 1][i - 1] >= strs[row][i - 1]:
+                if i == 0 or strs[row - 1][0:i] >= strs[row][0:i]:
                     return -1
         
         if strs[0][i] == strs[-1][i]: 
@@ -96,7 +96,7 @@ def test_minDeletionSize(strs: List[str], expected: int):
     (["xc","yb","za"], 1, 1), 
     (["xc","xb","xa"], 0, 0), 
     (["xxa","xxb","xxa"], 1, 0), 
-    (["xga","xfb","yfa"], 2, -1), 
+    (["xga","xfb","yfa"], 2, 1), 
     (["xa","xb","ya"], 1, 1)
 ])
 def test_check_column(strs: List[str], i: int, expected: int): 
