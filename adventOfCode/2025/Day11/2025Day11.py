@@ -1,4 +1,5 @@
 import pytest
+from functools import cache
 from typing import Dict, List, Set
 from pathlib import Path
 
@@ -64,25 +65,23 @@ def part1(file_name: str) -> int:
 
     return paths 
 
+
 def part2(file_name: str) -> int:
     inputs = get_inputs(file_name)
     paths = 0
 
-    def backtrack(key: str, visited: Set[str]): 
-        nonlocal paths
-        if 'out' in inputs[key]:
-            if 'dac' in visited and 'fft' in visited:  
-                paths += 1
-            return
-        for dest in inputs[key]: 
-            if dest not in visited: 
-                v = visited.copy()
-                v.add(dest)
-                backtrack(dest, v)
-    start = "svr"
-    v = set([start])        
-    backtrack(start, v)
+    @cache
+    def count_paths(src: str, dest: str):
+        if src == dest:
+            return 1
+        return sum(count_paths(x, dest) for x in inputs.get(src, []))
+    # svr - dac / fft - out
 
+    dac_to_fft = count_paths("dac", "fft")
+    if dac_to_fft > 0: 
+        paths = count_paths("svr", "dac") * dac_to_fft * count_paths("fft", "out") 
+    else:
+        paths = count_paths("svr", "fft") * count_paths("fft", "dac") * count_paths("dac", "out")
     return paths 
 
 def test_part1(): 
