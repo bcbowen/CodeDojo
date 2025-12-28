@@ -4,7 +4,6 @@ from typing import List
 class Solution:
     def maximumHappinessSum(self, happiness: List[int], k: int) -> int:
         happiness.sort(reverse=True)
-        iterations = 0
         i = 0
         result = 0
         while i < len(happiness) and i < k: 
