@@ -2,18 +2,14 @@ import pytest
 from typing import List
 from pathlib import Path
 
-def get_input_filepath(file_name: str) -> Path:
+def get_inputs(file_name: str) -> str: 
+    input = "" 
     current_path = Path(__file__).parent
-    input_path = current_path / file_name
-    return input_path
-
-def get_inputs(file_name: str) -> List[str]: 
-    inputs = [] 
-    path = get_input_filepath(file_name)
+    path = current_path / file_name
     with open(path, "r") as file:
-        inputs = file.readlines() 
+        input = file.readline() 
     
-    return inputs
+    return input
 
 
 def part1(file_name: str) -> int: 
