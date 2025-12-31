@@ -6,6 +6,37 @@ class Solution:
     def sortArrayByParityII(self, nums: List[int]) -> List[int]:
         is_even = lambda x: x % 2 == 0
 
+        result = [-1] * len(nums)
+        indexes = []
+        evens = []
+        odds = []
+
+        for i in range(len(nums)): 
+            if is_even(i): 
+                if not is_even(nums[i]): 
+                    odds.append(nums[i])
+                    indexes.append(i)
+                else: 
+                    result[i] = nums[i]
+            else: 
+                if is_even(nums[i]): 
+                    evens.append(nums[i])
+                    indexes.append(i)
+                else: 
+                    result[i] = nums[i]
+
+        while len(indexes) > 0: 
+            i = indexes.pop()
+            if is_even(i): 
+                result[i] = evens.pop()
+            else: 
+                result[i] = odds.pop()
+
+        return result 
+    
+    def sortArrayByParityII_1(self, nums: List[int]) -> List[int]:
+        is_even = lambda x: x % 2 == 0
+
         i = 0
 
         while i < len(nums): 
@@ -42,7 +73,11 @@ Output: [2,3]
     [4, 2, 5, 7], 
     [2, 3], 
     [3, 4], 
-    [5, 2, 7, 4]
+    [5, 2, 7, 4], 
+    [2, 1, 4, 3, 6, 5, 8, 7, 0, 9], 
+    [1, 3, 5, 7, 2, 4, 6, 8], 
+    [2, 4, 6, 8, 1, 3, 5, 7], 
+    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 ])
 def test_sortArrayByParityII(nums: List[int]):
     result = Solution().sortArrayByParityII(nums)

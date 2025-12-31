@@ -10,11 +10,6 @@ class StringIterator:
 
     def __init__(self, compressedString: str):
         self.chars = StringIterator.parse(compressedString)
-        #self.compressedString = compressedString
-        #self.currentPosition = 0
-        #self.iterationsLeft = 0
-        #self.currentChar = self.chars[0][0]
-        #self.__setNext__()
 
     @staticmethod
     def parse(val: str) -> deque[Tuple[str, int]]: 
@@ -44,29 +39,6 @@ class StringIterator:
             return True
         else: 
             return self.chars[0][1] > 0
-
-    
-
-"""
-    def __setNext__(self):
-        if self.currentPosition < len(self.compressedString) - 1: 
-
-            self.currentChar = self.compressedString[self.currentPosition]
-            pos = self.currentPosition + 1
-            iterVal = ''
-            while pos < len(self.compressedString) and self.compressedString[pos].isdigit(): 
-                iterVal += self.compressedString[pos]
-                pos += 1
-            if len(iterVal) > 0: 
-                self.iterationsLeft = int(iterVal)
-                self.currentPosition = pos
-            else: 
-                self.iterationsLeft = 0
-                self.currentPosition = -1
-        else: 
-            self.currentPosition = len(self.compressedString) - 1
-            self.currentChar = ' '
-"""
 
 """
 Example 1:
