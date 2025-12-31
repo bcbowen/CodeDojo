@@ -1,53 +1,27 @@
 import pytest
-import re
-from collections import deque
-from typing import List, Tuple
 
-"""
-Parse compressedString to a queue of tuples with a letter and number of repititions. 
-"""
 class StringIterator:
 
     def __init__(self, compressedString: str):
-        self.chars = StringIterator.parse(compressedString)
-        #self.compressedString = compressedString
-        #self.currentPosition = 0
-        #self.iterationsLeft = 0
-        #self.currentChar = self.chars[0][0]
-        #self.__setNext__()
-
-    @staticmethod
-    def parse(val: str) -> deque[Tuple[str, int]]: 
-        pattern = r"([A-Za-z])(\d+)"
-        result = [(m[0], int(m[1])) for m in re.findall(pattern, val)]
-        
-        return deque(result)
+        self.compressedString = compressedString
+        self.currentPosition = 0
+        self.iterationsLeft = 0
+        self.currentChar = ' '
+        self.__setNext__()
 
     def next(self) -> str:
-        if len(self.chars) == 0:
-            return ' '
-
-        if self.chars[0][1] == 0: 
-            self.chars.popleft()
-            return self.next() 
-
-        letter, length = self.chars[0]
-        self.chars[0] = (letter, length - 1)
-
-        return letter
+        if self.iterationsLeft > 0: 
+            self.iterationsLeft -= 1
+            return self.currentChar
+        self.__setNext__()
+        if self.iterationsLeft > 0: 
+            self.iterationsLeft -= 1
+        return self.currentChar
 
 
     def hasNext(self) -> bool:
-        if len(self.chars) == 0: 
-            return False
-        elif len(self.chars) > 1: 
-            return True
-        else: 
-            return self.chars[0][1] > 0
-
+        return self.iterationsLeft > 0 
     
-
-"""
     def __setNext__(self):
         if self.currentPosition < len(self.compressedString) - 1: 
 
@@ -66,7 +40,7 @@ class StringIterator:
         else: 
             self.currentPosition = len(self.compressedString) - 1
             self.currentChar = ' '
-"""
+
 
 """
 Example 1:
@@ -218,13 +192,6 @@ def test_case_158():
     expected = False
     assert(b == expected)
 
-@pytest.mark.parametrize("val, expected", [
-    ('a1b2c3', deque([('a', 1), ('b', 2), ('c', 3)])),
-    ('a10b234c3443', deque([('a', 10), ('b', 234), ('c', 3443)]))
-])
-def test_parse(val: str, expected: deque[Tuple[str, int]]): 
-    result = StringIterator.parse(val)
-    assert(result == expected)
 
 if __name__ == "__main__":
     pytest.main([__file__]) 
