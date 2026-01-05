@@ -10,7 +10,6 @@ class Solution:
         while k > 0:
             if nums[i] < 0: 
                 nums[i] *= -1
-                
 
             elif has_zero:
                 break 
@@ -19,7 +18,7 @@ class Solution:
 
             if i < len(nums) - 1 and nums[i + 1] < nums[i]:
                 i += 1 
-                
+
             k -= 1
         return sum(nums)
 
