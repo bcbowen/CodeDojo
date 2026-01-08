@@ -77,7 +77,7 @@ def part1(storage_nodes: List[List[StorageNode]]) -> int:
 
 def part2(storage_nodes: List[List[StorageNode]]) -> int:
     row, col = find_empty_node(storage_nodes)
-
+    return 3
     
 
 def main(): 
