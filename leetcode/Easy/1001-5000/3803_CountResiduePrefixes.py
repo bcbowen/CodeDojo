@@ -1,9 +1,7 @@
 import pytest
 
 class Solution:
-    def residuePrefixes_1(self, s: str) -> int:
-        return len(set(s))
-    
+
     def residuePrefixes(self, s: str) -> int:
         chars = set() 
         result = 0
