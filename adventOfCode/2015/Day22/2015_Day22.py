@@ -1,4 +1,7 @@
+import sys
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))  # repo root
+import Modules.aoc_io
 from contextlib import redirect_stdout
 import pytest
 import copy
@@ -46,23 +49,30 @@ class RunParams:
     def __repr__(self) -> str:
         return f"player_hp: {self.initial_player_hp}; mana: {self.initial_mana}; boss_hp: {self.initial_boss_hp}; boss damage: {self.boss_damage}"
 
-    def load(initial_player_hp, initial_mana, file_name):
-        data_path = RunParams.get_data_path()
-        file_path = Path(data_path, file_name).resolve()
+    @staticmethod
+    def load(initial_player_hp : int, initial_mana: int, file_name: str):
+
+        #data_path = RunParams.get_data_path()
+        #file_path = Path(data_path, file_name).resolve()
         initial_boss_hp = 0
         boss_damage = 0
-        with open(file_path) as file: 
-            text = file.read() 
-            lines = text.split('\n')
-            initial_boss_hp = int(lines[0].split(':')[1])
-            boss_damage = int(lines[1].split(':')[1])
-            file.close()
+        #with open(file_path) as file: 
+            #text = file.read() 
+            #lines = text.split('\n')
+            #initial_boss_hp = int(lines[0].split(':')[1])
+            #boss_damage = int(lines[1].split(':')[1])
+            #file.close()
+        text = Modules.aoc_io.read_input(2015, 22, file_name)
+        lines = text.split('\n')
+        initial_boss_hp = int(lines[0].split(':')[1])
+        boss_damage = int(lines[1].split(':')[1])
         return RunParams(initial_player_hp, initial_mana, initial_boss_hp, boss_damage)
     
-    def get_data_path() -> str: 
-        path = str(Path(__file__).parent)
-        data_path = path.replace("CodeDojo\\adventOfCode", "adventOfCodePrivateFiles")
-        return data_path
+    #def get_data_path() -> str: 
+    #    path = str(Path(__file__).parent)
+    #    data_path = path.replace("CodeDojo\\adventOfCode", "adventOfCodePrivateFiles")
+    #    return data_path
+
 
 class Game: 
     """
@@ -91,7 +101,7 @@ class Game:
         self.verbose = False
 
     def play(self, initial_player_hp: int, initial_mana: int, file_name: str, hard_mode : bool = False, verbose : bool = False) -> tuple[int, list[str]]:
-        self.min_cost = float("inf")
+        self.min_cost = 10_000
         self.hard_mode = hard_mode
         self.verbose = verbose
         self.min_cost_log = []
@@ -226,7 +236,7 @@ class Game:
                 self.move(stats=nextStats, effects=copy.deepcopy(effects), spell=key, output=output.copy())
             
 
-    def take_a_dump(self, player_id: int, log: list[str]): 
+    def take_a_dump(self, player_id: str, log: list[str]): 
         path = Path(Path(__file__).parent, f"dump_{player_id}.txt").resolve()
         with open(path, 'w') as f:
             for line in log: 

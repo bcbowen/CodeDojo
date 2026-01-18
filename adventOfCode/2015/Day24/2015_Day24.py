@@ -1,5 +1,8 @@
 import pytest
+import sys
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))  # repo root
+import Modules.aoc_io
 import math
 
 class Arrangement: 
@@ -11,6 +14,7 @@ class Arrangement:
         self.cockpit = values
         self.quantum_entanglement = math.prod(self.cockpit)
 
+    @staticmethod
     def find_arrangements(values: list[int], groups: int) -> list['Arrangement']: 
         total = sum(values) 
         combos = Arrangement.find_combos(values, total//groups)
@@ -27,6 +31,7 @@ class Arrangement:
     """
     Find all ways to get the given total from the list of numbers
     """
+    @staticmethod
     def find_combos(values: list[int], target_sum: int) -> list[int]: 
         def backtrack(start: int, current_combo: list[int], current_sum: int):
             if current_sum == target_sum: 
@@ -52,16 +57,12 @@ class Balancer:
         self.groups = groups
 
     def get_input(self, file_name: str) -> list[int]: 
-        path = str(Path(__file__).parent)
-        data_path = path.replace("CodeDojo\\adventOfCode", "adventOfCodePrivateFiles")
-        file_path = Path(data_path, file_name).resolve()
-        values = []
-        with open(file_path) as file: 
-            text = file.read() 
-            lines = text.split('\n')
-            for line in lines: 
-                values.append(int(line))
-            file.close()
+        values = []        
+        text = Modules.aoc_io.read_input(2015, 24, file_name)
+        lines = text.split('\n')
+        for line in lines: 
+            values.append(int(line))
+        
         return values
     
     def run(self, file_name: str) -> int:

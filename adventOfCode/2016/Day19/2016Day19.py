@@ -59,49 +59,7 @@ class GiftExchange:
 
     # part 2: Players exchange with player across from them to the left
     # ex 1 -> 2 -> 3 -> 4 -> 5: player 1 goes to player 3 (on his left)
-    """ calculating part 2 takes too long, the commented code was the first attempt but ran forever
-
-    def play_2(self) -> int:
-        current = self.first
-        while self.first != self.last:
-            if not current.next: 
-                raise Exception("Current node has no next node!")
-            if not current.next.next: 
-                    raise Exception("Current Next node has no next node!")
-            previous, next = self.get_player(current)
-
-            current.gift_count += next.gift_count
-            if next == self.last: 
-                self.last = previous
-                self.last.next = self.first
-            elif previous == self.last: 
-                self.first = next.next
-
-            current = current.next
-        return self.first.id
-
-    def exchange_gifts_2(player_count: int) -> int:
-        exchange = GiftExchange.configure_exchange(player_count)
-        result = exchange.play_2()
-        return result
-
-    def get_player(self, current: GiftNode) -> Tuple[GiftNode, GiftNode]: 
-        fast = current.next.next
-        slow = current.next
-        previous = current
-        iterations = 0
-        while fast != current: 
-            fast = fast.next
-            iterations += 1
-            if iterations % 2 == 0: 
-                previous = slow
-                slow = slow.next
-        return (previous, slow)
-    """
- #  function winningElfAcross(n) {
- #      const p = Math.pow(3, Math.floor(Math.log(n) / Math.log(3)));
- #      return n === p ? n : n - p + Math.max(0, n - 2 * p);
-#   }
+ 
 
 def get_winning_elf_part_2(n : int) -> int: 
     exp = math.floor(math.log(n) / math.log(3))

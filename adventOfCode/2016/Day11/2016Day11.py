@@ -2,27 +2,16 @@ import pytest
 import re
 from collections import deque, Counter
 from itertools import chain, combinations
+import sys
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))  # repo root
+import Modules.aoc_io
 from typing import List, Set
 
 # Solution borrowed from Ed Mann: https://eddmann.com/posts/advent-of-code-2016-day-11-radioisotope-thermoelectric-generators/
 
-def get_input_filepath(file_name: str) -> Path:
-    current_path = Path(__file__).parent
-    day = current_path.name
-    current_path = current_path.parent
-    year = current_path.name
-
-    # traverse up directories to the private files
-    private_files_base = current_path.parents[2] / "adventOfCodePrivateFiles"
-
-    input_path = private_files_base / year / day / file_name
-    return input_path
-
 def load_input(file_name: str) -> List[Set[str]]: 
-  path = get_input_filepath(file_name)
-  with open(path, "rt") as file: 
-    input = file.read()
+  input = Modules.aoc_io.read_input(2016, 11, file_name)
   return parse_floors(input)
 
 def parse_floors(input) -> List[Set[str]]:

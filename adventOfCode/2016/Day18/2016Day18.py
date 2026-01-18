@@ -1,24 +1,13 @@
 import pytest
-#from typing import List
 from operator import xor
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))  # repo root
+import Modules.aoc_io
 from pathlib import Path
 
-def get_input_filepath(file_name: str) -> Path:
-        current_path = Path(__file__).parent
-        day = current_path.name
-        current_path = current_path.parent
-        year = current_path.name
-
-        # traverse up directories to the private files
-        private_files_base = current_path.parents[2] / "adventOfCodePrivateFiles"
-
-        input_path = private_files_base / year / day / file_name
-        return input_path
-
 def get_first_row(file_name: str) -> str: 
-    file_path = get_input_filepath(file_name)
-    with open(file_path, "r") as file: 
-        row = file.readline()
+    row = Modules.aoc_io.read_input(2016, 18, file_name)
     return row
 
 """

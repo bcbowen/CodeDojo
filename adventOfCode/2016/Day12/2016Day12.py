@@ -1,4 +1,8 @@
 import pytest
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))  # repo root
+import Modules.aoc_io
 from pathlib import Path
 
 class Interpreter:
@@ -6,22 +10,9 @@ class Interpreter:
         self.commands = self.get_commands(file_name)
         self.registers = {'a': 0, 'b': 0, 'c': c, 'd': 0}
 
-    def get_input_filepath(self, file_name: str):
-        current_path = Path(__file__).parent
-        day = current_path.name
-        current_path = current_path.parent
-        year = current_path.name
-
-        # traverse up directories to the private files
-        private_files_base = current_path.parents[2] / "adventOfCodePrivateFiles"
-
-        input_path = private_files_base / year / day / file_name
-        return input_path
-
     def get_commands(self, file_name: str) -> list[str]:
-        path = self.get_input_filepath(file_name)
-        with open(path, "r") as file:
-            commands = [line for line in file.readlines()]
+        text = Modules.aoc_io.read_input(2016, 12, file_name)
+        commands = text.split('\n')
         return commands
 
     def process_command(self, command : str, current_instruction : int) -> int:

@@ -1,6 +1,5 @@
 import pytest
 from collections import deque
-from pathlib import Path
 from typing import List
 
 """
@@ -10,7 +9,7 @@ def calc_space_value(x: int, y: int, init_value: int) -> str:
     binary_value = bin(x**2 + 3 * x + 2 * x * y + y + y**2 + init_value)
     return '.' if binary_value.count('1') % 2 == 0 else '#'
 
-def init_grid(init_value: int) -> List[List[int]]: 
+def init_grid(init_value: int) -> List[List[str]]: 
     grid = [['-' for _ in range(init_value)] for _ in range(init_value) ]
     for row in range(len(grid)): 
         for col in range(len(grid[0])): 

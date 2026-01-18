@@ -1,18 +1,9 @@
 import pytest
 from typing import List
+import sys
 from pathlib import Path
-
-def get_input_filepath(file_name: str) -> Path:
-        current_path = Path(__file__).parent
-        day = current_path.name
-        current_path = current_path.parent
-        year = current_path.name
-
-        # traverse up directories to the private files
-        private_files_base = current_path.parents[2] / "adventOfCodePrivateFiles"
-
-        input_path = private_files_base / year / day / file_name
-        return input_path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))  # repo root
+import Modules.aoc_io
 
 class block_range: 
     def __init__(self, start: int, end: int): 
@@ -77,11 +68,8 @@ class block_range:
         return ip_count 
 
 def load_test_data(file_name: str) -> List[block_range]: 
-    result = [] 
-    path = get_input_filepath(file_name)
-    with open(path) as file: 
-        for line in file.readlines():
-            result.append(block_range.parse(line))
+    inputs = Modules.aoc_io.read_input(2016, 20, file_name)
+    result = [block_range.parse(line) for line in inputs.split('\n')]
     return result
 
 def main(): 

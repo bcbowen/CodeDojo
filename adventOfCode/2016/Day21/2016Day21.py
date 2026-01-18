@@ -1,33 +1,16 @@
 import pytest
 from typing import List
+import sys
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))  # repo root
+import Modules.aoc_io
 
-def get_input_filepath(file_name: str) -> Path:
-        current_path = Path(__file__).parent
-        day = current_path.name
-        current_path = current_path.parent
-        year = current_path.name
-
-        # traverse up directories to the private files
-        private_files_base = current_path.parents[2] / "adventOfCodePrivateFiles"
-
-        input_path = private_files_base / year / day / file_name
-        return input_path
 
 def load_password(file_name: str) -> str: 
-    result = ""
-    
-    path = get_input_filepath(file_name)
-    with open(path, 'r') as file: 
-        result = file.read()
-    return result
+    return Modules.aoc_io.read_input(2016, 21, file_name)
 
 def load_commands(file_name: str) -> List[str]: 
-    commands = [] 
-    path = get_input_filepath(file_name)
-    with open(path, 'r') as file: 
-        commands = file.readlines()
-    return commands
+    return Modules.aoc_io.read_input(2016, 21, file_name).split('\n')
 
 def process_command(command: str, password: str) -> str:
     parts = command.split()

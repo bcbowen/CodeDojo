@@ -1,6 +1,9 @@
 import pytest
 from typing import List, Tuple
+import sys
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))  # repo root
+import Modules.aoc_io
 
 class StorageNode: 
     def __init__(self, name: str, size: int, used: int, avail: int, use_pct: float): 
@@ -14,30 +17,12 @@ class StorageNode:
         parts = self.name.split('-')
         x = int(parts[1][1:])
         y = int(parts[2][1:])
-        return (x, y)
-
-
-def get_input_filepath(file_name: str) -> Path:
-        current_path = Path(__file__).parent
-        day = current_path.name
-        current_path = current_path.parent
-        year = current_path.name
-
-        # traverse up directories to the private files
-        private_files_base = current_path.parents[2] / "adventOfCodePrivateFiles"
-
-        input_path = private_files_base / year / day / file_name
-        return input_path
-
-#def get_dimensions(line: str) -> Tuple[int, int]: 
-    
+        return (x, y)  
 
 # 38 col * 24 row
 def load_input() -> List[List[StorageNode]]:
 
-    path = get_input_filepath("input.txt")
-    with open(path, 'r') as f: 
-        lines = f.readlines()
+    lines = Modules.aoc_io.read_input(2016, 22, "input.txt").split('\n')
     
     temp_nodes : List[List[StorageNode | None ]]= [[None for _ in range(38)] for _ in range(24)]
     for line in lines[2:]: 

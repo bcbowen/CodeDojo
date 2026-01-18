@@ -1,23 +1,14 @@
 import pytest
+import sys
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))  # repo root
+import Modules.aoc_io
 from typing import List, Tuple
 
-def get_input_filepath(file_name: str) -> Path:
-        current_path = Path(__file__).parent
-        day = current_path.name
-        current_path = current_path.parent
-        year = current_path.name
-
-        # traverse up directories to the private files
-        private_files_base = current_path.parents[2] / "adventOfCodePrivateFiles"
-
-        input_path = private_files_base / year / day / file_name
-        return input_path
 
 def load_disks(file_name: str) -> List[Tuple[int, int]]: 
-    path = get_input_filepath(file_name)
-    with open(path, "r") as file: 
-        disks = [parse_disk(line) for line in file.readlines()]
+    text = Modules.aoc_io.read_input(2016, 15, file_name)
+    disks = [parse_disk(line) for line in text.split('\n')] 
     return disks
 
 def parse_disk(line: str) -> Tuple[int, int]: 
