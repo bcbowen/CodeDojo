@@ -1,29 +1,20 @@
 import pytest
+import sys
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))  # repo root
+import Modules.aoc_io
 from typing import List
 
-def get_input_filepath(file_name: str) -> Path:
-        current_path = Path(__file__).parent
-        day = current_path.name
-        current_path = current_path.parent
-        year = current_path.name
-
-        # traverse up directories to the private files
-        private_files_base = current_path.parents[2] / "adventOfCodePrivateFiles"
-
-        input_path = private_files_base / year / day / file_name
-        return input_path
 
 def load_data(file_name: str) -> List[List[int]]: 
-    path = get_input_filepath(file_name)
     data = []
-    with open(path, "rt") as file: 
-        #data = [[int(value) for value in line.strip().split('\t')] for line in file]
-        for line in file.readlines():
-            line = line.strip()
-            vals = line.split()
-            data.append([int(val) for val in vals])
+
+    for line in Modules.aoc_io.read_input(2017, 2, file_name).split('\n'):
+        line = line.strip()
+        vals = line.split()
+        data.append([int(val) for val in vals])
     return data
+
 
 def main(): 
     file_name = "input.txt"

@@ -1,14 +1,12 @@
 import pytest
-from pathlib import Path
-
 import sys
-sys.path.append('adventOfCode/Modules')
-from FileUtility import get_input_filepath
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))  # repo root
+import Modules.aoc_io
+
 
 def load_input(file_name: str) -> list[int]: 
-    path = get_input_filepath(file_name, __file__)
-    with open(path, "r") as file: 
-        return [int(line.strip()) for line in file.readlines()]
+    return [int(line.strip()) for line in Modules.aoc_io.read_input(2020, 1, file_name).split()]
 
 def part1(file_name: str) -> int: 
     values = load_input(file_name)
