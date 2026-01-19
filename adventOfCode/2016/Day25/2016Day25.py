@@ -8,7 +8,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))  # repo root
 
 
 def get_inputs(file_name: str) -> str:
-    text = Modules.aoc_io.read_input(2024, 1, file_name)
+    text = Modules.aoc_io.read_input(2016, 25, file_name)
     return text
 
 def main(): 
