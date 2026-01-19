@@ -1,7 +1,10 @@
 import math
 import pytest
 from typing import List
+import sys
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))  # repo root
+import Modules.aoc_io
 
 class HomeworkProblem: 
 
@@ -26,24 +29,9 @@ class HomeworkProblem:
 
         return total
 
-def get_input_filepath(file_name: str) -> Path:
-    current_path = Path(__file__).parent
-    day = current_path.name
-    current_path = current_path.parent
-    year = current_path.name
-
-    # traverse up directories to the private files
-    private_files_base = current_path.parents[2] / "adventOfCodePrivateFiles"
-
-    input_path = private_files_base / year / day / file_name
-    return input_path
-
 def get_inputs(file_name: str) -> List[HomeworkProblem]: 
     inputs = [] 
-    lines = []
-    path = get_input_filepath(file_name)
-    with open(path, "r") as file: 
-        lines = file.readlines()
+    lines = Modules.aoc_io.read_input(2025, 6, file_name).split('\n')
 
     # get numerical values
     for i in range(len(lines) - 1):

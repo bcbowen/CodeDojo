@@ -2,7 +2,10 @@ import pytest
 from collections import defaultdict
 from ordered_enum import OrderedEnum
 from functools import cmp_to_key
+import sys
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))  # repo root
+import Modules.aoc_io
 
 
 class Hand(OrderedEnum):
@@ -41,18 +44,6 @@ class Game:
 
     def __init__(self):
         pass
-
-    def get_input_filepath(file_name: str):
-        current_path = Path(__file__).parent
-        day = current_path.name
-        current_path = current_path.parent
-        year = current_path.name
-
-        # traverse up directories to the private files
-        private_files_base = current_path.parents[2] / "adventOfCodePrivateFiles"
-
-        input_path = private_files_base / year / day / file_name
-        return input_path
 
     def load(self, file_name: str) -> list[Bet]:
         content = Modules.aoc_io.read_input(2023, 7, file_name)

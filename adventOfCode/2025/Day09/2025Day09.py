@@ -1,26 +1,15 @@
 import pytest
 from typing import List, Tuple
+import sys
 from pathlib import Path
-
-def get_input_filepath(file_name: str) -> Path:
-    current_path = Path(__file__).parent
-    day = current_path.name
-    current_path = current_path.parent
-    year = current_path.name
-
-    # traverse up directories to the private files
-    private_files_base = current_path.parents[2] / "adventOfCodePrivateFiles"
-
-    input_path = private_files_base / year / day / file_name
-    return input_path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))  # repo root
+import Modules.aoc_io
 
 def get_inputs(file_name: str) -> List[Tuple[int, int]]:
-    path = get_input_filepath(file_name)
     inputs = []
-    with open(path, "r") as file: 
-        for line in file:
-            a, b = map(int, line.strip().split(','))
-            inputs.append((a, b))
+    for line in Modules.aoc_io.read_input(2025, 9, file_name).split('\n'):
+        a, b = map(int, line.strip().split(','))
+        inputs.append((a, b))
 
     return inputs
 

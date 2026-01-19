@@ -1,7 +1,10 @@
 import math
 import pytest
 from typing import List
+import sys
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))  # repo root
+import Modules.aoc_io
 
 class HomeworkProblem: 
 
@@ -39,26 +42,12 @@ class HomeworkProblem:
 
         return total
 
-def get_input_filepath(file_name: str) -> Path:
-    current_path = Path(__file__).parent
-    day = current_path.name
-    current_path = current_path.parent
-    year = current_path.name
-
-    # traverse up directories to the private files
-    private_files_base = current_path.parents[2] / "adventOfCodePrivateFiles"
-
-    input_path = private_files_base / year / day / file_name
-    return input_path
 
 def get_inputs(file_name: str) -> List[HomeworkProblem]: 
     inputs = [] 
-    lines = []
-    path = get_input_filepath(file_name)
-    with open(path, "r") as file: 
-        lines = [line.strip('\n') + ' ' for line in file.readlines()]
+    lines = [line.strip('\n') + ' ' for line in Modules.aoc_io.read_input(2025, 6, file_name).split('\n')]
 
-        next_problem = HomeworkProblem()
+    next_problem = HomeworkProblem()
     
     pos = 0
     while len(lines[0]) > 0: 
@@ -93,6 +82,7 @@ def main():
     print(f"Part 2 result: {result}")
 
 def part2(file_name: str) -> int: 
+    #inputs = get_inputs(file_name)
     inputs = get_inputs(file_name)
     return HomeworkProblem.calculate_all(inputs)
 
@@ -146,6 +136,7 @@ def test_get_numbers(values: List[str], expected: List[int]):
 
 def test_get_inputs(): 
     file_name = "sample.txt"
+    #inputs = get_inputs(file_name)
     inputs = get_inputs(file_name)
     assert(len(inputs) == 4)
     p = inputs[0]

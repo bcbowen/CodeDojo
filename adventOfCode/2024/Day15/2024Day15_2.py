@@ -1,5 +1,8 @@
 import pytest
+import sys
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))  # repo root
+import Modules.aoc_io
 from collections import namedtuple
 
 Direction = namedtuple('Direction', ['y', 'x'])
@@ -10,18 +13,6 @@ South = Direction(1, 0)
 North = Direction(-1, 0)
 
 debug_mode = False
-
-def get_input_filepath(file_name: str):
-    current_path = Path(__file__).parent
-    day = current_path.name
-    current_path = current_path.parent
-    year = current_path.name
-
-    # traverse up directories to the private files
-    private_files_base = current_path.parents[2] / "adventOfCodePrivateFiles"
-
-    input_path = private_files_base / year / day / file_name
-    return input_path
 
 def expand_grid(grid : list[list[str]]) -> list[list[str]]:
     new_grid = [] 
@@ -38,30 +29,26 @@ def expand_grid(grid : list[list[str]]) -> list[list[str]]:
     return new_grid
 
 def load_input(file_name : str) -> tuple[list[list[str]], list[str]]:
-    path = get_input_filepath(file_name)
-    with open(path, "r") as file: 
-        lines = file.readlines()
-        grid = []
-        for index, line in enumerate(lines): 
-            if line.strip() == "": 
-                break
-            grid.append(list(line.strip()))
-        index += 1
-        moves = [line for line in lines[index:]]
+    lines = Modules.aoc_io.read_input(2024, 15, file_name).split('\n')
+    grid = []
+    for index, line in enumerate(lines): 
+        if line.strip() == "": 
+            break
+        grid.append(list(line.strip()))
+    index += 1
+    moves = [line for line in lines[index:]]
 
-        grid = expand_grid(grid)
-        return grid, moves
+    grid = expand_grid(grid)
+    return grid, moves
 
 
 def load_grid(file_name : str) -> list[list[str]]:
-    path = get_input_filepath(file_name)
-    with open(path, "r") as file: 
-        lines = file.readlines()
-        grid = []
-        for index, line in enumerate(lines): 
-            if line.strip() == "": 
-                break
-            grid.append(list(line.strip()))
+    lines = Modules.aoc_io.read_input(2024, 15, file_name).split('\n')
+    grid = []
+    for index, line in enumerate(lines): 
+        if line.strip() == "": 
+            break
+        grid.append(list(line.strip()))
     return grid
 
 def find_robot(grid : list[list[str]]) -> Point: 

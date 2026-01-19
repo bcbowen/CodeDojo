@@ -1,37 +1,26 @@
 import math
 import pytest
+import sys
 from pathlib import Path
-from typing import Dict, List, Tuple
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))  # repo root
+import Modules.aoc_io
+from typing import List, Tuple
 
 """
 borrowed this approach (with thanks) from hyperneutrino: 
 https://www.youtube.com/watch?v=Rd7c4Wx7QDg
 """
-def get_input_filepath(file_name: str) -> Path:
-    current_path = Path(__file__).parent
-    day = current_path.name
-    current_path = current_path.parent
-    year = current_path.name
-
-    # traverse up directories to the private files
-    private_files_base = current_path.parents[2] / "adventOfCodePrivateFiles"
-
-    input_path = private_files_base / year / day / file_name
-    return input_path
 
 """
     Return boxes from input (x, y, z) and all edges, sorted by dist (i, j)
     Edges are index of bozes
 """
 def get_inputs(file_name: str) -> Tuple[List[Tuple[int, ...]], List[Tuple[int, int]]]:  
-    path = get_input_filepath(file_name)
-
-    with open(path, "r") as file: 
-        boxes : List[Tuple[int, ...]] = [
-            tuple(int(i) for i in line.strip().split(',')) for line in file
-        ]
-        edges : List[Tuple[int, int]] = [(i, j) for i in range(len(boxes) - 1) for j in range(i + 1, len(boxes))]
-        edges.sort(key = lambda x: math.hypot(*[x - y for x, y in zip(boxes[x[0]], boxes[x[1]])]))
+    boxes : List[Tuple[int, ...]] = [
+        tuple(int(i) for i in line.strip().split(',')) for line in Modules.aoc_io.read_input(2025, 8, file_name).split('\n')
+    ]
+    edges : List[Tuple[int, int]] = [(i, j) for i in range(len(boxes) - 1) for j in range(i + 1, len(boxes))]
+    edges.sort(key = lambda x: math.hypot(*[x - y for x, y in zip(boxes[x[0]], boxes[x[1]])]))
     return (boxes, edges)
 
 def main():

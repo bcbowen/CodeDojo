@@ -1,25 +1,14 @@
 import pytest
+import sys
 from pathlib import Path
-
-def get_input_filepath(file_name: str) -> str:
-    current_path = Path(__file__).parent
-    day = current_path.name
-    current_path = current_path.parent
-    year = current_path.name
-
-    # traverse up directories to the private files
-    private_files_base = current_path.parents[2] / "adventOfCodePrivateFiles"
-
-    input_path = private_files_base / year / day / file_name
-    return input_path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))  # repo root
+import Modules.aoc_io
 
 
 def get_test_data(file_name: str) -> tuple[list[str], list[str]]: 
-    path = get_input_filepath(file_name)
-    with open(path, "r") as file: 
-        lines = file.readlines()
-        patterns = [value.strip() for value in lines[0].split(', ')]
-        designs = [line.strip() for line in lines[2:]]
+    lines = Modules.aoc_io.read_input(2024, 19, file_name).split('\n')
+    patterns = [value.strip() for value in lines[0].split(', ')]
+    designs = [line.strip() for line in lines[2:]]
     return patterns, designs
 
 def get_possible_pattern_count(patterns : list[str], designs: list[str]) -> int: 
