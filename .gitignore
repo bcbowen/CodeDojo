@@ -19,6 +19,7 @@ mono_crash.*
 # Jupyter checkpoints
 .ipynb_checkpoints
 
+**/.vscode
 .vscode/*
 !.vscode/launch.json
 

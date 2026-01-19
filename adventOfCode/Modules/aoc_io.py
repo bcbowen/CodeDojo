@@ -1,8 +1,10 @@
 from pathlib import Path
 import os
+from dotenv import load_dotenv; load_dotenv()
 
 def input_path(year: int, day: int, file_name: str) -> Path:
     base = os.environ.get("AOC_INPUTS_DIR")
+    #print(os.environ)
     if not base:
         raise RuntimeError(
             "Set AOC_INPUTS_DIR to your private inputs folder "

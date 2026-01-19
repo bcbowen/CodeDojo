@@ -5,7 +5,6 @@ from typing import List
 class Solution:
     def sortByReflection(self, nums: List[int]) -> List[int]:
         reflections = [(num, int(bin(num)[2:][::-1].lstrip('0'), 2)) for num in nums]
-        # print(bin(n)[2:][::-1].lstrip('0'))
         reflections.sort(key=lambda x: (x[1], x[0]))
         return [r[0] for r in reflections]
     
