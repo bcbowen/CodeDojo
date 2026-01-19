@@ -2,32 +2,23 @@ import pytest
 from collections import deque
 from typing import List, Tuple
 from pathlib import Path
+import sys
 
-def get_input_filepath(file_name: str) -> Path:
-    current_path = Path(__file__).parent
-    day = current_path.name
-    current_path = current_path.parent
-    year = current_path.name
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))  # repo root
+import Modules.aoc_io
 
-    # traverse up directories to the private files
-    private_files_base = current_path.parents[2] / "adventOfCodePrivateFiles"
-
-    input_path = private_files_base / year / day / file_name
-    return input_path
 
 def get_inputs(file_name: str) -> List[Tuple[int, int]]:
-    path = get_input_filepath(file_name)
+    content = Modules.aoc_io.read_input(2025, 9, file_name)
     inputs = []
-    with open(path, "r") as file: 
-        for line in file:
-            a, b = map(int, line.strip().split(','))
-            inputs.append((a, b))
+    for line in content.split("\n"):
+        a, b = map(int, line.strip().split(","))
+        inputs.append((a, b))
 
     return inputs
 
 
-def part2(file_name: str) -> int: 
-
+def part2(file_name: str) -> int:
     def valid(x1, y1, x2, y2):
         cx1, cx2 = sorted([xs.index(x1) * 2, xs.index(x2) * 2])
         cy1, cy2 = sorted([ys.index(y1) * 2, ys.index(y2) * 2])
@@ -39,8 +30,8 @@ def part2(file_name: str) -> int:
 
     points = get_inputs(file_name)
 
-    xs = sorted({ x for x, _ in points })
-    ys = sorted({ y for _, y in points })
+    xs = sorted({x for x, _ in points})
+    ys = sorted({y for _, y in points})
 
     grid = [[0] * (len(ys) * 2 - 1) for _ in range(len(xs) * 2 - 1)]
 
@@ -57,9 +48,12 @@ def part2(file_name: str) -> int:
     while len(queue) > 0:
         tx, ty = queue.popleft()
         for nx, ny in [(tx - 1, ty), (tx + 1, ty), (tx, ty - 1), (tx, ty + 1)]:
-            if nx < -1 or ny < -1 or nx > len(grid) or ny > len(grid[0]): continue
-            if 0 <= nx < len(grid) and 0 <= ny < len(grid[0]) and grid[nx][ny] == 1: continue
-            if (nx, ny) in outside: continue
+            if nx < -1 or ny < -1 or nx > len(grid) or ny > len(grid[0]):
+                continue
+            if 0 <= nx < len(grid) and 0 <= ny < len(grid[0]) and grid[nx][ny] == 1:
+                continue
+            if (nx, ny) in outside:
+                continue
             outside.add((nx, ny))
             queue.append((nx, ny))
 
@@ -77,19 +71,26 @@ def part2(file_name: str) -> int:
             topleft = psa[x - 1][y - 1] if x > 0 < y else 0
             psa[x][y] = left + top - topleft + grid[x][y]
 
-    return max((abs(x1 - x2) + 1) * (abs(y1 - y2) + 1) for i, (x1, y1) in enumerate(points) for x2, y2 in points[:i] if valid(x1, y1, x2, y2))
+    return max(
+        (abs(x1 - x2) + 1) * (abs(y1 - y2) + 1)
+        for i, (x1, y1) in enumerate(points)
+        for x2, y2 in points[:i]
+        if valid(x1, y1, x2, y2)
+    )
 
 
-def main(): 
+def main():
     file_name = "input.txt"
     result = part2(file_name)
     print(f"Part2 result: {result}")
 
-def test_part2(): 
+
+def test_part2():
     file_name = "sample.txt"
     expected = 24
     result = part2(file_name)
-    assert(result == expected)
+    assert result == expected
+
 
 if __name__ == "__main__":
     pytest.main([__file__])

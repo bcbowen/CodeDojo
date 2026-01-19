@@ -2,30 +2,25 @@ import pytest
 import re
 from typing import List
 from pathlib import Path
+import sys
 
-def get_input_filepath(file_name: str) -> Path:
-    current_path = Path(__file__).parent
-    day = current_path.name
-    current_path = current_path.parent
-    year = current_path.name
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))  # repo root
+import Modules.aoc_io
 
-    # traverse up directories to the private files
-    private_files_base = current_path.parents[2] / "adventOfCodePrivateFiles"
 
-    input_path = private_files_base / year / day / file_name
-    return input_path
+def get_inputs(file_name: str):
+    content = Modules.aoc_io.read_input(2025, 12, file_name)
 
-def get_inputs(file_name: str): 
-    path = get_input_filepath(file_name)
-
-    lines = open(path).read().split("\n\n")[-1].splitlines()
+    lines = content.split("\n\n")[-1].splitlines()
     return lines
 
-def main(): 
+
+def main():
     result = part1()
     print(f"Part1 result: {result}")
 
-def part1() -> int: 
+
+def part1() -> int:
     file_name = "input.txt"
     lines = get_inputs(file_name)
 
@@ -37,6 +32,7 @@ def part1() -> int:
             total += 1
 
     return total
+
 
 if __name__ == "__main__":
     pytest.main([__file__])

@@ -4,17 +4,18 @@ from ordered_enum import OrderedEnum
 from functools import cmp_to_key
 from pathlib import Path
 
-class Hand(OrderedEnum): 
-    HighCard = 1,
-    OnePair = 2, 
-    TwoPair = 3,
-    ThreeOfAKind = 4,
-    FullHouse = 5,
-    FourOfAKind = 6,
-    FiveOfAKind = 7 
+
+class Hand(OrderedEnum):
+    HighCard = (1,)
+    OnePair = (2,)
+    TwoPair = (3,)
+    ThreeOfAKind = (4,)
+    FullHouse = (5,)
+    FourOfAKind = (6,)
+    FiveOfAKind = 7
 
 
-class Bet: 
+class Bet:
     def __init__(self, cards: str, bet: int):
         self.place = 0
         self.cards = cards
@@ -22,47 +23,57 @@ class Bet:
 
 
 class Game:
-    card_values = { "A": 14, "K": 13, "Q": 12, "J": 11, "T": 10, "9": 9, "8": 8, "7" : 7, "6" : 6, "5" : 5, "4" : 4 , "3" : 3, "2" : 2 } 
-    def __init__(self): 
+    card_values = {
+        "A": 14,
+        "K": 13,
+        "Q": 12,
+        "J": 11,
+        "T": 10,
+        "9": 9,
+        "8": 8,
+        "7": 7,
+        "6": 6,
+        "5": 5,
+        "4": 4,
+        "3": 3,
+        "2": 2,
+    }
+
+    def __init__(self):
         pass
 
-    def get_input_filepath(file_name: str): 
+    def get_input_filepath(file_name: str):
         current_path = Path(__file__).parent
         day = current_path.name
         current_path = current_path.parent
         year = current_path.name
 
-        # traverse up directories to the private files 
+        # traverse up directories to the private files
         private_files_base = current_path.parents[2] / "adventOfCodePrivateFiles"
-        
+
         input_path = private_files_base / year / day / file_name
         return input_path
 
-    def load(self, file_name: str) -> list[Bet]: 
-        input_path = Game.get_input_filepath(file_name)
+    def load(self, file_name: str) -> list[Bet]:
+        content = Modules.aoc_io.read_input(2023, 7, file_name)
+        lines = content.split("\n")
         bets = []
-        with open(input_path) as file: 
-            text = file.read() 
-            lines = text.split('\n')
-            
-            for line in lines: 
-                fields = line.split(' ')
-                bet = Bet(cards=fields[0], bet=int(fields[1]))
-                bets.append(bet)
-                
-            file.close()
+        for line in lines:
+            fields = line.split(" ")
+            bet = Bet(cards=fields[0], bet=int(fields[1]))
+            bets.append(bet)
         return bets
 
-    def play(self, file_name: str) -> int: 
+    def play(self, file_name: str) -> int:
         bets = self.load(file_name)
         bets = sorted(bets, key=cmp_to_key(Game.compare_bets))
         score = 0
         place = 1
-        for bet in bets: 
+        for bet in bets:
             score += bet.bet * place
             place += 1
         return score
-    
+
     def compare_bets(b1: Bet, b2: Bet) -> int:
         return Game.compare_hands(b1.cards, b2.cards)
 
@@ -70,89 +81,97 @@ class Game:
         h1 = Game.get_hand(c1)
         h2 = Game.get_hand(c2)
 
-        if h1 < h2: 
+        if h1 < h2:
             return -1
         elif h1 > h2:
             return 1
-        else: 
-            for i in range(len(c1)): 
-                if Game.card_values[c1[i]] < Game.card_values[c2[i]]: 
+        else:
+            for i in range(len(c1)):
+                if Game.card_values[c1[i]] < Game.card_values[c2[i]]:
                     return -1
                 elif Game.card_values[c1[i]] > Game.card_values[c2[i]]:
                     return 1
         return 0
-    
-    def get_hand(cards: str) -> Hand: 
+
+    def get_hand(cards: str) -> Hand:
         counts = defaultdict(int)
-        for card in cards: 
+        for card in cards:
             counts[card] += 1
         key_len = len(counts.keys())
         values = list(counts.values())
-        if key_len == 1: 
+        if key_len == 1:
             return Hand.FiveOfAKind
-        if key_len == 2: 
-            if values[0] in [4, 1]: 
+        if key_len == 2:
+            if values[0] in [4, 1]:
                 return Hand.FourOfAKind
-            else: 
+            else:
                 return Hand.FullHouse
-        if 3 in values: 
+        if 3 in values:
             return Hand.ThreeOfAKind
-        if key_len == 3: 
+        if key_len == 3:
             return Hand.TwoPair
-        if 2 in values: 
+        if 2 in values:
             return Hand.OnePair
         return Hand.HighCard
 
 
-def part1(): 
+def part1():
     file_name = "input.txt"
-    game = Game(); 
+    game = Game()
     result = game.play(file_name=file_name)
     print(f"Part1: {result}")
 
-@pytest.mark.parametrize("c1, c2, expected", [
-    ("QQQQQ", "QQQQ2", 1),
-    ("QQQQ2", "QQQQQ", -1),
-    ("22222", "QQQQQ", -1),
-    ("QQQQQ", "22222", 1),
-    ("Q2222", "QQQKK", 1),
-    ("QQQKK", "Q2222", -1),
-    ("2222K", "K2222", -1),
-    ("A2222", "AAAA2", -1),
-    ("A2345", "22345", -1), 
-])
-def test_CompareHands(c1: str, c2: str, expected: int): 
+
+@pytest.mark.parametrize(
+    "c1, c2, expected",
+    [
+        ("QQQQQ", "QQQQ2", 1),
+        ("QQQQ2", "QQQQQ", -1),
+        ("22222", "QQQQQ", -1),
+        ("QQQQQ", "22222", 1),
+        ("Q2222", "QQQKK", 1),
+        ("QQQKK", "Q2222", -1),
+        ("2222K", "K2222", -1),
+        ("A2222", "AAAA2", -1),
+        ("A2345", "22345", -1),
+    ],
+)
+def test_CompareHands(c1: str, c2: str, expected: int):
     result = Game.compare_hands(c1, c2)
-    assert(expected == result) 
+    assert expected == result
 
-@pytest.mark.parametrize("cards, expected", [
-    ("QQQQQ", Hand.FiveOfAKind),
-    ("Q2222", Hand.FourOfAKind),
-    ("QQQQ2", Hand.FourOfAKind),
-    ("QQQ22", Hand.FullHouse),
-    ("22QQQ", Hand.FullHouse),
-    ("2Q2Q2", Hand.FullHouse),
-    ("2Q232", Hand.ThreeOfAKind),
-    ("QQQ23", Hand.ThreeOfAKind),
-    ("42423", Hand.TwoPair),
-    ("44233", Hand.TwoPair),
-    ("52344", Hand.OnePair),
-    ("52534", Hand.OnePair),
-    ("55234", Hand.OnePair),
-    ("62345", Hand.HighCard),
-])
-def test_GetHand(cards: str, expected: Hand): 
+
+@pytest.mark.parametrize(
+    "cards, expected",
+    [
+        ("QQQQQ", Hand.FiveOfAKind),
+        ("Q2222", Hand.FourOfAKind),
+        ("QQQQ2", Hand.FourOfAKind),
+        ("QQQ22", Hand.FullHouse),
+        ("22QQQ", Hand.FullHouse),
+        ("2Q2Q2", Hand.FullHouse),
+        ("2Q232", Hand.ThreeOfAKind),
+        ("QQQ23", Hand.ThreeOfAKind),
+        ("42423", Hand.TwoPair),
+        ("44233", Hand.TwoPair),
+        ("52344", Hand.OnePair),
+        ("52534", Hand.OnePair),
+        ("55234", Hand.OnePair),
+        ("62345", Hand.HighCard),
+    ],
+)
+def test_GetHand(cards: str, expected: Hand):
     result = Game.get_hand(cards)
-    assert(expected == result) 
+    assert expected == result
 
-@pytest.mark.parametrize("file_name, expected", [
-    ("sample.txt", 6440)
-])
-def test_game(file_name: str, expected: int): 
+
+@pytest.mark.parametrize("file_name, expected", [("sample.txt", 6440)])
+def test_game(file_name: str, expected: int):
     game = Game()
     result = game.play(file_name=file_name)
-    assert(expected == result)
+    assert expected == result
 
-if __name__ == "__main__": 
+
+if __name__ == "__main__":
     pytest.main([__file__])
     part1()

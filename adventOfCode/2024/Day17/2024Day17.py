@@ -1,27 +1,20 @@
 import pytest
 from pathlib import Path
+import sys
 
-class ElfWare: 
-    def __init__(self): 
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))  # repo root
+import Modules.aoc_io
+
+
+class ElfWare:
+    def __init__(self):
         self.reg_a = 0
         self.reg_b = 0
         self.reg_c = 0
-        
-        self.program : list[int] = [] 
 
-    def get_input_filepath(self, file_name: str) -> str:
-        current_path = Path(__file__).parent
-        day = current_path.name
-        current_path = current_path.parent
-        year = current_path.name
+        self.program: list[int] = []
 
-        # traverse up directories to the private files
-        private_files_base = current_path.parents[2] / "adventOfCodePrivateFiles"
-
-        input_path = private_files_base / year / day / file_name
-        return input_path
-    
-    def copy(self) -> 'ElfWare': 
+    def copy(self) -> "ElfWare":
         p = ElfWare()
         p.reg_a = self.reg_a
         p.reg_b = self.reg_b
@@ -30,25 +23,18 @@ class ElfWare:
 
         return p
 
-    def load(self, file_name: str): 
-        def parse_input_val(line: str) -> str: 
-            fields = line.split(':')
+    def load(self, file_name: str):
+        def parse_input_val(line: str) -> str:
+            fields = line.split(":")
             return fields[1].strip()
-        
-        path = self.get_input_filepath(file_name)
-        with open(path, "r") as file: 
-            line = file.readline()
-            self.reg_a = int(parse_input_val(line))
 
-            line = file.readline()
-            self.reg_b = int(parse_input_val(line))
+        content = Modules.aoc_io.read_input(2024, 17, file_name)
+        lines = content.split("\n")
+        self.reg_a = int(parse_input_val(lines[0]))
+        self.reg_b = int(parse_input_val(lines[1]))
+        self.reg_c = int(parse_input_val(lines[2]))
+        self.program = [int(val) for val in parse_input_val(lines[4]).split(",")]
 
-            line = file.readline()
-            self.reg_c = int(parse_input_val(line))
-
-            line = file.readline() 
-            self.program = [int(val) for val in parse_input_val(file.readline()).split(',') ]
-    
     """
     Combo operands 0 through 3 represent literal values 0 through 3.
     Combo operand 4 represents the value of register A.
@@ -56,7 +42,6 @@ class ElfWare:
     Combo operand 6 represents the value of register C.
     Combo operand 7 is reserved and will not appear in valid programs.
     """
-    
 
     """
     The adv instruction (opcode 0) performs division. The numerator is the value in the A register. 
@@ -64,38 +49,40 @@ class ElfWare:
     operand of 2 would divide A by 4 (2^2); an operand of 5 would divide A by 2^B.) The result of 
     the division operation is truncated to an integer and then written to the A register.
     """
-    def __get_combo_op__(self, val : int) -> int: 
-        if val < 0 or val > 6: 
+
+    def __get_combo_op__(self, val: int) -> int:
+        if val < 0 or val > 6:
             raise Exception("Invalid value for combo operand")
-        match val: 
-            case 4: 
+        match val:
+            case 4:
                 return self.reg_a
-            case 5: 
+            case 5:
                 return self.reg_b
-            case 6: 
+            case 6:
                 return self.reg_c
-            case _: 
+            case _:
                 return val
-            
-    
-    def adv(self, arg: int): 
+
+    def adv(self, arg: int):
         val = self.__get_combo_op__(arg)
-        
-        result = self.reg_a // 2 ** val
+
+        result = self.reg_a // 2**val
         self.reg_a = result
 
     """
     The bxl instruction (opcode 1) calculates the bitwise XOR of register B and the instruction's 
     literal operand, then stores the result in register B.
     """
-    def bxl(self, arg: int): 
+
+    def bxl(self, arg: int):
         self.reg_b = self.reg_b ^ arg
 
     """    
     The bst instruction (opcode 2) calculates the value of its combo operand modulo 8 (thereby 
     keeping only its lowest 3 bits), then writes that value to the B register.
     """
-    def bst(self, arg: int): 
+
+    def bst(self, arg: int):
         val = self.__get_combo_op__(arg) % 8
         self.reg_b = val
 
@@ -106,8 +93,9 @@ class ElfWare:
 
     Note: Set the instruction pointer to the return value if it is > -1, leave it alone otherwise
     """
-    def jnz(self, arg: int) -> int: 
-        if self.reg_a != 0: 
+
+    def jnz(self, arg: int) -> int:
+        if self.reg_a != 0:
             return arg
         return -1
 
@@ -116,14 +104,16 @@ class ElfWare:
     stores the result in register B. (For legacy reasons, this instruction reads an operand but 
     ignores it.)
     """
-    def bxc(self, arg): 
+
+    def bxc(self, arg):
         self.reg_b = self.reg_b ^ self.reg_c
 
     """
     The out instruction (opcode 5) calculates the value of its combo operand modulo 8, then outputs 
     that value. (If a program outputs multiple values, they are separated by commas.)
     """
-    def out(self, arg : int) -> int: 
+
+    def out(self, arg: int) -> int:
         val = self.__get_combo_op__(arg)
         return val % 8
 
@@ -131,41 +121,43 @@ class ElfWare:
     The bdv instruction (opcode 6) works exactly like the adv instruction except that the result is 
     stored in the B register. (The numerator is still read from the A register.)
     """
-    def bdv(self, arg: int): 
+
+    def bdv(self, arg: int):
         val = self.__get_combo_op__(arg)
-        
-        result = self.reg_a // 2 ** val
+
+        result = self.reg_a // 2**val
         self.reg_b = result
 
     """
     The cdv instruction (opcode 7) works exactly like the adv instruction except that the result is 
     stored in the C register. (The numerator is still read from the A register.)
     """
-    def cdv(self, arg: int): 
+
+    def cdv(self, arg: int):
         val = self.__get_combo_op__(arg)
-        
-        result = self.reg_a // 2 ** val
+
+        result = self.reg_a // 2**val
         self.reg_c = result
 
     def __execute__(self, opcode: int, arg: int) -> int:
-        match opcode: 
-            case 0: 
+        match opcode:
+            case 0:
                 self.adv(arg)
-            case 1: 
+            case 1:
                 self.bxl(arg)
-            case 2: 
+            case 2:
                 self.bst(arg)
-            case 3: 
+            case 3:
                 return self.jnz(arg)
-            case 4: 
+            case 4:
                 self.bxc(arg)
-            case 5: 
+            case 5:
                 return self.out(arg)
-            case 6: 
+            case 6:
                 self.bdv(arg)
-            case 7: 
+            case 7:
                 self.cdv(arg)
-            case _: 
+            case _:
                 raise Exception("Unsupported opcode")
 
     """
@@ -188,38 +180,40 @@ class ElfWare:
 
     """
 
-
-    def run(self) -> str: 
+    def run(self) -> str:
         ptr = 0
         output = []
         while ptr < len(self.program):
             cmd = self.program[ptr]
             arg = self.program[ptr + 1]
             result = self.__execute__(cmd, arg)
-            if cmd == 3 and result > -1: 
+            if cmd == 3 and result > -1:
                 ptr = result
-            else: 
+            else:
                 ptr += 2
-            
-            if cmd == 5: 
+
+            if cmd == 5:
                 output.append(result)
-        
-        return ','.join(str(val) for val in output)
-    
-def main(): 
+
+        return ",".join(str(val) for val in output)
+
+
+def main():
     file_name = "input.txt"
     p = ElfWare()
     p.load(file_name)
     result = p.run()
     print(f"Part 1 result for {file_name}: {result}")
 
-def part1(file_name: str) -> str: 
+
+def part1(file_name: str) -> str:
     p = ElfWare()
     p.load(file_name)
     result = p.run()
     return result
 
-def part2(file_name : str) -> int: 
+
+def part2(file_name: str) -> int:
     return -1
     """
     p = ElfWare()
@@ -264,15 +258,29 @@ the registers to the given values, then run the given program, collecting any ou
 by out instructions. (Always join the values produced by out instructions with commas.) After 
 the above program halts, its final output will be 4,6,3,5,6,3,5,2,1,0.
 """
-@pytest.mark.parametrize("a_in, b_in, c_in, program, a_ex, b_ex, c_ex, expected_output", [
-    (0, 0, 9, [2,6], 0, 1, 0, ""),
-    (10, 0, 0, [5,0,5,1,5,4], 10, 0, 0, "0,1,2"),
-    (2024, 0, 0, [0,1,5,4,3,0], 0, 0, 0, "4,2,5,6,7,7,7,7,3,1,0"),
-    (0, 29, 0, [1,7], 0, 26, 0, ""),
-    (0, 2024, 43690, [4,0], 0, 44354, 0, ""),
-    (729, 0, 0, [0,1,5,4,3,0], 0, 0, 0, "4,6,3,5,6,3,5,2,1,0")
-])
-def test_program(a_in: int, b_in: int, c_in: int, program: list[int], a_ex: int, b_ex: int, c_ex: int, expected_output: str): 
+
+
+@pytest.mark.parametrize(
+    "a_in, b_in, c_in, program, a_ex, b_ex, c_ex, expected_output",
+    [
+        (0, 0, 9, [2, 6], 0, 1, 0, ""),
+        (10, 0, 0, [5, 0, 5, 1, 5, 4], 10, 0, 0, "0,1,2"),
+        (2024, 0, 0, [0, 1, 5, 4, 3, 0], 0, 0, 0, "4,2,5,6,7,7,7,7,3,1,0"),
+        (0, 29, 0, [1, 7], 0, 26, 0, ""),
+        (0, 2024, 43690, [4, 0], 0, 44354, 0, ""),
+        (729, 0, 0, [0, 1, 5, 4, 3, 0], 0, 0, 0, "4,6,3,5,6,3,5,2,1,0"),
+    ],
+)
+def test_program(
+    a_in: int,
+    b_in: int,
+    c_in: int,
+    program: list[int],
+    a_ex: int,
+    b_ex: int,
+    c_ex: int,
+    expected_output: str,
+):
     p = ElfWare()
     p.reg_a = a_in
     p.reg_b = b_in
@@ -280,30 +288,33 @@ def test_program(a_in: int, b_in: int, c_in: int, program: list[int], a_ex: int,
     p.program = program
     result = p.run()
 
-    if a_ex > 0: 
-        assert (p.reg_a == a_ex)
+    if a_ex > 0:
+        assert p.reg_a == a_ex
 
-    if b_ex > 0: 
-        assert (p.reg_b == b_ex)
+    if b_ex > 0:
+        assert p.reg_b == b_ex
 
-    if c_ex > 0: 
-        assert (p.reg_c == c_ex)
-        
-    if expected_output != "": 
-        assert (result == expected_output)
+    if c_ex > 0:
+        assert p.reg_c == c_ex
 
-def test_load(): 
+    if expected_output != "":
+        assert result == expected_output
+
+
+def test_load():
     file_name = "sample.txt"
     p = ElfWare()
     p.load(file_name)
-    assert(p.reg_a == 729)
-    assert(p.program == [0,1,5,4,3,0])
+    assert p.reg_a == 729
+    assert p.program == [0, 1, 5, 4, 3, 0]
 
-def test_part1(): 
+
+def test_part1():
     file_name = "sample.txt"
     expected = "4,6,3,5,6,3,5,2,1,0"
     result = part1(file_name)
-    assert(result == expected)
+    assert result == expected
+
 
 """
 Register A: 2024
@@ -314,11 +325,13 @@ Program: 0,3,5,4,3,0
 
 117440
 """
-def test_part2(): 
+
+
+def test_part2():
     expected = 117440
     file_name = "sample.txt"
     result = part2(file_name)
-    assert(result == expected)
+    assert result == expected
 
 
 if __name__ == "__main__":

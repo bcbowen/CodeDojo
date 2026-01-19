@@ -1,63 +1,64 @@
 import pytest
 from pathlib import Path
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))  # repo root
+import Modules.aoc_io
 from collections import namedtuple
 
-Direction = namedtuple('Direction', ['y', 'x'])
+Direction = namedtuple("Direction", ["y", "x"])
 East = Direction(0, 1)
 West = Direction(0, -1)
 South = Direction(1, 0)
 North = Direction(-1, 0)
 
-def get_input_filepath(file_name: str):
-    current_path = Path(__file__).parent
-    day = current_path.name
-    current_path = current_path.parent
-    year = current_path.name
 
-    # traverse up directories to the private files
-    private_files_base = current_path.parents[2] / "adventOfCodePrivateFiles"
-
-    input_path = private_files_base / year / day / file_name
-    return input_path
-
-def load_grid(file_name: str) -> list[list[str]]: 
-    path = get_input_filepath(file_name)
-    with open(path, "r") as file: 
-        grid = [(list(line.strip())) for line in file.readlines()]
+def load_grid(file_name: str) -> list[list[str]]:
+    content = Modules.aoc_io.read_input(2024, 12, file_name)
+    grid = [(list(line.strip())) for line in content.splitlines(keepends=True)]
     return grid
+
 
 """
 perimeter = + 1 for each side bordered by another value or an edge
 """
-def calc_perimiter(grid: list[list[str]], row : int, col: int): 
+
+
+def calc_perimiter(grid: list[list[str]], row: int, col: int):
     val = grid[row][col]
     p = 0
     # west
-    if col == 0 or grid[row][col - 1] != val: 
+    if col == 0 or grid[row][col - 1] != val:
         p += 1
     # east
-    if col == len(grid[0]) - 1 or grid[row][col + 1] != val: 
+    if col == len(grid[0]) - 1 or grid[row][col + 1] != val:
         p += 1
     # north
-    if row == 0 or grid[row - 1][col] != val: 
+    if row == 0 or grid[row - 1][col] != val:
         p += 1
-    # south 
-    if row == len(grid) - 1 or grid[row + 1][col] != val: 
+    # south
+    if row == len(grid) - 1 or grid[row + 1][col] != val:
         p += 1
 
     return p
 
-def traverse_connected_cells(grid: list[list[str]], visited: set[tuple[int, int]], position: tuple[int, int], plots : dict[str, list[tuple[int, int]]]): 
+
+def traverse_connected_cells(
+    grid: list[list[str]],
+    visited: set[tuple[int, int]],
+    position: tuple[int, int],
+    plots: dict[str, list[tuple[int, int]]],
+):
     value = grid[position[0]][position[1]]
-    #visited.add(position)
+    # visited.add(position)
     q = []
     q.append(position)
     area = 0
     perimiter = 0
     cells = []
-    while len(q) > 0: 
+    while len(q) > 0:
         cell = q.pop(0)
-        if cell in visited: 
+        if cell in visited:
             continue
 
         visited.add(cell)
@@ -66,58 +67,59 @@ def traverse_connected_cells(grid: list[list[str]], visited: set[tuple[int, int]
         perimiter += calc_perimiter(grid, cell[0], cell[1])
 
         # north
-        if cell[0] > 0 and grid[cell[0] - 1][cell[1]] == value: 
+        if cell[0] > 0 and grid[cell[0] - 1][cell[1]] == value:
             q.append((cell[0] - 1, cell[1]))
 
         # east
-        if cell[1] < len(grid) - 1 and grid[cell[0]][cell[1] + 1] == value: 
+        if cell[1] < len(grid) - 1 and grid[cell[0]][cell[1] + 1] == value:
             q.append((cell[0], cell[1] + 1))
-        
-        #south
-        if cell[0] < len(grid) - 1 and grid[cell[0] + 1][cell[1]] == value: 
+
+        # south
+        if cell[0] < len(grid) - 1 and grid[cell[0] + 1][cell[1]] == value:
             q.append((cell[0] + 1, cell[1]))
 
-        #west
-        if cell[1] > 0 and grid[cell[0]][cell[1] - 1] == value: 
+        # west
+        if cell[1] > 0 and grid[cell[0]][cell[1] - 1] == value:
             q.append((cell[0], cell[1] - 1))
 
     if not value in plots:
         plots[value] = []
     plots[value].append((perimiter, area, cells))
 
-def day12_part1(file_name: str) -> int: 
+
+def day12_part1(file_name: str) -> int:
     grid = load_grid(file_name)
     # plots key = garden, val = [p, a]
     plots = {}
     visited = set()
-    for row in range(len(grid)): 
+    for row in range(len(grid)):
         for col in range(len(grid[0])):
-            if ((row, col)) in visited: 
+            if ((row, col)) in visited:
                 continue
             traverse_connected_cells(grid, visited, (row, col), plots)
     result = 0
-    for key in plots: 
-        for group in plots[key]: 
+    for key in plots:
+        for group in plots[key]:
             result += group[0] * group[1]
 
     return result
 
-def main(): 
+
+def main():
     file_name = "input.txt"
     result = day12_part1(file_name)
     print(f"Part 1 result for {file_name}: {result}")
-    
 
-@pytest.mark.parametrize("file_name, expected", [
-    ("sample.txt", 140),
-    ("sample2.txt", 772),
-    ("sample3.txt", 1930) 
-])
-def test_day12_part1(file_name : str, expected: int): 
+
+@pytest.mark.parametrize(
+    "file_name, expected",
+    [("sample.txt", 140), ("sample2.txt", 772), ("sample3.txt", 1930)],
+)
+def test_day12_part1(file_name: str, expected: int):
     result = day12_part1(file_name)
-    assert(result == expected)
+    assert result == expected
 
-if __name__ == "__main__": 
+
+if __name__ == "__main__":
     pytest.main([__file__])
     main()
-
