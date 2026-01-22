@@ -3,7 +3,6 @@ import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))  # repo root
 import Modules.aoc_io
-from pathlib import Path
 
 # Continuation of monorail code from day 12
 
@@ -17,6 +16,20 @@ class Interpreter:
         commands = text.split('\n')
         return commands
 
+    def process_toggle(self, current_instruction: int, reg: str): 
+        index = self.registers[reg]
+        command_index = current_instruction + index
+        if command_index >= 0 and command_index < len(self.commands): 
+            toggle_command = self.commands[index].split(' ')
+            current 
+            match toggle_command[0]: 
+                case 'inc': 
+                    self.commands[index] = 'dec'
+                case 'dec': 
+                    self.commands[index] = 'inc'
+                case 'cpy': 
+                    self.commands[index]
+
     def process_command(self, command : str, current_instruction : int) -> int:
         parts = command.strip().split(' ')
         next_instruction = current_instruction + 1
@@ -25,7 +38,8 @@ class Interpreter:
             case 'cpy':
                 val = interpret(parts[1])
                 reg = parts[2]
-                self.registers[reg] = val
+                if reg in self.registers: 
+                    self.registers[reg] = val
             case 'dec':
                 reg = parts[1]
                 self.registers[reg] -= 1
@@ -37,7 +51,8 @@ class Interpreter:
                 val = int(parts[2])
                 if reg != 0:
                     next_instruction = current_instruction + val
-
+            case 'tgl':
+                self.process_toggle(current_instruction, parts[1])
 
         return next_instruction
 
@@ -47,18 +62,19 @@ class Interpreter:
             current_command = self.process_command(self.commands[current_command], current_command)
         return self.registers['a']
 
-def part1(file_name: str):
+def part1(file_name: str) -> int:
     interpreter = Interpreter(file_name,0)
     result = interpreter.run()
     return result
 
-def part2(file_name: str):
-    interpreter = Interpreter(file_name,1)
-    result = interpreter.run()
+def part2(file_name: str) -> int:
+    #interpreter = Interpreter(file_name,1)
+    #result = interpreter.run()
+    result = 2
     return result
 
-def test():
-    expected = 42
+def test_part1():
+    expected = 3
     result = part1("sample.txt")
     assert(result == expected)
 
