@@ -12,7 +12,7 @@ class Interpreter:
         self.registers = {'a': 0, 'b': 0, 'c': c, 'd': 0}
 
     def get_commands(self, file_name: str) -> list[str]:
-        text = Modules.aoc_io.read_input(2016, 12, file_name)
+        text = Modules.aoc_io.read_input(2016, 23, file_name)
         commands = text.split('\n')
         return commands
 
@@ -20,15 +20,16 @@ class Interpreter:
         index = self.registers[reg]
         command_index = current_instruction + index
         if command_index >= 0 and command_index < len(self.commands): 
-            toggle_command = self.commands[index].split(' ')
-            current 
+            toggle_command = self.commands[command_index].split(' ')
             match toggle_command[0]: 
                 case 'inc': 
                     self.commands[index] = 'dec'
                 case 'dec': 
                     self.commands[index] = 'inc'
                 case 'cpy': 
-                    self.commands[index]
+                    self.commands[index] = self.commands[index].replace('cpy', 'jnz')
+                case 'jnz': 
+                    self.commands[index] = self.commands[index].replace('jnz', 'cpy')
 
     def process_command(self, command : str, current_instruction : int) -> int:
         parts = command.strip().split(' ')
