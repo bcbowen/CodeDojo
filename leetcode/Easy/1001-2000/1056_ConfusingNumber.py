@@ -1,6 +1,8 @@
 class Solution:
     def confusingNumber(self, n: int) -> bool:
         replacements = {0: 0, 1: 1, 6: 9, 8: 8, 9: 6}
+        if n == 0: 
+            return False
         start = n
         replacement = ''
         while start > 0: 
