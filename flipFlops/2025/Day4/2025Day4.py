@@ -2,12 +2,13 @@ import pytest
 from typing import List
 from pathlib import Path
 
-def get_inputs(file_name: str) -> List[str]: 
+def get_inputs(file_name: str) -> List[List[int]]: 
     input = [] 
     current_path = Path(__file__).parent
     path = current_path / file_name
     with open(path, "r") as file:
-        input = file.readlines() 
+        for line in file.readlines():
+            input.append([int(x) for x in line.strip().split(',')])
     
     return input
 
@@ -16,10 +17,8 @@ def part1(file_name: str) -> int:
     result = 0
     inputs = get_inputs(file_name)
     last = (0, 0)
-    for line in inputs:
-        x, y = line.strip().split(',')
-        x = int(x)
-        y = int(y.strip())
+    for row in inputs:
+        x, y = row[0], row[1]
 
         result += abs(last[0] - x)
         result += abs(last[1] - y)
@@ -32,10 +31,8 @@ def part2(file_name: str) -> int:
     result = 0
     inputs = get_inputs(file_name)
     last = (0, 0)
-    for line in inputs:
-        x, y = line.strip().split(',')
-        x = int(x)
-        y = int(y.strip())
+    for row in inputs:
+        x, y = row[0], row[1]
 
         result += max(abs(last[1] - y), abs(last[0] - x))
 
@@ -48,16 +45,12 @@ def part3(file_name: str) -> int:
     inputs = get_inputs(file_name)
     last = (0, 0)
     inputs = sorted(inputs, key = lambda x: x[0] + x[1])
-    for line in inputs:
-        x, y = line.strip().split(',')
-        x = int(x)
-        y = int(y.strip())
-
+    for row in inputs:
+        x, y = row[0], row[1]
         result += max(abs(last[1] - y), abs(last[0] - x))
 
         last = (x, y)     
    
-    # 3445 too high
     return result     
 
 def main(): 
@@ -76,7 +69,7 @@ def test_load_inputs():
     file_name = "sample.txt"
     inputs = get_inputs(file_name)
     assert(len(inputs) == 3)
-    assert(inputs[0].strip() == "3,3")
+    assert(inputs[0] == [3, 3])
 
 def test_part1(): 
     file_name = "sample.txt"

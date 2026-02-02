@@ -114,3 +114,5 @@ Your pickup strategy is the same as last part, but now you pick up the trash in 
 The total number of steps taken in the newly sorted example is now 3 + 3 + 3 = 9.
 
 What is the total number of steps required to collect all the trash with this new sorting strategy?
+
+Your answer was: `2062`
