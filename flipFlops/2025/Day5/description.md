@@ -52,3 +52,19 @@ Total   = 38 steps
 Keep in mind that the step from one tunnel to the next is not counted. (Outside the tunnel)
 
 What is the total number of steps the train takes inside tunnels for the full map?
+
+Your answer was: `1546`
+
+-= Part 2: Unused Tunnels =-
+After exploring the tunnels, you realize that some tunnels are not visited by the train.
+
+You have to know which tunnels are not visited so you can plan another trip to go back and visit them still.
+
+In the previous example, the train visits the tunnels A, k, s, i, and P.
+
+The tunnels B and c are not visited.
+
+The answer, in the order in which they appear, is Bc.
+
+What tunnels are not visited by the train on the full map? (Answer must be in order of appearance)
+
