@@ -8,9 +8,25 @@ class Solution:
         ct = 0
         output = [] 
         for c in s: 
+            if c == '(' and ct > 0: 
+                output.append(c)
+            elif c == ')' and ct > 1: 
+                output.append(c)
+            
             if c == '(': 
                 ct += 1
-                if ct == 1:
+            else: 
+                ct -= 1
+
+        return ''.join(output)
+        
+    def removeOuterParentheses_1(self, s: str) -> str:
+        ct = 0
+        output = [] 
+        for c in s: 
+            if c == '(': 
+                ct += 1
+                if ct == 2:
                     output.append(c)
             else: 
                 ct -= 1

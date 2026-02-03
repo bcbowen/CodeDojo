@@ -2,13 +2,12 @@ import pytest
 from typing import List
 from pathlib import Path
 
-def get_inputs(file_name: str) -> List[List[int]]: 
-    input = [] 
+def get_inputs(file_name: str) -> str: 
+    input = "" 
     current_path = Path(__file__).parent
     path = current_path / file_name
     with open(path, "r") as file:
-        for line in file.readlines():
-            input.append([int(x) for x in line.strip().split(',')])
+        input = file.readline() 
     
     return input
 
@@ -16,42 +15,23 @@ def get_inputs(file_name: str) -> List[List[int]]:
 def part1(file_name: str) -> int: 
     result = 0
     inputs = get_inputs(file_name)
-    last = (0, 0)
-    for row in inputs:
-        x, y = row[0], row[1]
-
-        result += abs(last[0] - x)
-        result += abs(last[1] - y)
-        last = (x, y)     
-
+    
 
     return result   
 
 def part2(file_name: str) -> int: 
     result = 0
     inputs = get_inputs(file_name)
-    last = (0, 0)
-    for row in inputs:
-        x, y = row[0], row[1]
+    
 
-        result += max(abs(last[1] - y), abs(last[0] - x))
-
-        last = (x, y)     
-   
     return result   
   
 def part3(file_name: str) -> int: 
     result = 0
     inputs = get_inputs(file_name)
-    last = (0, 0)
-    inputs = sorted(inputs, key = lambda x: x[0] + x[1])
-    for row in inputs:
-        x, y = row[0], row[1]
-        result += max(abs(last[1] - y), abs(last[0] - x))
+    
 
-        last = (x, y)     
-   
-    return result     
+    return result   
 
 def main(): 
     file_name = "input.txt"
@@ -68,25 +48,26 @@ def main():
 def test_load_inputs(): 
     file_name = "sample.txt"
     inputs = get_inputs(file_name)
-    assert(len(inputs) == 3)
-    assert(inputs[0] == [3, 3])
+    pass
+    #assert(len(inputs) == 5)
+    #print(inputs[0])
 
 def test_part1(): 
     file_name = "sample.txt"
     result = part1(file_name)
-    expected = 24
+    expected = -1
     assert(result == expected)
 
 def test_part2(): 
     file_name = "sample.txt"
     result = part2(file_name)
-    expected = 12
+    expected = -1
     assert(result == expected)
 
 def test_part3(): 
     file_name = "sample.txt"
     result = part3(file_name)
-    expected = 9
+    expected = -1
     assert(result == expected)
 
 
