@@ -50,17 +50,32 @@ def part2(file_name: str) -> str:
         if next_pos == len(tunnel_map) - 1: 
             break
         pos = next_pos + 1
-    result = set() 
-    for c in unvisited: 
-        result.add(c)
+    result = []
+    for c in unvisited:
+        if not c in result:  
+            result.append(c)
+
+    # incorrect: fLEoeSHsdkPjazF, HEoSPkLazjdFsef
     return "".join(result)
   
 def part3(file_name: str) -> int: 
     result = 0
     tunnel_map = get_inputs(file_name)
-    
 
-    return result   
+    pos = 0
+    while pos < len(tunnel_map): 
+
+        next_pos = find_next(tunnel_map, tunnel_map[pos], pos)
+        c = tunnel_map[next_pos]
+        if c.isupper(): 
+            result -= abs(pos - next_pos)
+        else:
+            result += abs(pos - next_pos)
+
+        if next_pos == len(tunnel_map) - 1: 
+            break
+        pos = next_pos + 1
+    return result 
 
 def main(): 
     file_name = "input.txt"
@@ -105,7 +120,7 @@ def test_part2():
 def test_part3(): 
     file_name = "sample.txt"
     result = part3(file_name)
-    expected = -1
+    expected = -6
     assert(result == expected)
 
 

@@ -68,3 +68,31 @@ The answer, in the order in which they appear, is Bc.
 
 What tunnels are not visited by the train on the full map? (Answer must be in order of appearance)
 
+Your answer was: `FdEsPoHkfjaSLze`
+
+-= Part 3: Powered Tunnels =-
+As you near the first tunnel, you notice a sign that says "Powered Tunnels".
+
+Curious, you read the sign and learn that these tunnels have special properties.
+
+When the train enters a powered tunnel, it emerges at the other end having taken a negative number of steps (don't question it).
+
+A powered tunnel is represented by an uppercase letter.
+
+Example Walkthrough:
+
+```text
+A -> A  = -10 steps
+k <- k  =   7 steps
+s -> s  =   7 steps
+P <- P  =  -6 steps
+i <- i  =   2 steps
+P -> P  =  -6 steps
+-------------------
+```
+
+Total   =  -6 steps
+Since A and P are powered tunnels, the train takes negative steps for those tunnels.
+
+What is the total number of steps the train takes inside tunnels for the full map with these new rules?
+
