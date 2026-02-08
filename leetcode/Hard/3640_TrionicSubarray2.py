@@ -35,7 +35,7 @@ class Solution:
 
         max_sum = -(10**10)
         for i in range(2, len(nums)): 
-            if i > 0: 
+            if nums[i] > 0: 
                 max_sum = max(max_sum, sum(nums[i - 2:i + 1]))
         return max_sum
 
