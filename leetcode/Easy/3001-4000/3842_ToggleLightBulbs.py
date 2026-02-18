@@ -7,4 +7,6 @@ class Solution:
             else: 
                 lit.remove(bulb)
 
-        return list(lit)
+        result = list(lit)
+        result.sort()
+        return result
