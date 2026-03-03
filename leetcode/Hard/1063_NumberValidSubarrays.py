@@ -4,6 +4,22 @@ from typing import List
 
 class Solution:
     def validSubarrays(self, nums: List[int]) -> int:
+        array_count = 0
+
+        for left in range(len(nums)): 
+            for right in range(left, len(nums)): 
+                if right > left: 
+                    if nums[right] >= nums[left]: 
+                        array_count += 1
+                    else: 
+                        break
+                else: 
+                    array_count += 1
+
+        return array_count
+    
+
+    def validSubarrays_1(self, nums: List[int]) -> int:
         test_len = 2
         array_count = len(nums)
         while test_len < len(nums): 
