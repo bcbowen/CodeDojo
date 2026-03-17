@@ -11,7 +11,6 @@ class Solution:
         if len(pairs) > 1:
             pairs.sort()
             result[0] = pairs[0][0]
-            #pairs.sort(key=lambda p: p[1])
             for i in range(1, len(pairs)): 
                 if pairs[i][1] != counts[result[0]]: 
                     result[1] = pairs[i][0]
