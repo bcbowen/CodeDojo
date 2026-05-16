@@ -1,0 +1,3 @@
+# Fix when keyboard lighting stops working: 
+cat /sys/class/leds/asus::kbd_backlight/max_brightness
+echo 3 | sudo tee /sys/class/leds/asus::kbd_backlight/brightness
